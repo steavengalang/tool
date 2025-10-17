@@ -113,6 +113,7 @@
       position: relative;
       min-width: 600px;
       min-height: 500px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .grid-cell {
@@ -169,7 +170,8 @@
       color: var(--accent);
       cursor: move;
       min-height: 80px;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
     }
 
     .grid-item:hover {
@@ -183,6 +185,13 @@
     .grid-item.dragging {
       opacity: 0.5;
       cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    .grid-item.drag-over {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(212, 255, 58, 0.35), rgba(212, 255, 58, 0.2));
+      box-shadow: 0 0 0 3px rgba(212, 255, 58, 0.2);
     }
 
     .resize-handle {
@@ -304,7 +313,6 @@
     .code-box .property { color: #78dce8; }
     .code-box .value { color: #d4ff3a; }
     .code-box .selector { color: #fc9867; }
-    .code-box .comment { color: #5c6370; }
   </style>
 </head>
 <body>
@@ -481,20 +489,46 @@
         handle.onmousedown = (e) => startResize(e, item);
         div.appendChild(handle);
 
-        div.ondragstart = () => {
+        // Smooth drag events
+        div.ondragstart = (e) => {
           draggedItem = item;
-          div.classList.add('dragging');
+          setTimeout(() => {
+            div.classList.add('dragging');
+          }, 0);
+          e.dataTransfer.effectAllowed = 'move';
         };
 
         div.ondragend = () => {
           div.classList.remove('dragging');
           draggedItem = null;
+          // Remove all drag-over classes
+          document.querySelectorAll('.grid-item').forEach(el => {
+            el.classList.remove('drag-over');
+          });
         };
 
-        div.ondragover = (e) => e.preventDefault();
+        div.ondragover = (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        };
+
+        div.ondragenter = (e) => {
+          e.preventDefault();
+          if (draggedItem && draggedItem !== item) {
+            div.classList.add('drag-over');
+          }
+        };
+
+        div.ondragleave = (e) => {
+          if (e.target === div) {
+            div.classList.remove('drag-over');
+          }
+        };
 
         div.ondrop = (e) => {
           e.preventDefault();
+          div.classList.remove('drag-over');
+          
           if (draggedItem && draggedItem !== item) {
             const tempCol = item.col;
             const tempRow = item.row;
@@ -502,7 +536,11 @@
             item.row = draggedItem.row;
             draggedItem.col = tempCol;
             draggedItem.row = tempRow;
-            render();
+            
+            // Smooth transition
+            requestAnimationFrame(() => {
+              render();
+            });
           }
         };
 
@@ -527,7 +565,10 @@
         const newRowSpan = Math.max(1, startRowSpan + Math.round(deltaY / 80));
         item.colSpan = Math.min(newColSpan, cols - item.col + 1);
         item.rowSpan = Math.min(newRowSpan, rows - item.row + 1);
-        render();
+        
+        requestAnimationFrame(() => {
+          render();
+        });
       };
 
       const onUp = () => {
