@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⚖️ BMI Calculator</h1>
+        <p>Hitung Body Mass Index (BMI) kamu</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="weight">Berat Badan (kg):</label>
+          <input type="number" id="weight" placeholder="70">
+        </div>
+
+        <div class="form-group">
+          <label for="height">Tinggi Badan (cm):</label>
+          <input type="number" id="height" placeholder="170">
+        </div>
+
+        <button class="btn" onclick="calculate()">Hitung BMI</button>
+
+        <div id="result" class="result-box" style="display:none; margin-top: 2rem;">
+          <h3>BMI: <span id="bmiValue"></span></h3>
+          <p id="bmiCategory"></p>
+          <p id="bmiAdvice"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function calculate() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value) / 100;
+      
+      if(!weight || !height) {
+        alert('Masukkan berat dan tinggi badan!');
+        return;
+      }
+      
+      const bmi = (weight / (height * height)).toFixed(1);
+      let category, advice;
+      
+      if(bmi < 18.5) {
+        category = 'Underweight';
+        advice = 'Anda perlu menambah berat badan';
+      } else if(bmi < 25) {
+        category = 'Normal';
+        advice = 'Berat badan Anda ideal!';
+      } else if(bmi < 30) {
+        category = 'Overweight';
+        advice = 'Anda perlu menurunkan berat badan';
+      } else {
+        category = 'Obesitas';
+        advice = 'Konsultasikan dengan dokter';
+      }
+      
+      document.getElementById('bmiValue').textContent = bmi;
+      document.getElementById('bmiCategory').textContent = `Kategori: ${category}`;
+      document.getElementById('bmiAdvice').textContent = advice;
+      document.getElementById('result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

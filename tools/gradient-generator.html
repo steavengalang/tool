@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradient Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .gradient-preview {
+      width: 100%;
+      height: 300px;
+      border-radius: var(--radius-lg);
+      margin: var(--space-6) 0;
+      box-shadow: var(--shadow-lg);
+      transition: all var(--duration-normal) var(--ease-standard);
+    }
+    .color-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+    }
+    .color-input-group {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+    }
+    .color-input-group input[type="color"] {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+    .preset-gradients {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: var(--space-3);
+      margin: var(--space-6) 0;
+    }
+    .preset-item {
+      height: 80px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-standard);
+      border: 2px solid transparent;
+    }
+    .preset-item:hover {
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🌈 Gradient Generator</h1>
+        <p>Create beautiful CSS gradients with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Preview -->
+        <div class="gradient-preview" id="preview"></div>
+
+        <!-- Type Selection -->
+        <div class="form-group">
+          <label>Gradient Type:</label>
+          <div class="button-group">
+            <button class="btn btn-secondary active" onclick="setType('linear')">Linear</button>
+            <button class="btn btn-secondary" onclick="setType('radial')">Radial</button>
+          </div>
+        </div>
+
+        <!-- Color Inputs -->
+        <div class="color-inputs">
+          <div class="color-input-group">
+            <input type="color" id="color1" value="#d4ff3a" oninput="updateGradient()">
+            <label>Color 1</label>
+          </div>
+          <div class="color-input-group">
+            <input type="color" id="color2" value="#0a0a0a" oninput="updateGradient()">
+            <label>Color 2</label>
+          </div>
+        </div>
+
+        <!-- Angle (for linear) -->
+        <div class="form-group" id="angleControl">
+          <label for="angle">Angle: <span id="angleValue">90</span>°</label>
+          <input type="range" id="angle" min="0" max="360" value="90" oninput="updateGradient()">
+        </div>
+
+        <!-- CSS Output -->
+        <div class="form-group">
+          <label for="cssOutput">CSS Code:</label>
+          <textarea id="cssOutput" rows="4" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyCSS()">
+          📋 Copy CSS
+        </button>
+
+        <!-- Preset Gradients -->
+        <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Quick Presets:</h3>
+        <div class="preset-gradients">
+          <div class="preset-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)" onclick="applyPreset('#667eea', '#764ba2')"></div>
+          <div class="preset-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" onclick="applyPreset('#f093fb', '#f5576c')"></div>
+          <div class="preset-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" onclick="applyPreset('#4facfe', '#00f2fe')"></div>
+          <div class="preset-item" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" onclick="applyPreset('#43e97b', '#38f9d7')"></div>
+          <div class="preset-item" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%)" onclick="applyPreset('#fa709a', '#fee140')"></div>
+          <div class="preset-item" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%)" onclick="applyPreset('#30cfd0', '#330867')"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let gradientType = 'linear';
+
+    function setType(type) {
+      gradientType = type;
+      document.querySelectorAll('.button-group .btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('angleControl').style.display = type === 'linear' ? 'block' : 'none';
+      updateGradient();
+    }
+
+    function updateGradient() {
+      const color1 = document.getElementById('color1').value;
+      const color2 = document.getElementById('color2').value;
+      const angle = document.getElementById('angle').value;
+      document.getElementById('angleValue').textContent = angle;
+
+      let gradient;
+      if (gradientType === 'linear') {
+        gradient = `linear-gradient(${angle}deg, ${color1} 0%, ${color2} 100%)`;
+      } else {
+        gradient = `radial-gradient(circle, ${color1} 0%, ${color2} 100%)`;
+      }
+
+      document.getElementById('preview').style.background = gradient;
+      document.getElementById('cssOutput').value = `background: ${gradient};`;
+    }
+
+    function applyPreset(c1, c2) {
+      document.getElementById('color1').value = c1;
+      document.getElementById('color2').value = c2;
+      updateGradient();
+    }
+
+    function copyCSS() {
+      const css = document.getElementById('cssOutput');
+      css.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSS';
+      }, 2000);
+    }
+
+    window.onload = updateGradient;
+  </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Diff Checker - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔍 Text Diff Checker</h1>
+        <p>Compare dan temukan perbedaan dua teks</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="text1">Text 1:</label>
+          <textarea id="text1" rows="6"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="text2">Text 2:</label>
+          <textarea id="text2" rows="6"></textarea>
+        </div>
+
+        <button class="btn" onclick="compareDiff()">Compare</button>
+
+        <div class="form-group">
+          <label>Result:</label>
+          <div id="diffResult" class="result-box"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function compareDiff() {
+      const text1 = document.getElementById('text1').value.split('\n');
+      const text2 = document.getElementById('text2').value.split('\n');
+      let html = '';
+      
+      const maxLength = Math.max(text1.length, text2.length);
+      for(let i = 0; i < maxLength; i++) {
+        if(text1[i] !== text2[i]) {
+          if(text1[i]) html += `<div class="removed">- ${text1[i]}</div>`;
+          if(text2[i]) html += `<div class="added">+ ${text2[i]}</div>`;
+        } else {
+          html += `<div>${text1[i] || ''}</div>`;
+        }
+      }
+      
+      document.getElementById('diffResult').innerHTML = html || 'No differences found';
+    }
+  </script>
+</body>
+</html>

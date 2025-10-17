@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to Slug Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .slug-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+      padding: var(--space-5);
+      background: rgba(15, 15, 15, 0.3);
+      backdrop-filter: var(--blur-sm);
+      -webkit-backdrop-filter: var(--blur-sm);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .option-item label {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: color var(--duration) var(--ease);
+    }
+    .option-item input:checked + label {
+      color: var(--accent);
+    }
+    .slug-preview {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-top: var(--space-6);
+      box-shadow: var(--shadow-glass), var(--shadow-inner);
+    }
+    .slug-output {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 1.25rem;
+      color: var(--accent);
+      word-break: break-all;
+      margin-bottom: var(--space-4);
+      padding: var(--space-5);
+      background: rgba(15, 15, 15, 0.5);
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+    }
+    .slug-examples {
+      display: grid;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+    .example-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-4);
+      background: rgba(15, 15, 15, 0.3);
+      backdrop-filter: var(--blur-sm);
+      -webkit-backdrop-filter: var(--blur-sm);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all var(--duration) var(--ease);
+    }
+    .example-item:hover {
+      background: var(--accent-muted);
+      border-color: var(--accent);
+    }
+    .example-text {
+      color: var(--text-secondary);
+      flex: 1;
+    }
+    .example-slug {
+      color: var(--accent);
+      font-family: 'Monaco', monospace;
+      margin-left: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔗 Text to Slug Generator</h1>
+        <p>Convert text ke URL-friendly slug untuk SEO dan clean URLs</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Input -->
+        <div class="form-group">
+          <label for="textInput">Text Input:</label>
+          <textarea id="textInput" rows="4" placeholder="Contoh: Cara Membuat Website Modern dan Elegan" oninput="generateSlug()"></textarea>
+        </div>
+
+        <!-- Options -->
+        <div class="slug-options">
+          <div class="option-item">
+            <input type="radio" name="separator" id="dash" value="-" checked onchange="generateSlug()">
+            <label for="dash">Dash (-)</label>
+          </div>
+          <div class="option-item">
+            <input type="radio" name="separator" id="underscore" value="_" onchange="generateSlug()">
+            <label for="underscore">Underscore (_)</label>
+          </div>
+          <div class="option-item">
+            <input type="checkbox" id="lowercase" checked onchange="generateSlug()">
+            <label for="lowercase">Lowercase</label>
+          </div>
+          <div class="option-item">
+            <input type="checkbox" id="removeSpecial" checked onchange="generateSlug()">
+            <label for="removeSpecial">Remove Special Chars</label>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="slug-preview">
+          <h3 style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Generated Slug:</h3>
+          <div class="slug-output" id="slugOutput">your-slug-will-appear-here</div>
+          <div style="display: flex; gap: var(--space-3);">
+            <button class="btn btn-primary" style="flex: 1;" onclick="copySlug()">
+              📋 Copy Slug
+            </button>
+            <button class="btn btn-secondary" style="flex: 1;" onclick="clearAll()">
+              🗑️ Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Examples -->
+        <div style="margin-top: var(--space-12);">
+          <h3 style="font-size: 1.125rem; margin-bottom: var(--space-4); color: var(--text-primary);">Quick Examples:</h3>
+          <div class="slug-examples">
+            <div class="example-item" onclick="useExample(this)">
+              <span class="example-text">Tutorial JavaScript Modern untuk Pemula</span>
+              <span class="example-slug">→ tutorial-javascript-modern-untuk-pemula</span>
+            </div>
+            <div class="example-item" onclick="useExample(this)">
+              <span class="example-text">10 Tips & Tricks Coding yang Wajib Diketahui!</span>
+              <span class="example-slug">→ 10-tips-tricks-coding-yang-wajib-diketahui</span>
+            </div>
+            <div class="example-item" onclick="useExample(this)">
+              <span class="example-text">Cara Membuat Website E-Commerce dengan React.js</span>
+              <span class="example-slug">→ cara-membuat-website-e-commerce-dengan-reactjs</span>
+            </div>
+            <div class="example-item" onclick="useExample(this)">
+              <span class="example-text">Belajar Python dari Nol: Panduan Lengkap 2025</span>
+              <span class="example-slug">→ belajar-python-dari-nol-panduan-lengkap-2025</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function generateSlug() {
+      const text = document.getElementById('textInput').value;
+      if (!text) {
+        document.getElementById('slugOutput').textContent = 'your-slug-will-appear-here';
+        return;
+      }
+
+      const separator = document.querySelector('input[name="separator"]:checked').value;
+      const lowercase = document.getElementById('lowercase').checked;
+      const removeSpecial = document.getElementById('removeSpecial').checked;
+
+      let slug = text.trim();
+
+      // Convert to lowercase if checked
+      if (lowercase) {
+        slug = slug.toLowerCase();
+      }
+
+      // Remove special characters if checked
+      if (removeSpecial) {
+        slug = slug.replace(/[^\w\s-]/g, '');
+      }
+
+      // Replace spaces with separator
+      slug = slug.replace(/\s+/g, separator);
+
+      // Remove multiple separators
+      const separatorRegex = new RegExp(`${separator}+`, 'g');
+      slug = slug.replace(separatorRegex, separator);
+
+      // Remove leading/trailing separators
+      const trimRegex = new RegExp(`^${separator}+|${separator}+$`, 'g');
+      slug = slug.replace(trimRegex, '');
+
+      document.getElementById('slugOutput').textContent = slug || 'invalid-input';
+    }
+
+    function copySlug() {
+      const slug = document.getElementById('slugOutput').textContent;
+      if (slug && slug !== 'your-slug-will-appear-here' && slug !== 'invalid-input') {
+        navigator.clipboard.writeText(slug).then(() => {
+          const btn = event.target;
+          const originalText = btn.textContent;
+          btn.textContent = '✓ Copied!';
+          btn.style.background = 'var(--accent)';
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+          }, 2000);
+        });
+      }
+    }
+
+    function clearAll() {
+      document.getElementById('textInput').value = '';
+      document.getElementById('slugOutput').textContent = 'your-slug-will-appear-here';
+    }
+
+    function useExample(element) {
+      const text = element.querySelector('.example-text').textContent;
+      document.getElementById('textInput').value = text;
+      generateSlug();
+      // Smooth scroll to input
+      document.getElementById('textInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>

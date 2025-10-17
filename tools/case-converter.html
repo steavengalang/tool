@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Converter - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>Aa Case Converter</h1>
+        <p>Convert teks ke berbagai format case</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">Input Text:</label>
+          <textarea id="input" rows="8" placeholder="Masukkan teks..."></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="convertCase('upper')">UPPERCASE</button>
+          <button class="btn" onclick="convertCase('lower')">lowercase</button>
+          <button class="btn" onclick="convertCase('title')">Title Case</button>
+          <button class="btn" onclick="convertCase('sentence')">Sentence case</button>
+          <button class="btn" onclick="convertCase('camel')">camelCase</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="8" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function convertCase(type) {
+      const input = document.getElementById('input').value;
+      let output = '';
+      
+      switch(type) {
+        case 'upper':
+          output = input.toUpperCase();
+          break;
+        case 'lower':
+          output = input.toLowerCase();
+          break;
+        case 'title':
+          output = input.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+          break;
+        case 'sentence':
+          output = input.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+          break;
+        case 'camel':
+          output = input.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, i) => 
+            i === 0 ? word.toLowerCase() : word.toUpperCase()).replace(/\s+/g, '');
+          break;
+      }
+      
+      document.getElementById('output').value = output;
+    }
+  </script>
+</body>
+</html>

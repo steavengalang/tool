@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropdown Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .dropdown-preview-area {
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212, 255, 58, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      margin: var(--space-6) 0;
+      padding: var(--space-8);
+    }
+
+    /* Custom Dropdown Styles */
+    .custom-dropdown {
+      position: relative;
+      display: inline-block;
+      min-width: 200px;
+    }
+
+    .dropdown-button {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .dropdown-button:hover {
+      background: var(--glass-hover);
+      border-color: var(--accent);
+    }
+
+    .dropdown-arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-button.active .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .dropdown-menu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-item:hover {
+      background: var(--accent-muted);
+      color: var(--accent);
+    }
+
+    .dropdown-item.active {
+      background: var(--accent);
+      color: var(--bg-primary);
+    }
+
+    /* Search input in dropdown */
+    .dropdown-search {
+      padding: 12px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .dropdown-search input {
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .dropdown-search input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Style presets */
+    .style-preset {
+      padding: var(--space-4);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .style-preset:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .style-preset.active {
+      background: var(--accent-muted);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📂 Dropdown Generator</h1>
+        <p>Create custom dropdown menus with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Preview Area -->
+        <div class="dropdown-preview-area">
+          <div class="custom-dropdown" id="previewDropdown">
+            <div class="dropdown-button" onclick="toggleDropdown()">
+              <span id="selectedText">Select Option</span>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-search" id="searchContainer" style="display: none;">
+                <input type="text" placeholder="Search..." oninput="filterOptions(this.value)">
+              </div>
+              <div id="optionsContainer">
+                <div class="dropdown-item" onclick="selectOption(this)">Option 1</div>
+                <div class="dropdown-item" onclick="selectOption(this)">Option 2</div>
+                <div class="dropdown-item" onclick="selectOption(this)">Option 3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Style Presets -->
+        <h3 style="margin-bottom: var(--space-4);">Style Presets:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); margin-bottom: var(--space-8);">
+          <div class="style-preset active" onclick="applyPreset('default')">
+            <strong>Default</strong>
+            <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Classic style</p>
+          </div>
+          <div class="style-preset" onclick="applyPreset('rounded')">
+            <strong>Rounded</strong>
+            <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Smooth corners</p>
+          </div>
+          <div class="style-preset" onclick="applyPreset('minimal')">
+            <strong>Minimal</strong>
+            <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">No borders</p>
+          </div>
+          <div class="style-preset" onclick="applyPreset('gradient')">
+            <strong>Gradient</strong>
+            <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Color accent</p>
+          </div>
+        </div>
+
+        <!-- Customization Options -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4);">
+          <div class="form-group">
+            <label for="buttonText">Button Text:</label>
+            <input type="text" id="buttonText" value="Select Option" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="buttonWidth">Width: <span id="widthValue">200</span>px</label>
+            <input type="range" id="buttonWidth" min="150" max="400" value="200" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="buttonPadding">Padding: <span id="paddingValue">12</span>px</label>
+            <input type="range" id="buttonPadding" min="8" max="24" value="12" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="borderRadius">Border Radius: <span id="radiusValue">12</span>px</label>
+            <input type="range" id="borderRadius" min="0" max="30" value="12" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="fontSize">Font Size: <span id="fontValue">16</span>px</label>
+            <input type="range" id="fontSize" min="12" max="24" value="16" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="bgColor">Background Color:</label>
+            <input type="color" id="bgColor" value="#141414" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="textColor">Text Color:</label>
+            <input type="color" id="textColor" value="#fafafa" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="borderColor">Border Color:</label>
+            <input type="color" id="borderColor" value="#333333" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label for="hoverColor">Hover Color:</label>
+            <input type="color" id="hoverColor" value="#d4ff3a" oninput="updateDropdown()">
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableSearch" onchange="updateDropdown()">
+              Enable Search
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableIcons" onchange="updateDropdown()">
+              Show Icons
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="multiSelect" onchange="updateDropdown()">
+              Multi-Select
+            </label>
+          </div>
+        </div>
+
+        <!-- Options Management -->
+        <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Dropdown Options:</h3>
+        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
+          <input type="text" id="newOption" placeholder="Add new option..." style="flex: 1;">
+          <button class="btn btn-secondary" onclick="addOption()">+ Add</button>
+        </div>
+
+        <div id="optionsList" style="display: grid; gap: var(--space-2); margin-bottom: var(--space-8);">
+          <div style="display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); background: var(--glass-bg); border-radius: var(--radius);">
+            <span style="flex: 1;">Option 1</span>
+            <button onclick="removeOption(this)" style="padding: 4px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">Remove</button>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); background: var(--glass-bg); border-radius: var(--radius);">
+            <span style="flex: 1;">Option 2</span>
+            <button onclick="removeOption(this)" style="padding: 4px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">Remove</button>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); background: var(--glass-bg); border-radius: var(--radius);">
+            <span style="flex: 1;">Option 3</span>
+            <button onclick="removeOption(this)" style="padding: 4px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">Remove</button>
+          </div>
+        </div>
+
+        <!-- Code Output -->
+        <div class="form-group">
+          <label>HTML Code:</label>
+          <textarea id="htmlOutput" rows="15" readonly></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>CSS Code:</label>
+          <textarea id="cssOutput" rows="20" readonly></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>JavaScript Code:</label>
+          <textarea id="jsOutput" rows="15" readonly></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="copyAllCode()">📋 Copy All Code</button>
+          <button class="btn btn-secondary" onclick="copyCode('html')">Copy HTML</button>
+          <button class="btn btn-secondary" onclick="copyCode('css')">Copy CSS</button>
+          <button class="btn btn-secondary" onclick="copyCode('js')">Copy JS</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentPreset = 'default';
+
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      const button = document.querySelector('.dropdown-button');
+      menu.classList.toggle('show');
+      button.classList.toggle('active');
+    }
+
+    function selectOption(element) {
+      document.getElementById('selectedText').textContent = element.textContent;
+      
+      if (!document.getElementById('multiSelect').checked) {
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        element.classList.add('active');
+        toggleDropdown();
+      } else {
+        element.classList.toggle('active');
+      }
+    }
+
+    function filterOptions(search) {
+      const items = document.querySelectorAll('.dropdown-item');
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(search.toLowerCase()) ? 'block' : 'none';
+      });
+    }
+
+    function addOption() {
+      const input = document.getElementById('newOption');
+      const value = input.value.trim();
+      if (!value) return;
+
+      // Add to list
+      const list = document.getElementById('optionsList');
+      const div = document.createElement('div');
+      div.style.cssText = 'display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); background: var(--glass-bg); border-radius: var(--radius);';
+      div.innerHTML = `
+        <span style="flex: 1;">${value}</span>
+        <button onclick="removeOption(this)" style="padding: 4px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">Remove</button>
+      `;
+      list.appendChild(div);
+
+      // Add to dropdown
+      const container = document.getElementById('optionsContainer');
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = value;
+      item.onclick = function() { selectOption(this); };
+      container.appendChild(item);
+
+      input.value = '';
+      updateDropdown();
+    }
+
+    function removeOption(button) {
+      const text = button.previousElementSibling.textContent;
+      button.parentElement.remove();
+      
+      // Remove from dropdown
+      const items = document.querySelectorAll('.dropdown-item');
+      items.forEach(item => {
+        if (item.textContent === text) item.remove();
+      });
+      
+      updateDropdown();
+    }
+
+    function applyPreset(preset) {
+      currentPreset = preset;
+      document.querySelectorAll('.style-preset').forEach(el => el.classList.remove('active'));
+      event.target.closest('.style-preset').classList.add('active');
+
+      const presets = {
+        default: { radius: 12, padding: 12, bgColor: '#141414', borderColor: '#333333' },
+        rounded: { radius: 24, padding: 14, bgColor: '#1a1a1a', borderColor: '#444444' },
+        minimal: { radius: 8, padding: 10, bgColor: 'transparent', borderColor: 'transparent' },
+        gradient: { radius: 16, padding: 12, bgColor: '#1a1a1a', borderColor: '#d4ff3a' }
+      };
+
+      const p = presets[preset];
+      document.getElementById('borderRadius').value = p.radius;
+      document.getElementById('buttonPadding').value = p.padding;
+      document.getElementById('bgColor').value = p.bgColor;
+      document.getElementById('borderColor').value = p.borderColor;
+
+      updateDropdown();
+    }
+
+    function updateDropdown() {
+      const button = document.querySelector('.dropdown-button');
+      const menu = document.querySelector('.dropdown-menu');
+      const dropdown = document.querySelector('.custom-dropdown');
+      const buttonText = document.getElementById('buttonText').value;
+      const width = document.getElementById('buttonWidth').value;
+      const padding = document.getElementById('buttonPadding').value;
+      const radius = document.getElementById('borderRadius').value;
+      const fontSize = document.getElementById('fontSize').value;
+      const bgColor = document.getElementById('bgColor').value;
+      const textColor = document.getElementById('textColor').value;
+      const borderColor = document.getElementById('borderColor').value;
+      const enableSearch = document.getElementById('enableSearch').checked;
+
+      document.getElementById('widthValue').textContent = width;
+      document.getElementById('paddingValue').textContent = padding;
+      document.getElementById('radiusValue').textContent = radius;
+      document.getElementById('fontValue').textContent = fontSize;
+
+      dropdown.style.minWidth = width + 'px';
+      button.style.padding = padding + 'px ' + (padding * 1.3) + 'px';
+      button.style.borderRadius = radius + 'px';
+      button.style.fontSize = fontSize + 'px';
+      button.style.backgroundColor = bgColor;
+      button.style.color = textColor;
+      button.style.borderColor = borderColor;
+      menu.style.borderRadius = radius + 'px';
+      menu.style.backgroundColor = bgColor;
+
+      document.getElementById('searchContainer').style.display = enableSearch ? 'block' : 'none';
+      document.getElementById('selectedText').textContent = buttonText;
+
+      generateCode();
+    }
+
+    function generateCode() {
+      const options = Array.from(document.querySelectorAll('#optionsContainer .dropdown-item')).map(el => el.textContent);
+      const enableSearch = document.getElementById('enableSearch').checked;
+      const width = document.getElementById('buttonWidth').value;
+      const padding = document.getElementById('buttonPadding').value;
+      const radius = document.getElementById('borderRadius').value;
+      const fontSize = document.getElementById('fontSize').value;
+      const bgColor = document.getElementById('bgColor').value;
+      const textColor = document.getElementById('textColor').value;
+      const borderColor = document.getElementById('borderColor').value;
+      const hoverColor = document.getElementById('hoverColor').value;
+
+      // HTML
+      const html = `<div class="custom-dropdown">
+  <div class="dropdown-button" onclick="toggleDropdown()">
+    <span class="selected-text">Select Option</span>
+    <span class="dropdown-arrow">▼</span>
+  </div>
+  <div class="dropdown-menu">
+    ${enableSearch ? '<div class="dropdown-search">\n      <input type="text" placeholder="Search..." oninput="filterOptions(this.value)">\n    </div>' : ''}
+    <div class="dropdown-items">
+${options.map(opt => `      <div class="dropdown-item" onclick="selectOption(this)">${opt}</div>`).join('\n')}
+    </div>
+  </div>
+</div>`;
+
+      // CSS
+      const css = `.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  min-width: ${width}px;
+}
+
+.dropdown-button {
+  width: 100%;
+  padding: ${padding}px ${padding * 1.3}px;
+  background: ${bgColor};
+  border: 1px solid ${borderColor};
+  border-radius: ${radius}px;
+  color: ${textColor};
+  font-size: ${fontSize}px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.dropdown-button:hover {
+  border-color: ${hoverColor};
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+.dropdown-button.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: ${bgColor};
+  border: 1px solid ${borderColor};
+  border-radius: ${radius}px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: ${padding}px ${padding * 1.3}px;
+  color: ${textColor};
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(212, 255, 58, 0.15);
+  color: ${hoverColor};
+}
+
+.dropdown-item.active {
+  background: ${hoverColor};
+  color: #000;
+}
+
+${enableSearch ? `.dropdown-search {
+  padding: 12px;
+  border-bottom: 1px solid ${borderColor};
+}
+
+.dropdown-search input {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${borderColor};
+  border-radius: ${radius}px;
+  color: ${textColor};
+  font-size: 14px;
+}
+
+.dropdown-search input:focus {
+  outline: none;
+  border-color: ${hoverColor};
+}` : ''}`;
+
+      // JavaScript
+      const js = `function toggleDropdown() {
+  const menu = document.querySelector('.dropdown-menu');
+  const button = document.querySelector('.dropdown-button');
+  menu.classList.toggle('show');
+  button.classList.toggle('active');
+}
+
+function selectOption(element) {
+  document.querySelector('.selected-text').textContent = element.textContent;
+  
+  // Remove active from all items
+  document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  
+  element.classList.add('active');
+  toggleDropdown();
+}
+
+${enableSearch ? `function filterOptions(search) {
+  const items = document.querySelectorAll('.dropdown-item');
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(search.toLowerCase()) ? 'block' : 'none';
+  });
+}` : ''}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.custom-dropdown')) {
+    document.querySelector('.dropdown-menu')?.classList.remove('show');
+    document.querySelector('.dropdown-button')?.classList.remove('active');
+  }
+});`;
+
+      document.getElementById('htmlOutput').value = html;
+      document.getElementById('cssOutput').value = css;
+      document.getElementById('jsOutput').value = js;
+    }
+
+    function copyCode(type) {
+      const textarea = document.getElementById(type + 'Output');
+      textarea.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = type === 'html' ? 'Copy HTML' : type === 'css' ? 'Copy CSS' : 'Copy JS';
+      }, 2000);
+    }
+
+    function copyAllCode() {
+      const html = document.getElementById('htmlOutput').value;
+      const css = document.getElementById('cssOutput').value;
+      const js = document.getElementById('jsOutput').value;
+      const all = `<!-- HTML -->\n${html}\n\n/* CSS */\n${css}\n\n// JavaScript\n${js}`;
+      navigator.clipboard.writeText(all);
+      event.target.textContent = '✓ All Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy All Code';
+      }, 2000);
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.custom-dropdown')) {
+        document.getElementById('dropdownMenu').classList.remove('show');
+        document.querySelector('.dropdown-button').classList.remove('active');
+      }
+    });
+
+    window.onload = updateDropdown;
+  </script>
+</body>
+</html>

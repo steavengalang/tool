@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Reverser - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔄 Text Reverser</h1>
+        <p>Balik urutan karakter, kata, atau baris</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">Input Text:</label>
+          <textarea id="input" rows="8" placeholder="Masukkan teks..."></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="reverse('char')">Reverse Characters</button>
+          <button class="btn" onclick="reverse('word')">Reverse Words</button>
+          <button class="btn" onclick="reverse('line')">Reverse Lines</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="8" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function reverse(type) {
+      const input = document.getElementById('input').value;
+      let output = '';
+      
+      if(type === 'char') {
+        output = input.split('').reverse().join('');
+      } else if(type === 'word') {
+        output = input.split(' ').reverse().join(' ');
+      } else if(type === 'line') {
+        output = input.split('\n').reverse().join('\n');
+      }
+      
+      document.getElementById('output').value = output;
+    }
+  </script>
+</body>
+</html>

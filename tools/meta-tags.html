@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meta Tags Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🏷️ Meta Tags Generator</h1>
+        <p>Generate SEO & social media meta tags</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" placeholder="ToolsKita - Modern Developer Tools" oninput="generateTags()">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea id="description" rows="3" placeholder="Koleksi tools online terbaik untuk developer..." oninput="generateTags()"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="keywords">Keywords (comma separated):</label>
+          <input type="text" id="keywords" placeholder="tools, developer, online, free" oninput="generateTags()">
+        </div>
+
+        <div class="form-group">
+          <label for="url">Website URL:</label>
+          <input type="text" id="url" placeholder="https://toolskita.com" oninput="generateTags()">
+        </div>
+
+        <div class="form-group">
+          <label for="image">Image URL (OG Image):</label>
+          <input type="text" id="image" placeholder="https://toolskita.com/og-image.jpg" oninput="generateTags()">
+        </div>
+
+        <div class="form-group">
+          <label for="author">Author:</label>
+          <input type="text" id="author" placeholder="Your Name" oninput="generateTags()">
+        </div>
+
+        <div class="form-group">
+          <label>Meta Tags Output:</label>
+          <textarea id="output" rows="20" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyTags()">
+          📋 Copy All Tags
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function generateTags() {
+      const title = document.getElementById('title').value || 'Your Website Title';
+      const description = document.getElementById('description').value || 'Your website description';
+      const keywords = document.getElementById('keywords').value || 'keywords, here';
+      const url = document.getElementById('url').value || 'https://yoursite.com';
+      const image = document.getElementById('image').value || 'https://yoursite.com/image.jpg';
+      const author = document.getElementById('author').value || 'Your Name';
+
+      const tags = `<!-- Basic Meta Tags -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="${description}">
+<meta name="keywords" content="${keywords}">
+<meta name="author" content="${author}">
+<title>${title}</title>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="${url}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${description}">
+<meta property="og:image" content="${image}">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="${url}">
+<meta property="twitter:title" content="${title}">
+<meta property="twitter:description" content="${description}">
+<meta property="twitter:image" content="${image}">
+
+<!-- Additional Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="language" content="Indonesian">
+<meta name="revisit-after" content="7 days">
+<link rel="canonical" href="${url}">`;
+
+      document.getElementById('output').value = tags;
+    }
+
+    function copyTags() {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy All Tags';
+      }, 2000);
+    }
+
+    window.onload = generateTags;
+  </script>
+</body>
+</html>

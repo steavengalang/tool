@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII Art Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🎨 ASCII Art Generator</h1>
+        <p>Convert text to ASCII art with multiple fonts</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="textInput">Input Text:</label>
+          <input type="text" id="textInput" placeholder="HELLO" maxlength="20" oninput="generateArt()">
+        </div>
+
+        <div class="form-group">
+          <label>Font Style:</label>
+          <div class="button-group">
+            <button class="btn btn-secondary active" onclick="setFont('standard')">Standard</button>
+            <button class="btn btn-secondary" onclick="setFont('banner')">Banner</button>
+            <button class="btn btn-secondary" onclick="setFont('block')">Block</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>ASCII Art Output:</label>
+          <textarea id="output" rows="15" readonly style="font-family: monospace; font-size: 0.75rem; line-height: 1.2;"></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyArt()">
+          📋 Copy ASCII Art
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentFont = 'standard';
+
+    const fonts = {
+      standard: {
+        'A': [' █████ ', '██   ██', '███████', '██   ██', '██   ██'],
+        'B': ['██████ ', '██   ██', '██████ ', '██   ██', '██████ '],
+        'C': [' ██████', '██     ', '██     ', '██     ', ' ██████'],
+        'D': ['██████ ', '██   ██', '██   ██', '██   ██', '██████ '],
+        'E': ['███████', '██     ', '█████  ', '██     ', '███████'],
+        'F': ['███████', '██     ', '█████  ', '██     ', '██     '],
+        'G': [' ██████ ', '██      ', '██   ███', '██    ██', ' ██████ '],
+        'H': ['██   ██', '██   ██', '███████', '██   ██', '██   ██'],
+        'I': ['██', '██', '██', '██', '██'],
+        'J': ['     ██', '     ██', '     ██', '██   ██', ' █████ '],
+        'K': ['██   ██', '██  ██ ', '█████  ', '██  ██ ', '██   ██'],
+        'L': ['██     ', '██     ', '██     ', '██     ', '███████'],
+        'M': ['███    ███', '████  ████', '██ ████ ██', '██  ██  ██', '██      ██'],
+        'N': ['███    ██', '████   ██', '██ ██  ██', '██  ██ ██', '██   ████'],
+        'O': [' ██████ ', '██    ██', '██    ██', '██    ██', ' ██████ '],
+        'P': ['██████ ', '██   ██', '██████ ', '██     ', '██     '],
+        'Q': [' ██████ ', '██    ██', '██    ██', '██ ▄▄ ██', ' ██████ '],
+        'R': ['██████ ', '██   ██', '██████ ', '██   ██', '██   ██'],
+        'S': ['███████', '██     ', '███████', '     ██', '███████'],
+        'T': ['████████', '   ██   ', '   ██   ', '   ██   ', '   ██   '],
+        'U': ['██    ██', '██    ██', '██    ██', '██    ██', ' ██████ '],
+        'V': ['██    ██', '██    ██', '██    ██', ' ██  ██ ', '  ████  '],
+        'W': ['██     ██', '██  █  ██', '██ ███ ██', '███   ███', '██     ██'],
+        'X': ['██   ██', ' ██ ██ ', '  ███  ', ' ██ ██ ', '██   ██'],
+        'Y': ['██    ██', ' ██  ██ ', '  ████  ', '   ██   ', '   ██   '],
+        'Z': ['███████', '   ███ ', '  ███  ', ' ███   ', '███████'],
+        '0': [' ██████ ', '██  ████', '██ ██ ██', '████  ██', ' ██████ '],
+        '1': [' ██', '███', ' ██', ' ██', '████'],
+        '2': ['██████ ', '    ██ ', ' █████ ', '██     ', '███████'],
+        '3': ['███████', '    ██ ', ' █████ ', '    ██ ', '███████'],
+        '4': ['██  ██', '██  ██', '███████', '    ██', '    ██'],
+        '5': ['███████', '██     ', '███████', '     ██', '███████'],
+        '6': [' ██████ ', '██      ', '███████ ', '██    ██', ' ██████ '],
+        '7': ['███████', '    ██ ', '   ██  ', '  ██   ', ' ██    '],
+        '8': [' █████ ', '██   ██', ' █████ ', '██   ██', ' █████ '],
+        '9': [' ██████ ', '██    ██', ' ███████', '      ██', ' ██████ '],
+        ' ': ['  ', '  ', '  ', '  ', '  ']
+      }
+    };
+
+    function setFont(font) {
+      currentFont = font;
+      document.querySelectorAll('.button-group .btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      generateArt();
+    }
+
+    function generateArt() {
+      const text = document.getElementById('textInput').value.toUpperCase();
+      const fontData = fonts.standard;
+      
+      let lines = ['', '', '', '', ''];
+      
+      for (let char of text) {
+        if (fontData[char]) {
+          for (let i = 0; i < 5; i++) {
+            lines[i] += fontData[char][i] + ' ';
+          }
+        }
+      }
+      
+      document.getElementById('output').value = lines.join('\n');
+    }
+
+    function copyArt() {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy ASCII Art';
+      }, 2000);
+    }
+
+    // Generate initial art
+    document.getElementById('textInput').value = 'HELLO';
+    generateArt();
+  </script>
+</body>
+</html>

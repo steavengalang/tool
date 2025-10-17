@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Tester - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>.* Regex Tester</h1>
+        <p>Test dan debug regular expression patterns</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="pattern">Regex Pattern:</label>
+          <input type="text" id="pattern" placeholder="\d{3}-\d{2}-\d{4}">
+        </div>
+
+        <div class="form-group">
+          <label>Flags:</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="flagG" checked> g (global)</label>
+            <label><input type="checkbox" id="flagI"> i (case-insensitive)</label>
+            <label><input type="checkbox" id="flagM"> m (multiline)</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="text">Test Text:</label>
+          <textarea id="text" rows="8" placeholder="Enter text to test..."></textarea>
+        </div>
+
+        <button class="btn" onclick="testRegex()">Test Regex</button>
+
+        <div class="form-group">
+          <label>Matches:</label>
+          <div id="matches" class="result-box"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function testRegex() {
+      const pattern = document.getElementById('pattern').value;
+      const text = document.getElementById('text').value;
+      
+      if(!pattern) {
+        alert('Masukkan regex pattern!');
+        return;
+      }
+
+      let flags = '';
+      if(document.getElementById('flagG').checked) flags += 'g';
+      if(document.getElementById('flagI').checked) flags += 'i';
+      if(document.getElementById('flagM').checked) flags += 'm';
+
+      try {
+        const regex = new RegExp(pattern, flags);
+        const matches = text.match(regex);
+        
+        if(matches && matches.length > 0) {
+          document.getElementById('matches').innerHTML = 
+            `<strong>Found ${matches.length} match(es):</strong><br><br>` +
+            matches.map((m, i) => `${i + 1}. "${m}"`).join('<br>');
+        } else {
+          document.getElementById('matches').textContent = 'No matches found';
+        }
+      } catch(e) {
+        document.getElementById('matches').textContent = 'Error: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

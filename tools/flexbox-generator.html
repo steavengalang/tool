@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .flex-preview {
+      min-height: 300px;
+      background: rgba(212, 255, 58, 0.1);
+      border: 2px dashed var(--accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-6) 0;
+      display: flex;
+    }
+    .flex-item {
+      background: var(--accent);
+      color: var(--bg-primary);
+      padding: var(--space-4);
+      border-radius: var(--radius);
+      font-weight: 700;
+      min-width: 80px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📦 Flexbox Generator</h1>
+        <p>Generate CSS Flexbox code with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="flex-preview" id="preview">
+          <div class="flex-item">1</div>
+          <div class="flex-item">2</div>
+          <div class="flex-item">3</div>
+          <div class="flex-item">4</div>
+        </div>
+
+        <div class="control-grid">
+          <div class="form-group">
+            <label for="direction">Flex Direction:</label>
+            <select id="direction" onchange="updateFlex()">
+              <option value="row">row</option>
+              <option value="row-reverse">row-reverse</option>
+              <option value="column">column</option>
+              <option value="column-reverse">column-reverse</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="justify">Justify Content:</label>
+            <select id="justify" onchange="updateFlex()">
+              <option value="flex-start">flex-start</option>
+              <option value="flex-end">flex-end</option>
+              <option value="center">center</option>
+              <option value="space-between">space-between</option>
+              <option value="space-around">space-around</option>
+              <option value="space-evenly">space-evenly</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="align">Align Items:</label>
+            <select id="align" onchange="updateFlex()">
+              <option value="stretch">stretch</option>
+              <option value="flex-start">flex-start</option>
+              <option value="flex-end">flex-end</option>
+              <option value="center">center</option>
+              <option value="baseline">baseline</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="wrap">Flex Wrap:</label>
+            <select id="wrap" onchange="updateFlex()">
+              <option value="nowrap">nowrap</option>
+              <option value="wrap">wrap</option>
+              <option value="wrap-reverse">wrap-reverse</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="gap">Gap: <span id="gapValue">16</span>px</label>
+            <input type="range" id="gap" min="0" max="50" value="16" oninput="updateFlex()">
+          </div>
+
+          <div class="form-group">
+            <label for="itemCount">Items: <span id="itemValue">4</span></label>
+            <input type="range" id="itemCount" min="1" max="10" value="4" oninput="updateItems()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>CSS Code:</label>
+          <textarea id="cssOutput" rows="10" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyCSS()">
+          📋 Copy CSS Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function updateFlex() {
+      const preview = document.getElementById('preview');
+      const direction = document.getElementById('direction').value;
+      const justify = document.getElementById('justify').value;
+      const align = document.getElementById('align').value;
+      const wrap = document.getElementById('wrap').value;
+      const gap = document.getElementById('gap').value;
+
+      document.getElementById('gapValue').textContent = gap;
+
+      preview.style.flexDirection = direction;
+      preview.style.justifyContent = justify;
+      preview.style.alignItems = align;
+      preview.style.flexWrap = wrap;
+      preview.style.gap = gap + 'px';
+
+      const css = `.container {
+  display: flex;
+  flex-direction: ${direction};
+  justify-content: ${justify};
+  align-items: ${align};
+  flex-wrap: ${wrap};
+  gap: ${gap}px;
+}`;
+
+      document.getElementById('cssOutput').value = css;
+    }
+
+    function updateItems() {
+      const count = document.getElementById('itemCount').value;
+      document.getElementById('itemValue').textContent = count;
+      
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '';
+      
+      for (let i = 1; i <= count; i++) {
+        const item = document.createElement('div');
+        item.className = 'flex-item';
+        item.textContent = i;
+        preview.appendChild(item);
+      }
+      
+      updateFlex();
+    }
+
+    function copyCSS() {
+      const css = document.getElementById('cssOutput');
+      css.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSS Code';
+      }, 2000);
+    }
+
+    window.onload = updateFlex;
+  </script>
+</body>
+</html>

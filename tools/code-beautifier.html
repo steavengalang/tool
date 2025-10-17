@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Beautifier - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>✨ Code Beautifier</h1>
+        <p>Format & beautify HTML, CSS, JavaScript code</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label>Language:</label>
+          <div class="button-group">
+            <button class="btn btn-secondary active" onclick="setLanguage('html')">HTML</button>
+            <button class="btn btn-secondary" onclick="setLanguage('css')">CSS</button>
+            <button class="btn btn-secondary" onclick="setLanguage('js')">JavaScript</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input">Input Code:</label>
+          <textarea id="input" rows="12" placeholder="Paste your messy code here..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="beautifyCode()">
+          ✨ Beautify Code
+        </button>
+
+        <div class="form-group">
+          <label for="output">Formatted Output:</label>
+          <textarea id="output" rows="12" readonly></textarea>
+        </div>
+
+        <button class="btn btn-secondary" style="width: 100%;" onclick="copyOutput()">
+          📋 Copy Output
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentLang = 'html';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.button-group .btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function beautifyCode() {
+      const input = document.getElementById('input').value;
+      let output = '';
+
+      try {
+        if (currentLang === 'html') {
+          output = beautifyHTML(input);
+        } else if (currentLang === 'css') {
+          output = beautifyCSS(input);
+        } else if (currentLang === 'js') {
+          output = beautifyJS(input);
+        }
+        document.getElementById('output').value = output;
+      } catch (e) {
+        document.getElementById('output').value = 'Error: ' + e.message;
+      }
+    }
+
+    function beautifyHTML(html) {
+      let formatted = '';
+      let indent = 0;
+      const tab = '  ';
+      
+      html.split(/>\s*</).forEach(node => {
+        if (node.match(/^\/\w/)) indent--;
+        formatted += tab.repeat(indent) + '<' + node + '>\n';
+        if (node.match(/^<?\w[^>]*[^\/]$/)) indent++;
+      });
+      
+      return formatted.substring(1, formatted.length - 2);
+    }
+
+    function beautifyCSS(css) {
+      css = css.replace(/\s+/g, ' ').trim();
+      css = css.replace(/\{/g, ' {\n  ');
+      css = css.replace(/\}/g, '\n}\n');
+      css = css.replace(/;/g, ';\n  ');
+      css = css.replace(/\n\s*\n/g, '\n');
+      return css.trim();
+    }
+
+    function beautifyJS(js) {
+      js = js.replace(/\s+/g, ' ').trim();
+      js = js.replace(/\{/g, ' {\n  ');
+      js = js.replace(/\}/g, '\n}\n');
+      js = js.replace(/;/g, ';\n  ');
+      js = js.replace(/\n\s*\n/g, '\n');
+      return js.trim();
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy Output';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

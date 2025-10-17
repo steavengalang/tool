@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Minifier - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⚡ JS Minifier</h1>
+        <p>Minify dan beautify JavaScript code</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">JavaScript Input:</label>
+          <textarea id="input" rows="12" placeholder="function hello() { console.log('Hello'); }"></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="minify()">Minify JS</button>
+          <button class="btn" onclick="beautify()">Beautify JS</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="12" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function minify() {
+      let js = document.getElementById('input').value;
+      js = js.replace(/\/\*[\s\S]*?\*\//g, ''); // Remove comments
+      js = js.replace(/\/\/.*/g, ''); // Remove single-line comments
+      js = js.replace(/\s+/g, ' '); // Multiple spaces to single
+      js = js.replace(/\s*{\s*/g, '{');
+      js = js.replace(/\s*}\s*/g, '}');
+      js = js.replace(/\s*\(\s*/g, '(');
+      js = js.replace(/\s*\)\s*/g, ')');
+      js = js.replace(/\s*;\s*/g, ';');
+      document.getElementById('output').value = js.trim();
+    }
+
+    function beautify() {
+      let js = document.getElementById('input').value;
+      js = js.replace(/\s+/g, ' ').trim();
+      js = js.replace(/\{/g, ' {\n  ');
+      js = js.replace(/\}/g, '\n}\n');
+      js = js.replace(/;/g, ';\n  ');
+      js = js.replace(/\n\s*\n/g, '\n');
+      document.getElementById('output').value = js.trim();
+    }
+  </script>
+</body>
+</html>

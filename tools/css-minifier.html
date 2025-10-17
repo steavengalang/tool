@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Minifier - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🎨 CSS Minifier</h1>
+        <p>Minify dan beautify CSS code</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">CSS Input:</label>
+          <textarea id="input" rows="12" placeholder="body { margin: 0; padding: 0; }"></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="minify()">Minify CSS</button>
+          <button class="btn" onclick="beautify()">Beautify CSS</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="12" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function minify() {
+      let css = document.getElementById('input').value;
+      css = css.replace(/\/\*[\s\S]*?\*\//g, ''); // Remove comments
+      css = css.replace(/\s+/g, ' '); // Multiple spaces to single
+      css = css.replace(/\s*{\s*/g, '{');
+      css = css.replace(/\s*}\s*/g, '}');
+      css = css.replace(/\s*:\s*/g, ':');
+      css = css.replace(/\s*;\s*/g, ';');
+      css = css.replace(/;\s*}/g, '}');
+      document.getElementById('output').value = css.trim();
+    }
+
+    function beautify() {
+      let css = document.getElementById('input').value;
+      css = css.replace(/\s+/g, ' ').trim();
+      css = css.replace(/\{/g, ' {\n  ');
+      css = css.replace(/\}/g, '\n}\n');
+      css = css.replace(/;/g, ';\n  ');
+      css = css.replace(/\n\s*\n/g, '\n');
+      document.getElementById('output').value = css.trim();
+    }
+  </script>
+</body>
+</html>

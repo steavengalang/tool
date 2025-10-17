@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPv4 Subnet Calculator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🌐 IPv4 Subnet Calculator</h1>
+        <p>Calculate IP subnets and network information</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="ipInput">IP Address / CIDR:</label>
+          <input type="text" id="ipInput" placeholder="192.168.1.0/24" oninput="calculate()">
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="calculate()">
+          🔢 Calculate
+        </button>
+
+        <div class="stats-grid" id="results" style="display: none; margin-top: var(--space-6);">
+          <div class="stat-box">
+            <div class="stat-value" id="networkAddr">-</div>
+            <div class="stat-label">Network Address</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="broadcastAddr">-</div>
+            <div class="stat-label">Broadcast Address</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="firstHost">-</div>
+            <div class="stat-label">First Host</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="lastHost">-</div>
+            <div class="stat-label">Last Host</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="subnetMask">-</div>
+            <div class="stat-label">Subnet Mask</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="totalHosts">-</div>
+            <div class="stat-label">Total Hosts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function calculate() {
+      const input = document.getElementById('ipInput').value;
+      const [ip, cidr] = input.split('/');
+      
+      if (!ip || !cidr || cidr < 0 || cidr > 32) {
+        alert('Invalid IP/CIDR format. Use: 192.168.1.0/24');
+        return;
+      }
+
+      const ipParts = ip.split('.').map(Number);
+      if (ipParts.length !== 4 || ipParts.some(p => p < 0 || p > 255)) {
+        alert('Invalid IP address');
+        return;
+      }
+
+      const maskBits = parseInt(cidr);
+      const mask = (0xFFFFFFFF << (32 - maskBits)) >>> 0;
+      const ipNum = (ipParts[0] << 24 | ipParts[1] << 16 | ipParts[2] << 8 | ipParts[3]) >>> 0;
+      
+      const network = (ipNum & mask) >>> 0;
+      const broadcast = (network | ~mask) >>> 0;
+      const firstHost = network + 1;
+      const lastHost = broadcast - 1;
+      const totalHosts = Math.pow(2, 32 - maskBits) - 2;
+
+      document.getElementById('networkAddr').textContent = numToIP(network);
+      document.getElementById('broadcastAddr').textContent = numToIP(broadcast);
+      document.getElementById('firstHost').textContent = numToIP(firstHost);
+      document.getElementById('lastHost').textContent = numToIP(lastHost);
+      document.getElementById('subnetMask').textContent = numToIP(mask);
+      document.getElementById('totalHosts').textContent = totalHosts.toLocaleString();
+      
+      document.getElementById('results').style.display = 'grid';
+    }
+
+    function numToIP(num) {
+      return [
+        (num >>> 24) & 0xFF,
+        (num >>> 16) & 0xFF,
+        (num >>> 8) & 0xFF,
+        num & 0xFF
+      ].join('.');
+    }
+  </script>
+</body>
+</html>

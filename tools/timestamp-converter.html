@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Converter - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⏰ Timestamp Converter</h1>
+        <p>Convert Unix timestamp ke datetime dan sebaliknya</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="timestamp">Unix Timestamp:</label>
+          <input type="number" id="timestamp" placeholder="1234567890">
+          <button class="btn" onclick="timestampToDate()">Convert to Date</button>
+        </div>
+
+        <div class="form-group">
+          <label for="datetime">Date Time:</label>
+          <input type="datetime-local" id="datetime">
+          <button class="btn" onclick="dateToTimestamp()">Convert to Timestamp</button>
+        </div>
+
+        <div class="form-group">
+          <label>Result:</label>
+          <div id="result" class="result-box"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function timestampToDate() {
+      const ts = document.getElementById('timestamp').value;
+      if(!ts) return;
+      const date = new Date(ts * 1000);
+      document.getElementById('result').textContent = date.toLocaleString('id-ID');
+    }
+
+    function dateToTimestamp() {
+      const dt = document.getElementById('datetime').value;
+      if(!dt) return;
+      const timestamp = Math.floor(new Date(dt).getTime() / 1000);
+      document.getElementById('result').textContent = timestamp;
+    }
+
+    // Set current time
+    window.onload = () => {
+      const now = new Date();
+      document.getElementById('timestamp').value = Math.floor(now.getTime() / 1000);
+      document.getElementById('datetime').value = now.toISOString().slice(0, 16);
+    };
+  </script>
+</body>
+</html>

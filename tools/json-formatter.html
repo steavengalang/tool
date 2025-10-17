@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>{ } JSON Formatter</h1>
+        <p>Beautify, minify, dan validate JSON</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">JSON Input:</label>
+          <textarea id="input" rows="12" placeholder='{"name":"John","age":30}'></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="beautify()">Beautify</button>
+          <button class="btn" onclick="minify()">Minify</button>
+          <button class="btn" onclick="validate()">Validate</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="12" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function beautify() {
+      try {
+        const json = JSON.parse(document.getElementById('input').value);
+        document.getElementById('output').value = JSON.stringify(json, null, 2);
+      } catch(e) {
+        document.getElementById('output').value = 'Error: ' + e.message;
+      }
+    }
+
+    function minify() {
+      try {
+        const json = JSON.parse(document.getElementById('input').value);
+        document.getElementById('output').value = JSON.stringify(json);
+      } catch(e) {
+        document.getElementById('output').value = 'Error: ' + e.message;
+      }
+    }
+
+    function validate() {
+      try {
+        JSON.parse(document.getElementById('input').value);
+        document.getElementById('output').value = '✓ Valid JSON';
+      } catch(e) {
+        document.getElementById('output').value = '✗ Invalid JSON\n\n' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

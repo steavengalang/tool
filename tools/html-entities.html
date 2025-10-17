@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Entities Encoder/Decoder - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>&lt;/&gt; HTML Entities</h1>
+        <p>Encode dan decode HTML entities</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">Input:</label>
+          <textarea id="input" rows="8" placeholder="Masukkan teks atau HTML..."></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="encode()">Encode</button>
+          <button class="btn" onclick="decode()">Decode</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="8" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function encode() {
+      const input = document.getElementById('input').value;
+      document.getElementById('output').value = input.replace(/[\u00A0-\u9999<>&"']/g, i => '&#'+i.charCodeAt(0)+';');
+    }
+
+    function decode() {
+      const input = document.getElementById('input').value;
+      const txt = document.createElement('textarea');
+      txt.innerHTML = input;
+      document.getElementById('output').value = txt.value;
+    }
+  </script>
+</body>
+</html>

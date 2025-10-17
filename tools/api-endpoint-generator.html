@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Endpoint Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .endpoint-list {
+      display: grid;
+      gap: var(--space-3);
+      margin: var(--space-6) 0;
+    }
+    .endpoint-item {
+      padding: var(--space-4);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      transition: all 0.2s ease;
+    }
+    .endpoint-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .method-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: var(--space-2);
+    }
+    .method-GET { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .method-POST { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .method-PUT { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .method-DELETE { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .param-builder {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+    .param-item {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: var(--space-2);
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔌 REST API Endpoint Generator</h1>
+        <p>Generate complete REST API endpoints with PHP backend</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- API Configuration -->
+        <h3>API Configuration:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4); margin: var(--space-4) 0;">
+          <div class="form-group">
+            <label for="apiName">API Name:</label>
+            <input type="text" id="apiName" value="users" oninput="generateEndpoints()" placeholder="e.g., users, products">
+          </div>
+          <div class="form-group">
+            <label for="baseUrl">Base URL:</label>
+            <input type="text" id="baseUrl" value="/api/v1" oninput="generateEndpoints()" placeholder="/api/v1">
+          </div>
+          <div class="form-group">
+            <label for="tableName">Database Table:</label>
+            <input type="text" id="tableName" value="users" oninput="generateEndpoints()" placeholder="users">
+          </div>
+        </div>
+
+        <!-- Endpoint Builder -->
+        <h3 style="margin-top: var(--space-8);">Build Endpoints:</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin: var(--space-4) 0;">
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="epGetAll" checked onchange="generateEndpoints()">
+            <span>GET - Get All Items</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="epGetOne" checked onchange="generateEndpoints()">
+            <span>GET - Get Single Item</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="epPost" checked onchange="generateEndpoints()">
+            <span>POST - Create Item</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="epPut" checked onchange="generateEndpoints()">
+            <span>PUT - Update Item</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="epDelete" checked onchange="generateEndpoints()">
+            <span>DELETE - Delete Item</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="epSearch" onchange="generateEndpoints()">
+            <span>GET - Search Items</span>
+          </label>
+        </div>
+
+        <!-- Parameters/Fields -->
+        <h3 style="margin-top: var(--space-8);">API Parameters/Fields:</h3>
+        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
+          <input type="text" id="newParam" placeholder="Parameter name" style="flex: 1;">
+          <select id="paramType" style="width: 150px;">
+            <option value="string">String</option>
+            <option value="integer">Integer</option>
+            <option value="boolean">Boolean</option>
+            <option value="date">Date</option>
+            <option value="email">Email</option>
+          </select>
+          <button class="btn btn-secondary" onclick="addParameter()">+ Add</button>
+        </div>
+
+        <div class="param-builder" id="paramsList">
+          <div class="param-item">
+            <input type="text" value="id" readonly style="background: rgba(255,255,255,0.03);">
+            <select disabled style="background: rgba(255,255,255,0.03);"><option>Integer</option></select>
+            <span style="font-size: 0.875rem; color: var(--text-tertiary);">Primary Key</span>
+            <span></span>
+          </div>
+          <div class="param-item">
+            <input type="text" value="name" oninput="generateEndpoints()">
+            <select oninput="generateEndpoints()">
+              <option value="string" selected>String</option>
+              <option value="integer">Integer</option>
+            </select>
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">Required</span>
+            <button onclick="removeParam(this)" style="padding: 6px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer; font-size: 0.875rem;">×</button>
+          </div>
+        </div>
+
+        <!-- Endpoint Preview -->
+        <h3 style="margin-top: var(--space-12);">Generated Endpoints:</h3>
+        <div class="endpoint-list" id="endpointPreview"></div>
+
+        <!-- Generated Code -->
+        <div id="codeOutputs"></div>
+
+        <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-6);" onclick="copyAllCode()">
+          📋 Copy All API Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function addParameter() {
+      const name = document.getElementById('newParam').value.trim();
+      const type = document.getElementById('paramType').value;
+      
+      if (!name) {
+        alert('Please enter parameter name');
+        return;
+      }
+
+      const list = document.getElementById('paramsList');
+      const div = document.createElement('div');
+      div.className = 'param-item';
+      div.innerHTML = `
+        <input type="text" value="${name}" oninput="generateEndpoints()">
+        <select oninput="generateEndpoints()">
+          <option value="string" ${type === 'string' ? 'selected' : ''}>String</option>
+          <option value="integer" ${type === 'integer' ? 'selected' : ''}>Integer</option>
+          <option value="boolean" ${type === 'boolean' ? 'selected' : ''}>Boolean</option>
+          <option value="date" ${type === 'date' ? 'selected' : ''}>Date</option>
+          <option value="email" ${type === 'email' ? 'selected' : ''}>Email</option>
+        </select>
+        <span style="font-size: 0.875rem; color: var(--text-secondary);">Optional</span>
+        <button onclick="removeParam(this)" style="padding: 6px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer; font-size: 0.875rem;">×</button>
+      `;
+      list.appendChild(div);
+
+      document.getElementById('newParam').value = '';
+      generateEndpoints();
+    }
+
+    function removeParam(btn) {
+      btn.closest('.param-item').remove();
+      generateEndpoints();
+    }
+
+    function getParams() {
+      const items = document.querySelectorAll('.param-item');
+      const params = [];
+      
+      items.forEach((item, index) => {
+        const input = item.querySelector('input[type="text"]');
+        const select = item.querySelector('select');
+        if (input && select && input.value) {
+          params.push({
+            name: input.value,
+            type: select.value,
+            isPrimary: index === 0
+          });
+        }
+      });
+      
+      return params;
+    }
+
+    function generateEndpoints() {
+      const apiName = document.getElementById('apiName').value;
+      const baseUrl = document.getElementById('baseUrl').value;
+      const tableName = document.getElementById('tableName').value;
+      const params = getParams();
+
+      // Generate endpoint preview
+      const previewDiv = document.getElementById('endpointPreview');
+      previewDiv.innerHTML = '';
+
+      const endpoints = [];
+
+      if (document.getElementById('epGetAll').checked) {
+        endpoints.push({
+          method: 'GET',
+          path: `${baseUrl}/${apiName}`,
+          description: `Get all ${apiName}`,
+          response: 'Array of items'
+        });
+      }
+
+      if (document.getElementById('epGetOne').checked) {
+        endpoints.push({
+          method: 'GET',
+          path: `${baseUrl}/${apiName}/{id}`,
+          description: `Get single ${apiName} by ID`,
+          response: 'Single item object'
+        });
+      }
+
+      if (document.getElementById('epPost').checked) {
+        endpoints.push({
+          method: 'POST',
+          path: `${baseUrl}/${apiName}`,
+          description: `Create new ${apiName}`,
+          response: 'Created item with ID'
+        });
+      }
+
+      if (document.getElementById('epPut').checked) {
+        endpoints.push({
+          method: 'PUT',
+          path: `${baseUrl}/${apiName}/{id}`,
+          description: `Update ${apiName}`,
+          response: 'Updated item'
+        });
+      }
+
+      if (document.getElementById('epDelete').checked) {
+        endpoints.push({
+          method: 'DELETE',
+          path: `${baseUrl}/${apiName}/{id}`,
+          description: `Delete ${apiName}`,
+          response: 'Success message'
+        });
+      }
+
+      if (document.getElementById('epSearch').checked) {
+        endpoints.push({
+          method: 'GET',
+          path: `${baseUrl}/${apiName}/search?q={query}`,
+          description: `Search ${apiName}`,
+          response: 'Filtered array'
+        });
+      }
+
+      endpoints.forEach(ep => {
+        const div = document.createElement('div');
+        div.className = 'endpoint-item';
+        div.innerHTML = `
+          <div>
+            <span class="method-badge method-${ep.method}">${ep.method}</span>
+            <code style="color: var(--accent); font-size: 0.9375rem;">${ep.path}</code>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: var(--space-2);">${ep.description}</p>
+          <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: var(--space-1);">Response: ${ep.response}</p>
+        `;
+        previewDiv.appendChild(div);
+      });
+
+      // Generate PHP code
+      generateAPICode(apiName, baseUrl, tableName, params);
+    }
+
+    function generateAPICode(apiName, baseUrl, tableName, params) {
+      const outputDiv = document.getElementById('codeOutputs');
+      outputDiv.innerHTML = '';
+
+      const paramsNoId = params.filter(p => !p.isPrimary);
+
+      // Main API Router
+      const routerCode = `<?php
+// ${apiName}_api.php - Main API Router
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header('Access-Control-Allow-Headers: Content-Type');
+
+require_once 'config.php';
+
+\$method = \$_SERVER['REQUEST_METHOD'];
+\$request = explode('/', trim(\$_SERVER['PATH_INFO'] ?? '', '/'));
+
+// Parse route
+\$resource = \$request[0] ?? '';
+\$id = \$request[1] ?? null;
+
+// Handle OPTIONS request for CORS
+if (\$method === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+try {
+    switch(\$method) {
+        case 'GET':
+            if (\$id) {
+                // GET single item
+                echo json_encode(get${capitalize(apiName)}(\$pdo, \$id));
+            } elseif (isset(\$_GET['q'])) {
+                // Search
+                echo json_encode(search${capitalize(apiName)}(\$pdo, \$_GET['q']));
+            } else {
+                // GET all items
+                echo json_encode(getAll${capitalize(apiName)}(\$pdo));
+            }
+            break;
+            
+        case 'POST':
+            \$data = json_decode(file_get_contents('php://input'), true);
+            echo json_encode(create${capitalize(apiName)}(\$pdo, \$data));
+            break;
+            
+        case 'PUT':
+            \$data = json_decode(file_get_contents('php://input'), true);
+            echo json_encode(update${capitalize(apiName)}(\$pdo, \$id, \$data));
+            break;
+            
+        case 'DELETE':
+            echo json_encode(delete${capitalize(apiName)}(\$pdo, \$id));
+            break;
+            
+        default:
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+    }
+} catch(Exception \$e) {
+    http_response_code(500);
+    echo json_encode(['error' => \$e->getMessage()]);
+}
+
+// API Functions
+function getAll${capitalize(apiName)}(\$pdo) {
+    \$stmt = \$pdo->query("SELECT * FROM ${tableName} ORDER BY id DESC");
+    return \$stmt->fetchAll();
+}
+
+function get${capitalize(apiName)}(\$pdo, \$id) {
+    \$stmt = \$pdo->prepare("SELECT * FROM ${tableName} WHERE id = ?");
+    \$stmt->execute([\$id]);
+    \$result = \$stmt->fetch();
+    
+    if (!\$result) {
+        http_response_code(404);
+        return ['error' => '${capitalize(apiName)} not found'];
+    }
+    
+    return \$result;
+}
+
+function create${capitalize(apiName)}(\$pdo, \$data) {
+    ${paramsNoId.map(p => `\$${p.name} = \$data['${p.name}'] ?? null;`).join('\n    ')}
+    
+    // Validation
+    ${paramsNoId.map(p => `if (!\$${p.name}) return ['error' => '${p.name} is required'];`).join('\n    ')}
+    
+    \$sql = "INSERT INTO ${tableName} (${paramsNoId.map(p => p.name).join(', ')}) VALUES (${paramsNoId.map(() => '?').join(', ')})";
+    \$stmt = \$pdo->prepare(\$sql);
+    \$stmt->execute([${paramsNoId.map(p => `\$${p.name}`).join(', ')}]);
+    
+    return [
+        'success' => true,
+        'id' => \$pdo->lastInsertId(),
+        'message' => '${capitalize(apiName)} created successfully'
+    ];
+}
+
+function update${capitalize(apiName)}(\$pdo, \$id, \$data) {
+    ${paramsNoId.map(p => `\$${p.name} = \$data['${p.name}'] ?? null;`).join('\n    ')}
+    
+    \$sql = "UPDATE ${tableName} SET ${paramsNoId.map(p => `${p.name} = ?`).join(', ')} WHERE id = ?";
+    \$stmt = \$pdo->prepare(\$sql);
+    \$stmt->execute([${paramsNoId.map(p => `\$${p.name}`).join(', ')}, \$id]);
+    
+    return [
+        'success' => true,
+        'message' => '${capitalize(apiName)} updated successfully'
+    ];
+}
+
+function delete${capitalize(apiName)}(\$pdo, \$id) {
+    \$stmt = \$pdo->prepare("DELETE FROM ${tableName} WHERE id = ?");
+    \$stmt->execute([\$id]);
+    
+    return [
+        'success' => true,
+        'message' => '${capitalize(apiName)} deleted successfully'
+    ];
+}
+
+function search${capitalize(apiName)}(\$pdo, \$query) {
+    \$search = "%\$query%";
+    \$stmt = \$pdo->prepare("SELECT * FROM ${tableName} WHERE ${paramsNoId[0]?.name || 'name'} LIKE ?");
+    \$stmt->execute([\$search]);
+    return \$stmt->fetchAll();
+}
+?>`;
+
+      addCodeSection('Complete API Router', routerCode);
+
+      // .htaccess for clean URLs
+      const htaccessCode = `# .htaccess - Clean URLs
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^${apiName}(/.*)?$ ${apiName}_api.php [QSA,L]`;
+
+      addCodeSection('.htaccess Configuration', htaccessCode);
+
+      // JavaScript Fetch Examples
+      const jsCode = `// JavaScript Fetch Examples
+
+// GET All ${apiName}
+fetch('${baseUrl}/${apiName}')
+  .then(res => res.json())
+  .then(data => console.log(data));
+
+// GET Single ${apiName}
+fetch('${baseUrl}/${apiName}/1')
+  .then(res => res.json())
+  .then(data => console.log(data));
+
+// POST Create ${apiName}
+fetch('${baseUrl}/${apiName}', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    ${paramsNoId.map(p => `${p.name}: 'value'`).join(',\n    ')}
+  })
+})
+  .then(res => res.json())
+  .then(data => console.log(data));
+
+// PUT Update ${apiName}
+fetch('${baseUrl}/${apiName}/1', {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    ${paramsNoId.map(p => `${p.name}: 'new value'`).join(',\n    ')}
+  })
+})
+  .then(res => res.json())
+  .then(data => console.log(data));
+
+// DELETE ${apiName}
+fetch('${baseUrl}/${apiName}/1', {
+  method: 'DELETE'
+})
+  .then(res => res.json())
+  .then(data => console.log(data));
+
+// SEARCH ${apiName}
+fetch('${baseUrl}/${apiName}/search?q=query')
+  .then(res => res.json())
+  .then(data => console.log(data));`;
+
+      addCodeSection('JavaScript Fetch Examples', jsCode);
+    }
+
+    function addCodeSection(title, code) {
+      const outputDiv = document.getElementById('codeOutputs');
+      const section = document.createElement('div');
+      section.innerHTML = `
+        <div class="form-group" style="margin-top: var(--space-6);">
+          <label>${title}:</label>
+          <textarea rows="20" readonly style="font-family: 'Monaco', monospace; font-size: 0.875rem;">${code}</textarea>
+          <button class="btn btn-secondary" style="width: 100%; margin-top: var(--space-3);" onclick="copyCode(this)">
+            📋 Copy ${title}
+          </button>
+        </div>
+      `;
+      outputDiv.appendChild(section);
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function copyCode(btn) {
+      const textarea = btn.previousElementSibling;
+      textarea.select();
+      document.execCommand('copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => {
+        const title = btn.textContent.split('✓ Copied!')[0];
+        btn.textContent = '📋 Copy ' + title;
+      }, 2000);
+    }
+
+    function copyAllCode() {
+      const textareas = document.querySelectorAll('#codeOutputs textarea');
+      let allCode = '';
+      textareas.forEach((ta, index) => {
+        if (index > 0) allCode += '\n\n' + '='.repeat(60) + '\n\n';
+        allCode += ta.value;
+      });
+      navigator.clipboard.writeText(allCode);
+      event.target.textContent = '✓ All API Code Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy All API Code';
+      }, 2000);
+    }
+
+    window.onload = generateEndpoints;
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Percentage Calculator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>% Percentage Calculator</h1>
+        <p>Kalkulasi persentase dengan mudah</p>
+      </div>
+
+      <div class="tool-content">
+        <h3>Berapa % dari nilai?</h3>
+        <div class="form-group">
+          <input type="number" id="percent1" placeholder="25"> % dari 
+          <input type="number" id="value1" placeholder="200"> = 
+          <input type="text" id="result1" readonly>
+          <button class="btn" onclick="calc1()">Hitung</button>
+        </div>
+
+        <h3>Nilai adalah berapa % dari total?</h3>
+        <div class="form-group">
+          <input type="number" id="value2" placeholder="50"> adalah 
+          <input type="text" id="result2" readonly> % dari 
+          <input type="number" id="total2" placeholder="200">
+          <button class="btn" onclick="calc2()">Hitung</button>
+        </div>
+
+        <h3>Perubahan Persentase</h3>
+        <div class="form-group">
+          Dari <input type="number" id="old" placeholder="100"> ke 
+          <input type="number" id="new" placeholder="150"> = 
+          <input type="text" id="result3" readonly>
+          <button class="btn" onclick="calc3()">Hitung</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function calc1() {
+      const p = parseFloat(document.getElementById('percent1').value);
+      const v = parseFloat(document.getElementById('value1').value);
+      document.getElementById('result1').value = ((p/100) * v).toFixed(2);
+    }
+
+    function calc2() {
+      const v = parseFloat(document.getElementById('value2').value);
+      const t = parseFloat(document.getElementById('total2').value);
+      document.getElementById('result2').value = ((v/t) * 100).toFixed(2);
+    }
+
+    function calc3() {
+      const o = parseFloat(document.getElementById('old').value);
+      const n = parseFloat(document.getElementById('new').value);
+      const change = ((n - o) / o * 100).toFixed(2);
+      document.getElementById('result3').value = change + '%';
+    }
+  </script>
+</body>
+</html>

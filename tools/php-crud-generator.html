@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHP CRUD Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .field-builder {
+      display: grid;
+      gap: var(--space-3);
+      margin: var(--space-6) 0;
+    }
+    .field-item {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: var(--space-3);
+      align-items: center;
+      padding: var(--space-3);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+    .remove-btn {
+      padding: var(--space-2) var(--space-3);
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🐘 PHP CRUD Generator</h1>
+        <p>Generate complete PHP CRUD operations (Create, Read, Update, Delete)</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Database Configuration -->
+        <h3>Database Configuration:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4); margin: var(--space-4) 0;">
+          <div class="form-group">
+            <label for="dbHost">Database Host:</label>
+            <input type="text" id="dbHost" value="localhost" oninput="generateCode()">
+          </div>
+          <div class="form-group">
+            <label for="dbName">Database Name:</label>
+            <input type="text" id="dbName" value="my_database" oninput="generateCode()">
+          </div>
+          <div class="form-group">
+            <label for="dbUser">Database User:</label>
+            <input type="text" id="dbUser" value="root" oninput="generateCode()">
+          </div>
+          <div class="form-group">
+            <label for="dbPass">Database Password:</label>
+            <input type="text" id="dbPass" value="" placeholder="(optional)" oninput="generateCode()">
+          </div>
+        </div>
+
+        <!-- Table Configuration -->
+        <h3 style="margin-top: var(--space-8);">Table Configuration:</h3>
+        <div class="form-group">
+          <label for="tableName">Table Name:</label>
+          <input type="text" id="tableName" value="users" oninput="generateCode()" placeholder="e.g., users, products, posts">
+        </div>
+
+        <!-- Fields Builder -->
+        <h3 style="margin-top: var(--space-8);">Table Fields:</h3>
+        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
+          <input type="text" id="newFieldName" placeholder="Field name (e.g., name, email)" style="flex: 1;">
+          <select id="newFieldType" style="width: 150px;">
+            <option value="VARCHAR(255)">VARCHAR(255)</option>
+            <option value="TEXT">TEXT</option>
+            <option value="INT">INT</option>
+            <option value="BIGINT">BIGINT</option>
+            <option value="DATE">DATE</option>
+            <option value="DATETIME">DATETIME</option>
+            <option value="BOOLEAN">BOOLEAN</option>
+            <option value="DECIMAL(10,2)">DECIMAL(10,2)</option>
+          </select>
+          <button class="btn btn-secondary" onclick="addField()">+ Add Field</button>
+        </div>
+
+        <div class="field-builder" id="fieldsList">
+          <div class="field-item">
+            <input type="text" value="id" readonly style="background: rgba(255,255,255,0.03);">
+            <select disabled style="background: rgba(255,255,255,0.03);">
+              <option>INT (Primary Key)</option>
+            </select>
+            <span style="font-size: 0.875rem; color: var(--text-tertiary);">Auto Increment</span>
+            <span></span>
+          </div>
+          <div class="field-item">
+            <input type="text" value="name" oninput="generateCode()">
+            <select oninput="generateCode()">
+              <option value="VARCHAR(255)" selected>VARCHAR(255)</option>
+              <option value="TEXT">TEXT</option>
+            </select>
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">Required</span>
+            <button class="remove-btn" onclick="removeField(this)">Remove</button>
+          </div>
+          <div class="field-item">
+            <input type="text" value="email" oninput="generateCode()">
+            <select oninput="generateCode()">
+              <option value="VARCHAR(255)" selected>VARCHAR(255)</option>
+            </select>
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">Unique</span>
+            <button class="remove-btn" onclick="removeField(this)">Remove</button>
+          </div>
+        </div>
+
+        <!-- Code Type Selection -->
+        <h3 style="margin-top: var(--space-8);">Generate Code For:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0;">
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="genConnection" checked onchange="generateCode()">
+            <span>Database Connection</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="genCreate" checked onchange="generateCode()">
+            <span>CREATE (Insert)</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="genRead" checked onchange="generateCode()">
+            <span>READ (Select)</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="genUpdate" checked onchange="generateCode()">
+            <span>UPDATE</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="genDelete" checked onchange="generateCode()">
+            <span>DELETE</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" id="genSQL" checked onchange="generateCode()">
+            <span>SQL Table Schema</span>
+          </label>
+        </div>
+
+        <!-- Code Outputs -->
+        <div id="codeOutputs"></div>
+
+        <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-6);" onclick="copyAllCode()">
+          📋 Copy All Generated Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function addField() {
+      const name = document.getElementById('newFieldName').value.trim();
+      const type = document.getElementById('newFieldType').value;
+      
+      if (!name) {
+        alert('Please enter field name');
+        return;
+      }
+
+      const fieldsList = document.getElementById('fieldsList');
+      const div = document.createElement('div');
+      div.className = 'field-item';
+      div.innerHTML = `
+        <input type="text" value="${name}" oninput="generateCode()">
+        <select oninput="generateCode()">
+          <option value="VARCHAR(255)" ${type === 'VARCHAR(255)' ? 'selected' : ''}>VARCHAR(255)</option>
+          <option value="TEXT" ${type === 'TEXT' ? 'selected' : ''}>TEXT</option>
+          <option value="INT" ${type === 'INT' ? 'selected' : ''}>INT</option>
+          <option value="BIGINT" ${type === 'BIGINT' ? 'selected' : ''}>BIGINT</option>
+          <option value="DATE" ${type === 'DATE' ? 'selected' : ''}>DATE</option>
+          <option value="DATETIME" ${type === 'DATETIME' ? 'selected' : ''}>DATETIME</option>
+          <option value="BOOLEAN" ${type === 'BOOLEAN' ? 'selected' : ''}>BOOLEAN</option>
+          <option value="DECIMAL(10,2)" ${type === 'DECIMAL(10,2)' ? 'selected' : ''}>DECIMAL(10,2)</option>
+        </select>
+        <span style="font-size: 0.875rem; color: var(--text-secondary);">Optional</span>
+        <button class="remove-btn" onclick="removeField(this)">Remove</button>
+      `;
+      fieldsList.appendChild(div);
+
+      document.getElementById('newFieldName').value = '';
+      generateCode();
+    }
+
+    function removeField(btn) {
+      btn.closest('.field-item').remove();
+      generateCode();
+    }
+
+    function getFields() {
+      const items = document.querySelectorAll('.field-item');
+      const fields = [];
+      
+      items.forEach((item, index) => {
+        const input = item.querySelector('input[type="text"]');
+        const select = item.querySelector('select');
+        if (input && select && input.value) {
+          fields.push({
+            name: input.value,
+            type: select.value,
+            isPrimary: index === 0
+          });
+        }
+      });
+      
+      return fields;
+    }
+
+    function generateCode() {
+      const dbHost = document.getElementById('dbHost').value;
+      const dbName = document.getElementById('dbName').value;
+      const dbUser = document.getElementById('dbUser').value;
+      const dbPass = document.getElementById('dbPass').value;
+      const tableName = document.getElementById('tableName').value;
+      const fields = getFields();
+
+      const outputDiv = document.getElementById('codeOutputs');
+      outputDiv.innerHTML = '';
+
+      // Database Connection
+      if (document.getElementById('genConnection').checked) {
+        const connectionCode = `<?php
+// config.php - Database Connection
+\$host = '${dbHost}';
+\$dbname = '${dbName}';
+\$username = '${dbUser}';
+\$password = '${dbPass}';
+
+try {
+    \$pdo = new PDO("mysql:host=\$host;dbname=\$dbname", \$username, \$password);
+    \$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    \$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch(PDOException \$e) {
+    die("Connection failed: " . \$e->getMessage());
+}
+?>`;
+        addCodeSection('Database Connection (config.php)', connectionCode);
+      }
+
+      // CREATE
+      if (document.getElementById('genCreate').checked) {
+        const fieldsNoId = fields.filter(f => !f.isPrimary);
+        const fieldNames = fieldsNoId.map(f => f.name).join(', ');
+        const fieldPlaceholders = fieldsNoId.map(f => ':' + f.name).join(', ');
+        const bindParams = fieldsNoId.map(f => `\$stmt->bindParam(':${f.name}', \$${f.name});`).join('\n    ');
+
+        const createCode = `<?php
+// create_${tableName}.php
+require_once 'config.php';
+
+if (\$_SERVER['REQUEST_METHOD'] === 'POST') {
+    ${fieldsNoId.map(f => `\$${f.name} = \$_POST['${f.name}'];`).join('\n    ')}
+    
+    try {
+        \$sql = "INSERT INTO ${tableName} (${fieldNames}) VALUES (${fieldPlaceholders})";
+        \$stmt = \$pdo->prepare(\$sql);
+        
+        ${bindParams}
+        
+        \$stmt->execute();
+        
+        echo json_encode([
+            'success' => true,
+            'message' => '${tableName} created successfully',
+            'id' => \$pdo->lastInsertId()
+        ]);
+    } catch(PDOException \$e) {
+        echo json_encode([
+            'success' => false,
+            'message' => \$e->getMessage()
+        ]);
+    }
+}
+?>`;
+        addCodeSection('CREATE Operation (create_' + tableName + '.php)', createCode);
+      }
+
+      // READ
+      if (document.getElementById('genRead').checked) {
+        const readCode = `<?php
+// read_${tableName}.php
+require_once 'config.php';
+
+// Get all ${tableName}
+function getAll${capitalize(tableName)}(\$pdo) {
+    \$sql = "SELECT * FROM ${tableName} ORDER BY id DESC";
+    \$stmt = \$pdo->prepare(\$sql);
+    \$stmt->execute();
+    return \$stmt->fetchAll();
+}
+
+// Get single ${tableName} by ID
+function get${capitalize(tableName)}ById(\$pdo, \$id) {
+    \$sql = "SELECT * FROM ${tableName} WHERE id = :id";
+    \$stmt = \$pdo->prepare(\$sql);
+    \$stmt->bindParam(':id', \$id);
+    \$stmt->execute();
+    return \$stmt->fetch();
+}
+
+// Example usage:
+if (isset(\$_GET['id'])) {
+    \$result = get${capitalize(tableName)}ById(\$pdo, \$_GET['id']);
+} else {
+    \$result = getAll${capitalize(tableName)}(\$pdo);
+}
+
+echo json_encode(\$result);
+?>`;
+        addCodeSection('READ Operation (read_' + tableName + '.php)', readCode);
+      }
+
+      // UPDATE
+      if (document.getElementById('genUpdate').checked) {
+        const fieldsNoId = fields.filter(f => !f.isPrimary);
+        const setClause = fieldsNoId.map(f => `${f.name} = :${f.name}`).join(', ');
+        const bindParams = fieldsNoId.map(f => `\$stmt->bindParam(':${f.name}', \$${f.name});`).join('\n    ');
+
+        const updateCode = `<?php
+// update_${tableName}.php
+require_once 'config.php';
+
+if (\$_SERVER['REQUEST_METHOD'] === 'POST') {
+    \$id = \$_POST['id'];
+    ${fieldsNoId.map(f => `\$${f.name} = \$_POST['${f.name}'];`).join('\n    ')}
+    
+    try {
+        \$sql = "UPDATE ${tableName} SET ${setClause} WHERE id = :id";
+        \$stmt = \$pdo->prepare(\$sql);
+        
+        \$stmt->bindParam(':id', \$id);
+        ${bindParams}
+        
+        \$stmt->execute();
+        
+        echo json_encode([
+            'success' => true,
+            'message' => '${tableName} updated successfully'
+        ]);
+    } catch(PDOException \$e) {
+        echo json_encode([
+            'success' => false,
+            'message' => \$e->getMessage()
+        ]);
+    }
+}
+?>`;
+        addCodeSection('UPDATE Operation (update_' + tableName + '.php)', updateCode);
+      }
+
+      // DELETE
+      if (document.getElementById('genDelete').checked) {
+        const deleteCode = `<?php
+// delete_${tableName}.php
+require_once 'config.php';
+
+if (\$_SERVER['REQUEST_METHOD'] === 'POST') {
+    \$id = \$_POST['id'];
+    
+    try {
+        \$sql = "DELETE FROM ${tableName} WHERE id = :id";
+        \$stmt = \$pdo->prepare(\$sql);
+        \$stmt->bindParam(':id', \$id);
+        \$stmt->execute();
+        
+        echo json_encode([
+            'success' => true,
+            'message' => '${tableName} deleted successfully'
+        ]);
+    } catch(PDOException \$e) {
+        echo json_encode([
+            'success' => false,
+            'message' => \$e->getMessage()
+        ]);
+    }
+}
+?>`;
+        addCodeSection('DELETE Operation (delete_' + tableName + '.php)', deleteCode);
+      }
+
+      // SQL Schema
+      if (document.getElementById('genSQL').checked) {
+        const fieldsSQL = fields.map(f => {
+          if (f.isPrimary) {
+            return `  ${f.name} INT AUTO_INCREMENT PRIMARY KEY`;
+          }
+          return `  ${f.name} ${f.type} NOT NULL`;
+        }).join(',\n');
+
+        const sqlCode = `-- SQL Table Schema
+CREATE TABLE IF NOT EXISTS ${tableName} (
+${fieldsSQL},
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`;
+        addCodeSection('SQL Table Schema', sqlCode);
+      }
+    }
+
+    function addCodeSection(title, code) {
+      const outputDiv = document.getElementById('codeOutputs');
+      const section = document.createElement('div');
+      section.innerHTML = `
+        <div class="form-group" style="margin-top: var(--space-6);">
+          <label>${title}:</label>
+          <textarea rows="15" readonly style="font-family: 'Monaco', 'Courier New', monospace; font-size: 0.875rem;">${code}</textarea>
+          <button class="btn btn-secondary" style="width: 100%; margin-top: var(--space-3);" onclick="copyCode(this)">
+            📋 Copy ${title}
+          </button>
+        </div>
+      `;
+      outputDiv.appendChild(section);
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function copyCode(btn) {
+      const textarea = btn.previousElementSibling;
+      textarea.select();
+      document.execCommand('copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => {
+        btn.textContent = '📋 Copy ' + btn.textContent.split('Copy ')[1];
+      }, 2000);
+    }
+
+    function copyAllCode() {
+      const textareas = document.querySelectorAll('#codeOutputs textarea');
+      let allCode = '';
+      textareas.forEach((ta, index) => {
+        if (index > 0) allCode += '\n\n' + '='.repeat(50) + '\n\n';
+        allCode += ta.value;
+      });
+      navigator.clipboard.writeText(allCode);
+      event.target.textContent = '✓ All Code Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy All Generated Code';
+      }, 2000);
+    }
+
+    window.onload = generateCode;
+  </script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Query Builder - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .query-preview {
+      background: rgba(15, 15, 15, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin: var(--space-6) 0;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 1rem;
+      color: var(--accent);
+      min-height: 120px;
+      line-height: 1.8;
+    }
+    .query-keyword {
+      color: #ff6b6b;
+      font-weight: 700;
+    }
+    .condition-builder {
+      display: grid;
+      gap: var(--space-3);
+      margin: var(--space-4) 0;
+    }
+    .condition-item {
+      display: grid;
+      grid-template-columns: 2fr 1fr 2fr auto auto;
+      gap: var(--space-2);
+      align-items: center;
+      padding: var(--space-3);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🗄️ SQL Query Builder</h1>
+        <p>Build SQL queries visually without writing code</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Query Preview -->
+        <h3>Generated Query:</h3>
+        <div class="query-preview" id="queryPreview">SELECT * FROM table_name</div>
+
+        <!-- Query Type -->
+        <h3 style="margin-top: var(--space-8);">Query Type:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0;">
+          <button class="btn btn-secondary active" onclick="setQueryType('SELECT')">SELECT</button>
+          <button class="btn btn-secondary" onclick="setQueryType('INSERT')">INSERT</button>
+          <button class="btn btn-secondary" onclick="setQueryType('UPDATE')">UPDATE</button>
+          <button class="btn btn-secondary" onclick="setQueryType('DELETE')">DELETE</button>
+        </div>
+
+        <!-- Table Name -->
+        <div class="form-group">
+          <label for="tableName">Table Name:</label>
+          <input type="text" id="tableName" value="users" oninput="buildQuery()" placeholder="e.g., users, products">
+        </div>
+
+        <!-- SELECT specific -->
+        <div id="selectOptions">
+          <div class="form-group">
+            <label for="selectFields">Select Fields (comma separated or * for all):</label>
+            <input type="text" id="selectFields" value="*" oninput="buildQuery()" placeholder="e.g., id, name, email or *">
+          </div>
+        </div>
+
+        <!-- INSERT specific -->
+        <div id="insertOptions" style="display: none;">
+          <h3>Insert Values:</h3>
+          <div id="insertFields">
+            <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--space-3); margin-bottom: var(--space-3);">
+              <input type="text" placeholder="Field name" oninput="buildQuery()">
+              <input type="text" placeholder="Value" oninput="buildQuery()">
+              <button class="btn btn-secondary" onclick="addInsertField()">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPDATE specific -->
+        <div id="updateOptions" style="display: none;">
+          <h3>Update Fields:</h3>
+          <div id="updateFields">
+            <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--space-3); margin-bottom: var(--space-3);">
+              <input type="text" placeholder="Field name" oninput="buildQuery()">
+              <input type="text" placeholder="New value" oninput="buildQuery()">
+              <button class="btn btn-secondary" onclick="addUpdateField()">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHERE Conditions -->
+        <h3 style="margin-top: var(--space-8);">WHERE Conditions:</h3>
+        <div class="condition-builder" id="conditionsList">
+          <div class="condition-item">
+            <input type="text" placeholder="Field name (e.g., id)" oninput="buildQuery()">
+            <select oninput="buildQuery()">
+              <option value="=">=</option>
+              <option value="!=">!=</option>
+              <option value=">">></option>
+              <option value="<"><</option>
+              <option value=">=">>=</option>
+              <option value="<="><=</option>
+              <option value="LIKE">LIKE</option>
+              <option value="IN">IN</option>
+              <option value="BETWEEN">BETWEEN</option>
+            </select>
+            <input type="text" placeholder="Value" oninput="buildQuery()">
+            <select oninput="buildQuery()">
+              <option value="AND">AND</option>
+              <option value="OR">OR</option>
+            </select>
+            <button onclick="removeCondition(this)" style="padding: 8px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">×</button>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="addCondition()">+ Add Condition</button>
+
+        <!-- ORDER BY -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); margin-top: var(--space-6);">
+          <div class="form-group">
+            <label for="orderBy">ORDER BY:</label>
+            <input type="text" id="orderBy" placeholder="e.g., created_at, name" oninput="buildQuery()">
+          </div>
+          <div class="form-group">
+            <label for="orderDir">Direction:</label>
+            <select id="orderDir" onchange="buildQuery()">
+              <option value="">None</option>
+              <option value="ASC">ASC</option>
+              <option value="DESC">DESC</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- LIMIT -->
+        <div class="form-group">
+          <label for="limitValue">LIMIT:</label>
+          <input type="number" id="limitValue" placeholder="e.g., 10, 50" oninput="buildQuery()">
+        </div>
+
+        <!-- Output -->
+        <div class="form-group" style="margin-top: var(--space-8);">
+          <label>SQL Query:</label>
+          <textarea id="sqlOutput" rows="8" readonly style="font-family: 'Monaco', monospace;"></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="copyQuery()">📋 Copy Query</button>
+          <button class="btn btn-secondary" onclick="formatQuery()">✨ Format Query</button>
+          <button class="btn btn-secondary" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+
+        <!-- Query Examples -->
+        <h3 style="margin-top: var(--space-12);">Quick Examples:</h3>
+        <div style="display: grid; gap: var(--space-3); margin-top: var(--space-4);">
+          <div onclick="loadExample('basic')" style="padding: var(--space-4); background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius); cursor: pointer; transition: all 0.2s;">
+            <strong>Basic SELECT</strong>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 4px;">SELECT * FROM users</p>
+          </div>
+          <div onclick="loadExample('where')" style="padding: var(--space-4); background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius); cursor: pointer; transition: all 0.2s;">
+            <strong>SELECT with WHERE</strong>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 4px;">SELECT * FROM users WHERE age > 18</p>
+          </div>
+          <div onclick="loadExample('order')" style="padding: var(--space-4); background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius); cursor: pointer; transition: all 0.2s;">
+            <strong>SELECT with ORDER BY</strong>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 4px;">SELECT * FROM products ORDER BY price DESC</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentQueryType = 'SELECT';
+
+    function setQueryType(type) {
+      currentQueryType = type;
+      document.querySelectorAll('.btn-secondary').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Show/hide relevant options
+      document.getElementById('selectOptions').style.display = type === 'SELECT' ? 'block' : 'none';
+      document.getElementById('insertOptions').style.display = type === 'INSERT' ? 'block' : 'none';
+      document.getElementById('updateOptions').style.display = type === 'UPDATE' ? 'block' : 'none';
+
+      buildQuery();
+    }
+
+    function addCondition() {
+      const list = document.getElementById('conditionsList');
+      const div = document.createElement('div');
+      div.className = 'condition-item';
+      div.innerHTML = `
+        <input type="text" placeholder="Field name" oninput="buildQuery()">
+        <select oninput="buildQuery()">
+          <option value="=">=</option>
+          <option value="!=">!=</option>
+          <option value=">">></option>
+          <option value="<"><</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+          <option value="LIKE">LIKE</option>
+          <option value="IN">IN</option>
+        </select>
+        <input type="text" placeholder="Value" oninput="buildQuery()">
+        <select oninput="buildQuery()">
+          <option value="AND">AND</option>
+          <option value="OR">OR</option>
+        </select>
+        <button onclick="removeCondition(this)" style="padding: 8px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">×</button>
+      `;
+      list.appendChild(div);
+    }
+
+    function removeCondition(btn) {
+      btn.closest('.condition-item').remove();
+      buildQuery();
+    }
+
+    function addInsertField() {
+      const container = document.getElementById('insertFields');
+      const div = document.createElement('div');
+      div.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--space-3); margin-bottom: var(--space-3);';
+      div.innerHTML = `
+        <input type="text" placeholder="Field name" oninput="buildQuery()">
+        <input type="text" placeholder="Value" oninput="buildQuery()">
+        <button onclick="this.parentElement.remove(); buildQuery();" style="padding: 8px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">×</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function addUpdateField() {
+      const container = document.getElementById('updateFields');
+      const div = document.createElement('div');
+      div.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--space-3); margin-bottom: var(--space-3);';
+      div.innerHTML = `
+        <input type="text" placeholder="Field name" oninput="buildQuery()">
+        <input type="text" placeholder="New value" oninput="buildQuery()">
+        <button onclick="this.parentElement.remove(); buildQuery();" style="padding: 8px 12px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer;">×</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function buildQuery() {
+      const tableName = document.getElementById('tableName').value || 'table_name';
+      let query = '';
+
+      if (currentQueryType === 'SELECT') {
+        const fields = document.getElementById('selectFields').value || '*';
+        query = `SELECT ${fields} FROM ${tableName}`;
+      } else if (currentQueryType === 'INSERT') {
+        const items = document.querySelectorAll('#insertFields > div');
+        const fields = [];
+        const values = [];
+        items.forEach(item => {
+          const inputs = item.querySelectorAll('input');
+          if (inputs[0].value && inputs[1].value) {
+            fields.push(inputs[0].value);
+            values.push(`'${inputs[1].value}'`);
+          }
+        });
+        if (fields.length > 0) {
+          query = `INSERT INTO ${tableName} (${fields.join(', ')}) VALUES (${values.join(', ')})`;
+        } else {
+          query = `INSERT INTO ${tableName} (field1, field2) VALUES ('value1', 'value2')`;
+        }
+      } else if (currentQueryType === 'UPDATE') {
+        const items = document.querySelectorAll('#updateFields > div');
+        const sets = [];
+        items.forEach(item => {
+          const inputs = item.querySelectorAll('input');
+          if (inputs[0].value && inputs[1].value) {
+            sets.push(`${inputs[0].value} = '${inputs[1].value}'`);
+          }
+        });
+        if (sets.length > 0) {
+          query = `UPDATE ${tableName} SET ${sets.join(', ')}`;
+        } else {
+          query = `UPDATE ${tableName} SET field1 = 'value1'`;
+        }
+      } else if (currentQueryType === 'DELETE') {
+        query = `DELETE FROM ${tableName}`;
+      }
+
+      // WHERE conditions
+      const conditions = [];
+      const conditionItems = document.querySelectorAll('.condition-item');
+      conditionItems.forEach((item, index) => {
+        const inputs = item.querySelectorAll('input');
+        const selects = item.querySelectorAll('select');
+        if (inputs[0].value && inputs[1].value) {
+          const connector = index > 0 ? selects[1].value : '';
+          const condition = `${inputs[0].value} ${selects[0].value} '${inputs[1].value}'`;
+          if (index === 0) {
+            conditions.push(condition);
+          } else {
+            conditions.push(`${connector} ${condition}`);
+          }
+        }
+      });
+
+      if (conditions.length > 0) {
+        query += ` WHERE ${conditions.join(' ')}`;
+      }
+
+      // ORDER BY
+      const orderBy = document.getElementById('orderBy').value;
+      const orderDir = document.getElementById('orderDir').value;
+      if (orderBy && orderDir) {
+        query += ` ORDER BY ${orderBy} ${orderDir}`;
+      }
+
+      // LIMIT
+      const limit = document.getElementById('limitValue').value;
+      if (limit) {
+        query += ` LIMIT ${limit}`;
+      }
+
+      // Update preview with syntax highlighting
+      const preview = document.getElementById('queryPreview');
+      preview.innerHTML = highlightSQL(query);
+
+      // Update textarea
+      document.getElementById('sqlOutput').value = query;
+    }
+
+    function highlightSQL(query) {
+      const keywords = ['SELECT', 'FROM', 'WHERE', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ORDER BY', 'LIMIT', 'AND', 'OR'];
+      let highlighted = query;
+      keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+        highlighted = highlighted.replace(regex, `<span class="query-keyword">${keyword}</span>`);
+      });
+      return highlighted;
+    }
+
+    function copyQuery() {
+      const textarea = document.getElementById('sqlOutput');
+      textarea.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy Query';
+      }, 2000);
+    }
+
+    function formatQuery() {
+      let query = document.getElementById('sqlOutput').value;
+      // Add line breaks for better formatting
+      query = query.replace(/WHERE/g, '\nWHERE')
+                   .replace(/ORDER BY/g, '\nORDER BY')
+                   .replace(/LIMIT/g, '\nLIMIT')
+                   .replace(/AND/g, '\n  AND')
+                   .replace(/OR/g, '\n  OR');
+      document.getElementById('sqlOutput').value = query;
+      document.getElementById('queryPreview').innerHTML = highlightSQL(query.replace(/\n/g, '<br>'));
+    }
+
+    function clearAll() {
+      document.getElementById('tableName').value = 'users';
+      document.getElementById('selectFields').value = '*';
+      document.getElementById('orderBy').value = '';
+      document.getElementById('orderDir').value = '';
+      document.getElementById('limitValue').value = '';
+      
+      // Clear conditions except first one
+      const conditions = document.querySelectorAll('.condition-item');
+      for (let i = 1; i < conditions.length; i++) {
+        conditions[i].remove();
+      }
+      
+      // Clear first condition inputs
+      const firstCondition = document.querySelector('.condition-item');
+      if (firstCondition) {
+        firstCondition.querySelectorAll('input').forEach(input => input.value = '');
+      }
+      
+      buildQuery();
+    }
+
+    function loadExample(type) {
+      clearAll();
+      if (type === 'basic') {
+        document.getElementById('tableName').value = 'users';
+        document.getElementById('selectFields').value = '*';
+      } else if (type === 'where') {
+        document.getElementById('tableName').value = 'users';
+        document.getElementById('selectFields').value = '*';
+        const condition = document.querySelector('.condition-item');
+        condition.querySelectorAll('input')[0].value = 'age';
+        condition.querySelectorAll('select')[0].value = '>';
+        condition.querySelectorAll('input')[1].value = '18';
+      } else if (type === 'order') {
+        document.getElementById('tableName').value = 'products';
+        document.getElementById('selectFields').value = '*';
+        document.getElementById('orderBy').value = 'price';
+        document.getElementById('orderDir').value = 'DESC';
+      }
+      buildQuery();
+    }
+
+    window.onload = buildQuery;
+  </script>
+</body>
+</html>

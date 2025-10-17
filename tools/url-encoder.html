@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Encoder/Decoder - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔗 URL Encoder/Decoder</h1>
+        <p>Encode dan decode URL string</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">Input:</label>
+          <textarea id="input" rows="8" placeholder="Masukkan URL..."></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="encode()">Encode</button>
+          <button class="btn" onclick="decode()">Decode</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="8" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function encode() {
+      document.getElementById('output').value = encodeURIComponent(document.getElementById('input').value);
+    }
+
+    function decode() {
+      try {
+        document.getElementById('output').value = decodeURIComponent(document.getElementById('input').value);
+      } catch(e) {
+        document.getElementById('output').value = 'Error: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

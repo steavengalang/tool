@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .form-preview {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      margin: var(--space-6) 0;
+      min-height: 300px;
+    }
+    .field-list {
+      display: grid;
+      gap: var(--space-3);
+      margin: var(--space-6) 0;
+    }
+    .field-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+    .field-item button {
+      padding: var(--space-2) var(--space-3);
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📝 HTML Form Generator</h1>
+        <p>Create HTML forms with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <h3>Add Form Fields:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0;">
+          <button class="btn btn-secondary" onclick="addField('text')">📝 Text Input</button>
+          <button class="btn btn-secondary" onclick="addField('email')">📧 Email</button>
+          <button class="btn btn-secondary" onclick="addField('password')">🔒 Password</button>
+          <button class="btn btn-secondary" onclick="addField('number')">🔢 Number</button>
+          <button class="btn btn-secondary" onclick="addField('date')">📅 Date</button>
+          <button class="btn btn-secondary" onclick="addField('textarea')">📄 Textarea</button>
+          <button class="btn btn-secondary" onclick="addField('select')">📋 Select</button>
+          <button class="btn btn-secondary" onclick="addField('checkbox')">☑️ Checkbox</button>
+          <button class="btn btn-secondary" onclick="addField('radio')">🔘 Radio</button>
+        </div>
+
+        <h3 style="margin-top: var(--space-8);">Form Fields:</h3>
+        <div class="field-list" id="fieldList"></div>
+
+        <h3 style="margin-top: var(--space-8);">Preview:</h3>
+        <div class="form-preview" id="preview">
+          <p style="color: var(--text-secondary); text-align: center;">Add fields to see preview</p>
+        </div>
+
+        <div class="form-group">
+          <label>HTML Code:</label>
+          <textarea id="htmlOutput" rows="20" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyHTML()">
+          📋 Copy HTML Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let fields = [];
+    let fieldCounter = 0;
+
+    function addField(type) {
+      const id = ++fieldCounter;
+      const label = prompt('Enter field label:', type.charAt(0).toUpperCase() + type.slice(1));
+      if (!label) return;
+
+      fields.push({ id, type, label });
+      updateForm();
+    }
+
+    function removeField(id) {
+      fields = fields.filter(f => f.id !== id);
+      updateForm();
+    }
+
+    function updateForm() {
+      // Update field list
+      const fieldList = document.getElementById('fieldList');
+      fieldList.innerHTML = fields.map(f => `
+        <div class="field-item">
+          <span style="flex: 1;">${f.label} (${f.type})</span>
+          <button onclick="removeField(${f.id})">Remove</button>
+        </div>
+      `).join('');
+
+      // Update preview
+      const preview = document.getElementById('preview');
+      if (fields.length === 0) {
+        preview.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Add fields to see preview</p>';
+      } else {
+        preview.innerHTML = '<form>' + fields.map(f => generateFieldHTML(f, true)).join('') + 
+          '<button type="submit" style="margin-top: var(--space-4);">Submit</button></form>';
+      }
+
+      // Update HTML output
+      const html = `<form action="/submit" method="POST">
+${fields.map(f => '  ' + generateFieldHTML(f, false)).join('\n')}
+  
+  <button type="submit">Submit</button>
+</form>`;
+
+      document.getElementById('htmlOutput').value = html;
+    }
+
+    function generateFieldHTML(field, withStyle) {
+      const style = withStyle ? ' style="margin-bottom: var(--space-4);"' : '';
+      
+      switch(field.type) {
+        case 'textarea':
+          return `<div${style}>
+    <label for="${field.label.toLowerCase()}">${field.label}:</label>
+    <textarea id="${field.label.toLowerCase()}" name="${field.label.toLowerCase()}" rows="4"></textarea>
+  </div>`;
+        
+        case 'select':
+          return `<div${style}>
+    <label for="${field.label.toLowerCase()}">${field.label}:</label>
+    <select id="${field.label.toLowerCase()}" name="${field.label.toLowerCase()}">
+      <option value="">Select...</option>
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+    </select>
+  </div>`;
+        
+        case 'checkbox':
+          return `<div${style}>
+    <label>
+      <input type="checkbox" name="${field.label.toLowerCase()}" value="yes">
+      ${field.label}
+    </label>
+  </div>`;
+        
+        case 'radio':
+          return `<div${style}>
+    <label>${field.label}:</label>
+    <label><input type="radio" name="${field.label.toLowerCase()}" value="option1"> Option 1</label>
+    <label><input type="radio" name="${field.label.toLowerCase()}" value="option2"> Option 2</label>
+  </div>`;
+        
+        default:
+          return `<div${style}>
+    <label for="${field.label.toLowerCase()}">${field.label}:</label>
+    <input type="${field.type}" id="${field.label.toLowerCase()}" name="${field.label.toLowerCase()}">
+  </div>`;
+      }
+    }
+
+    function copyHTML() {
+      const html = document.getElementById('htmlOutput');
+      html.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy HTML Code';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

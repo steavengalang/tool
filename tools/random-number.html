@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Number Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🎲 Random Number Generator</h1>
+        <p>Generate angka random dengan range custom</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="min">Minimum:</label>
+          <input type="number" id="min" value="1">
+        </div>
+
+        <div class="form-group">
+          <label for="max">Maximum:</label>
+          <input type="number" id="max" value="100">
+        </div>
+
+        <div class="form-group">
+          <label for="count">Jumlah:</label>
+          <input type="number" id="count" min="1" max="1000" value="10">
+        </div>
+
+        <button class="btn" onclick="generate()">Generate Random Numbers</button>
+
+        <div class="form-group">
+          <label>Result:</label>
+          <textarea id="result" rows="10" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function generate() {
+      const min = parseInt(document.getElementById('min').value);
+      const max = parseInt(document.getElementById('max').value);
+      const count = parseInt(document.getElementById('count').value);
+      
+      if(min >= max) {
+        alert('Minimum harus lebih kecil dari Maximum!');
+        return;
+      }
+      
+      let result = '';
+      for(let i = 0; i < count; i++) {
+        const random = Math.floor(Math.random() * (max - min + 1)) + min;
+        result += random + '\n';
+      }
+      
+      document.getElementById('result').value = result;
+    }
+
+    window.onload = generate;
+  </script>
+</body>
+</html>

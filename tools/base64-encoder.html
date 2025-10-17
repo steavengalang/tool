@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 Encoder/Decoder - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔐 Base64 Encoder/Decoder</h1>
+        <p>Encode dan decode Base64 string</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="input">Input:</label>
+          <textarea id="input" rows="8" placeholder="Masukkan teks..."></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="encode()">Encode</button>
+          <button class="btn" onclick="decode()">Decode</button>
+        </div>
+
+        <div class="form-group">
+          <label for="output">Output:</label>
+          <textarea id="output" rows="8" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function encode() {
+      const input = document.getElementById('input').value;
+      try {
+        document.getElementById('output').value = btoa(input);
+      } catch(e) {
+        document.getElementById('output').value = 'Error: ' + e.message;
+      }
+    }
+
+    function decode() {
+      const input = document.getElementById('input').value;
+      try {
+        document.getElementById('output').value = atob(input);
+      } catch(e) {
+        document.getElementById('output').value = 'Error: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

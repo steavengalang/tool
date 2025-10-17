@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Compressor - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .upload-zone {
+      border: 2px dashed var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-12);
+      text-align: center;
+      background: rgba(15, 15, 15, 0.3);
+      backdrop-filter: var(--blur-sm);
+      -webkit-backdrop-filter: var(--blur-sm);
+      cursor: pointer;
+      transition: all var(--duration) var(--ease);
+      margin-bottom: var(--space-8);
+    }
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-muted);
+    }
+    .upload-icon {
+      font-size: 4rem;
+      margin-bottom: var(--space-4);
+      opacity: 0.6;
+    }
+    .image-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+    .preview-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-glass), var(--shadow-inner);
+    }
+    .preview-card h3 {
+      font-size: 1rem;
+      margin-bottom: var(--space-4);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .preview-card img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      margin-bottom: var(--space-4);
+      background: var(--bg-secondary);
+    }
+    .preview-info {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-2);
+    }
+    .quality-slider {
+      margin: var(--space-6) 0;
+    }
+    .quality-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: var(--space-3);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🖼️ Image Compressor</h1>
+        <p>Kompres gambar dengan mudah tanpa mengurangi kualitas drastis</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📁</div>
+          <h3>Click atau Drag & Drop Gambar</h3>
+          <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: var(--space-2);">
+            Support: JPG, PNG, WebP (Max 10MB)
+          </p>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display: none;" multiple>
+        </div>
+
+        <!-- Quality Slider -->
+        <div class="quality-slider">
+          <div class="quality-value" id="qualityValue">80%</div>
+          <div class="form-group">
+            <label for="quality">Kualitas Kompresi:</label>
+            <input type="range" id="quality" min="10" max="100" value="80" oninput="updateQuality()">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-tertiary); margin-top: var(--space-2);">
+              <span>Lebih Kecil</span>
+              <span>Kualitas Tinggi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Area -->
+        <div class="image-preview" id="previewArea"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const previewArea = document.getElementById('previewArea');
+    let originalImages = [];
+
+    // Update quality display
+    function updateQuality() {
+      const quality = document.getElementById('quality').value;
+      document.getElementById('qualityValue').textContent = quality + '%';
+      // Re-compress if images already loaded
+      if (originalImages.length > 0) {
+        compressImages();
+      }
+    }
+
+    // Drag & Drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      originalImages = [];
+      previewArea.innerHTML = '';
+      
+      Array.from(files).forEach(file => {
+        if (file.type.match('image.*')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            originalImages.push({
+              name: file.name,
+              originalSize: file.size,
+              dataUrl: e.target.result
+            });
+            if (originalImages.length === files.length) {
+              compressImages();
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function compressImages() {
+      previewArea.innerHTML = '';
+      const quality = document.getElementById('quality').value / 100;
+
+      originalImages.forEach((imgData, index) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          canvas.toBlob((blob) => {
+            const compressedUrl = URL.createObjectURL(blob);
+            const compressedSize = blob.size;
+            const reduction = ((imgData.originalSize - compressedSize) / imgData.originalSize * 100).toFixed(1);
+
+            displayPreview(imgData, compressedUrl, compressedSize, reduction, index);
+          }, 'image/jpeg', quality);
+        };
+        img.src = imgData.dataUrl;
+      });
+    }
+
+    function displayPreview(original, compressedUrl, compressedSize, reduction, index) {
+      const card = document.createElement('div');
+      card.className = 'preview-card';
+      card.innerHTML = `
+        <h3>${original.name}</h3>
+        <img src="${compressedUrl}" alt="Compressed">
+        <div class="preview-info">
+          <strong>Original:</strong> ${formatSize(original.originalSize)}
+        </div>
+        <div class="preview-info">
+          <strong>Compressed:</strong> ${formatSize(compressedSize)}
+        </div>
+        <div class="preview-info" style="color: var(--accent);">
+          <strong>Saved:</strong> ${reduction}%
+        </div>
+        <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-4);" onclick="downloadImage('${compressedUrl}', '${original.name}')">
+          Download
+        </button>
+      `;
+      previewArea.appendChild(card);
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function downloadImage(url, filename) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'compressed_' + filename.replace(/\.[^/.]+$/, '') + '.jpg';
+      a.click();
+    }
+  </script>
+</body>
+</html>

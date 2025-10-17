@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Border Radius Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .radius-preview {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      margin: var(--space-8) auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--bg-primary);
+      box-shadow: var(--shadow-xl);
+    }
+    .corner-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+      margin: var(--space-8) 0;
+      position: relative;
+    }
+    .corner-controls::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 100%;
+      background: var(--glass-border);
+    }
+    .corner-controls::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 2px;
+      background: var(--glass-border);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⭕ Border Radius Generator</h1>
+        <p>Create custom border radius for any corner</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="radius-preview" id="preview">Preview</div>
+
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="allCorners" checked onchange="toggleAllCorners()"> 
+            Apply to all corners
+          </label>
+        </div>
+
+        <div class="corner-controls">
+          <div class="form-group">
+            <label for="topLeft">Top Left: <span id="tlValue">20</span>px</label>
+            <input type="range" id="topLeft" min="0" max="150" value="20" oninput="updateRadius()">
+          </div>
+
+          <div class="form-group">
+            <label for="topRight">Top Right: <span id="trValue">20</span>px</label>
+            <input type="range" id="topRight" min="0" max="150" value="20" oninput="updateRadius()">
+          </div>
+
+          <div class="form-group">
+            <label for="bottomLeft">Bottom Left: <span id="blValue">20</span>px</label>
+            <input type="range" id="bottomLeft" min="0" max="150" value="20" oninput="updateRadius()">
+          </div>
+
+          <div class="form-group">
+            <label for="bottomRight">Bottom Right: <span id="brValue">20</span>px</label>
+            <input type="range" id="bottomRight" min="0" max="150" value="20" oninput="updateRadius()">
+          </div>
+        </div>
+
+        <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Presets:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: var(--space-3); margin-bottom: var(--space-6);">
+          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 0; cursor: pointer;" onclick="applyPreset(0,0,0,0)"></div>
+          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 10px; cursor: pointer;" onclick="applyPreset(10,10,10,10)"></div>
+          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 20px; cursor: pointer;" onclick="applyPreset(20,20,20,20)"></div>
+          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; cursor: pointer;" onclick="applyPreset(150,150,150,150)"></div>
+          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50px 10px 50px 10px; cursor: pointer;" onclick="applyPreset(50,10,10,50)"></div>
+          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 80px 10px; cursor: pointer;" onclick="applyPreset(80,10,80,10)"></div>
+        </div>
+
+        <div class="form-group">
+          <label>CSS Code:</label>
+          <textarea id="cssOutput" rows="3" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyCSS()">
+          📋 Copy CSS
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleAllCorners() {
+      const allCorners = document.getElementById('allCorners').checked;
+      const inputs = ['topRight', 'bottomLeft', 'bottomRight'];
+      
+      if (allCorners) {
+        const topLeft = document.getElementById('topLeft').value;
+        inputs.forEach(id => {
+          document.getElementById(id).value = topLeft;
+          document.getElementById(id).disabled = true;
+        });
+      } else {
+        inputs.forEach(id => {
+          document.getElementById(id).disabled = false;
+        });
+      }
+      updateRadius();
+    }
+
+    function updateRadius() {
+      const allCorners = document.getElementById('allCorners').checked;
+      const tl = document.getElementById('topLeft').value;
+      const tr = allCorners ? tl : document.getElementById('topRight').value;
+      const bl = allCorners ? tl : document.getElementById('bottomLeft').value;
+      const br = allCorners ? tl : document.getElementById('bottomRight').value;
+
+      document.getElementById('tlValue').textContent = tl;
+      document.getElementById('trValue').textContent = tr;
+      document.getElementById('blValue').textContent = bl;
+      document.getElementById('brValue').textContent = br;
+
+      const preview = document.getElementById('preview');
+      preview.style.borderRadius = `${tl}px ${tr}px ${br}px ${bl}px`;
+
+      let css;
+      if (tl === tr && tr === br && br === bl) {
+        css = `border-radius: ${tl}px;`;
+      } else {
+        css = `border-radius: ${tl}px ${tr}px ${br}px ${bl}px;`;
+      }
+
+      document.getElementById('cssOutput').value = css;
+    }
+
+    function applyPreset(tl, tr, br, bl) {
+      document.getElementById('allCorners').checked = false;
+      document.getElementById('topLeft').value = tl;
+      document.getElementById('topRight').value = tr;
+      document.getElementById('bottomRight').value = br;
+      document.getElementById('bottomLeft').value = bl;
+      
+      ['topRight', 'bottomLeft', 'bottomRight'].forEach(id => {
+        document.getElementById(id).disabled = false;
+      });
+      
+      updateRadius();
+    }
+
+    function copyCSS() {
+      const css = document.getElementById('cssOutput');
+      css.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSS';
+      }, 2000);
+    }
+
+    window.onload = updateRadius;
+  </script>
+</body>
+</html>

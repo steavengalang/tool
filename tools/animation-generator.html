@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .animation-preview {
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212, 255, 58, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      margin: var(--space-6) 0;
+      padding: var(--space-8);
+    }
+    .animated-box {
+      width: 100px;
+      height: 100px;
+      background: var(--accent);
+      border-radius: var(--radius);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⚡ CSS Animation Generator</h1>
+        <p>Create CSS animations with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="animation-preview">
+          <div class="animated-box" id="animatedBox"></div>
+        </div>
+
+        <button class="btn btn-secondary" style="width: 100%; margin-bottom: var(--space-6);" onclick="replayAnimation()">
+          🔄 Replay Animation
+        </button>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4);">
+          <div class="form-group">
+            <label for="animationType">Animation Type:</label>
+            <select id="animationType" onchange="updateAnimation()">
+              <option value="fadeIn">Fade In</option>
+              <option value="fadeOut">Fade Out</option>
+              <option value="slideInLeft">Slide In Left</option>
+              <option value="slideInRight">Slide In Right</option>
+              <option value="slideInUp">Slide In Up</option>
+              <option value="slideInDown">Slide In Down</option>
+              <option value="bounce">Bounce</option>
+              <option value="pulse">Pulse</option>
+              <option value="shake">Shake</option>
+              <option value="rotate">Rotate</option>
+              <option value="scale">Scale</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Duration: <span id="durationValue">1</span>s</label>
+            <input type="range" id="duration" min="0.1" max="5" step="0.1" value="1" oninput="updateAnimation()">
+          </div>
+
+          <div class="form-group">
+            <label for="delay">Delay: <span id="delayValue">0</span>s</label>
+            <input type="range" id="delay" min="0" max="3" step="0.1" value="0" oninput="updateAnimation()">
+          </div>
+
+          <div class="form-group">
+            <label for="timing">Timing Function:</label>
+            <select id="timing" onchange="updateAnimation()">
+              <option value="ease">ease</option>
+              <option value="ease-in">ease-in</option>
+              <option value="ease-out">ease-out</option>
+              <option value="ease-in-out">ease-in-out</option>
+              <option value="linear">linear</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="iteration">Iteration:</label>
+            <select id="iteration" onchange="updateAnimation()">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="infinite">infinite</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="direction">Direction:</label>
+            <select id="direction" onchange="updateAnimation()">
+              <option value="normal">normal</option>
+              <option value="reverse">reverse</option>
+              <option value="alternate">alternate</option>
+              <option value="alternate-reverse">alternate-reverse</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>CSS Code:</label>
+          <textarea id="cssOutput" rows="20" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyCSS()">
+          📋 Copy CSS Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const animations = {
+      fadeIn: `@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}`,
+      fadeOut: `@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}`,
+      slideInLeft: `@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}`,
+      slideInRight: `@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}`,
+      slideInUp: `@keyframes slideInUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}`,
+      slideInDown: `@keyframes slideInDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}`,
+      bounce: `@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}`,
+      pulse: `@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}`,
+      shake: `@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}`,
+      rotate: `@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}`,
+      scale: `@keyframes scale {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}`
+    };
+
+    function updateAnimation() {
+      const type = document.getElementById('animationType').value;
+      const duration = document.getElementById('duration').value;
+      const delay = document.getElementById('delay').value;
+      const timing = document.getElementById('timing').value;
+      const iteration = document.getElementById('iteration').value;
+      const direction = document.getElementById('direction').value;
+
+      document.getElementById('durationValue').textContent = duration;
+      document.getElementById('delayValue').textContent = delay;
+
+      const box = document.getElementById('animatedBox');
+      box.style.animation = 'none';
+      setTimeout(() => {
+        box.style.animation = `${type} ${duration}s ${timing} ${delay}s ${iteration} ${direction}`;
+      }, 10);
+
+      const css = `${animations[type]}
+
+.element {
+  animation-name: ${type};
+  animation-duration: ${duration}s;
+  animation-timing-function: ${timing};
+  animation-delay: ${delay}s;
+  animation-iteration-count: ${iteration};
+  animation-direction: ${direction};
+  
+  /* Shorthand */
+  animation: ${type} ${duration}s ${timing} ${delay}s ${iteration} ${direction};
+}`;
+
+      document.getElementById('cssOutput').value = css;
+    }
+
+    function replayAnimation() {
+      const box = document.getElementById('animatedBox');
+      const currentAnimation = box.style.animation;
+      box.style.animation = 'none';
+      setTimeout(() => {
+        box.style.animation = currentAnimation;
+      }, 10);
+    }
+
+    function copyCSS() {
+      const css = document.getElementById('cssOutput');
+      css.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSS Code';
+      }, 2000);
+    }
+
+    window.onload = updateAnimation;
+  </script>
+</body>
+</html>

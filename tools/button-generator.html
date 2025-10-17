@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .button-preview {
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212, 255, 58, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      margin: var(--space-6) 0;
+      padding: var(--space-8);
+    }
+    #previewButton {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔘 Button Generator</h1>
+        <p>Create custom CSS buttons with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="button-preview">
+          <button id="previewButton">Click Me</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4);">
+          <div class="form-group">
+            <label for="btnText">Button Text:</label>
+            <input type="text" id="btnText" value="Click Me" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="bgColor">Background Color:</label>
+            <input type="color" id="bgColor" value="#d4ff3a" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="textColor">Text Color:</label>
+            <input type="color" id="textColor" value="#0a0a0a" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="fontSize">Font Size: <span id="fontValue">16</span>px</label>
+            <input type="range" id="fontSize" min="12" max="32" value="16" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="padding">Padding: <span id="padValue">12</span>px</label>
+            <input type="range" id="padding" min="8" max="32" value="12" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="borderRadius">Border Radius: <span id="radiusValue">8</span>px</label>
+            <input type="range" id="borderRadius" min="0" max="50" value="8" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="borderWidth">Border Width: <span id="borderValue">0</span>px</label>
+            <input type="range" id="borderWidth" min="0" max="5" value="0" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="borderColor">Border Color:</label>
+            <input type="color" id="borderColor" value="#0a0a0a" oninput="updateButton()">
+          </div>
+
+          <div class="form-group">
+            <label for="fontWeight">Font Weight:</label>
+            <select id="fontWeight" onchange="updateButton()">
+              <option value="400">Normal (400)</option>
+              <option value="500">Medium (500)</option>
+              <option value="600" selected>Semi-Bold (600)</option>
+              <option value="700">Bold (700)</option>
+              <option value="800">Extra Bold (800)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="hoverBg">Hover Background:</label>
+            <input type="color" id="hoverBg" value="#b8e028" oninput="updateButton()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>CSS Code:</label>
+          <textarea id="cssOutput" rows="16" readonly></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="copyCSS()">📋 Copy CSS</button>
+          <button class="btn btn-secondary" onclick="copyHTML()">📄 Copy HTML</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function updateButton() {
+      const btn = document.getElementById('previewButton');
+      const text = document.getElementById('btnText').value;
+      const bgColor = document.getElementById('bgColor').value;
+      const textColor = document.getElementById('textColor').value;
+      const fontSize = document.getElementById('fontSize').value;
+      const padding = document.getElementById('padding').value;
+      const borderRadius = document.getElementById('borderRadius').value;
+      const borderWidth = document.getElementById('borderWidth').value;
+      const borderColor = document.getElementById('borderColor').value;
+      const fontWeight = document.getElementById('fontWeight').value;
+      const hoverBg = document.getElementById('hoverBg').value;
+
+      document.getElementById('fontValue').textContent = fontSize;
+      document.getElementById('padValue').textContent = padding;
+      document.getElementById('radiusValue').textContent = borderRadius;
+      document.getElementById('borderValue').textContent = borderWidth;
+
+      btn.textContent = text;
+      btn.style.backgroundColor = bgColor;
+      btn.style.color = textColor;
+      btn.style.fontSize = fontSize + 'px';
+      btn.style.padding = padding + 'px ' + (padding * 2) + 'px';
+      btn.style.borderRadius = borderRadius + 'px';
+      btn.style.border = borderWidth + 'px solid ' + borderColor;
+      btn.style.fontWeight = fontWeight;
+
+      btn.onmouseover = () => btn.style.backgroundColor = hoverBg;
+      btn.onmouseout = () => btn.style.backgroundColor = bgColor;
+
+      const css = `.button {
+  background-color: ${bgColor};
+  color: ${textColor};
+  font-size: ${fontSize}px;
+  font-weight: ${fontWeight};
+  padding: ${padding}px ${padding * 2}px;
+  border-radius: ${borderRadius}px;
+  border: ${borderWidth}px solid ${borderColor};
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: ${hoverBg};
+  transform: translateY(-2px);
+}
+
+.button:active {
+  transform: translateY(0);
+}`;
+
+      document.getElementById('cssOutput').value = css;
+    }
+
+    function copyCSS() {
+      const css = document.getElementById('cssOutput');
+      css.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied CSS!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSS';
+      }, 2000);
+    }
+
+    function copyHTML() {
+      const text = document.getElementById('btnText').value;
+      const html = `<button class="button">${text}</button>`;
+      navigator.clipboard.writeText(html);
+      event.target.textContent = '✓ Copied HTML!';
+      setTimeout(() => {
+        event.target.textContent = '📄 Copy HTML';
+      }, 2000);
+    }
+
+    window.onload = updateButton;
+  </script>
+</body>
+</html>

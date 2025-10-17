@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON to CSV Converter - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📊 JSON to CSV Converter</h1>
+        <p>Convert JSON data to CSV format with download</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="jsonInput">JSON Input:</label>
+          <textarea id="jsonInput" rows="12" placeholder='[{"name":"John","age":30},{"name":"Jane","age":25}]'></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="convertToCSV()">
+          🔄 Convert to CSV
+        </button>
+
+        <div class="stats-grid" id="stats" style="display: none; margin: var(--space-6) 0;">
+          <div class="stat-box">
+            <div class="stat-value" id="rowCount">0</div>
+            <div class="stat-label">Rows</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="colCount">0</div>
+            <div class="stat-label">Columns</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="csvOutput">CSV Output:</label>
+          <textarea id="csvOutput" rows="12" readonly></textarea>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" onclick="copyCSV()">📋 Copy CSV</button>
+          <button class="btn btn-secondary" onclick="downloadCSV()">💾 Download CSV</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function convertToCSV() {
+      const jsonInput = document.getElementById('jsonInput').value;
+      
+      try {
+        const data = JSON.parse(jsonInput);
+        
+        if (!Array.isArray(data) || data.length === 0) {
+          alert('Please enter a valid JSON array');
+          return;
+        }
+
+        // Get all unique keys
+        const keys = [...new Set(data.flatMap(Object.keys))];
+        
+        // Create CSV header
+        let csv = keys.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+          const values = keys.map(key => {
+            const value = row[key] !== undefined ? row[key] : '';
+            // Escape commas and quotes
+            return typeof value === 'string' && (value.includes(',') || value.includes('"'))
+              ? `"${value.replace(/"/g, '""')}"`
+              : value;
+          });
+          csv += values.join(',') + '\n';
+        });
+
+        document.getElementById('csvOutput').value = csv;
+        document.getElementById('rowCount').textContent = data.length;
+        document.getElementById('colCount').textContent = keys.length;
+        document.getElementById('stats').style.display = 'grid';
+      } catch (e) {
+        alert('Invalid JSON: ' + e.message);
+      }
+    }
+
+    function copyCSV() {
+      const csv = document.getElementById('csvOutput');
+      csv.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSV';
+      }, 2000);
+    }
+
+    function downloadCSV() {
+      const csv = document.getElementById('csvOutput').value;
+      if (!csv) {
+        alert('Please convert JSON to CSV first');
+        return;
+      }
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

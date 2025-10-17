@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV to JSON - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📊 CSV to JSON Converter</h1>
+        <p>Convert CSV data ke format JSON</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="csvInput">CSV Input:</label>
+          <textarea id="csvInput" rows="10" placeholder="name,age,city&#10;John,25,Jakarta&#10;Jane,30,Bandung"></textarea>
+        </div>
+
+        <button class="btn" onclick="convertCSV()">Convert to JSON</button>
+
+        <div class="form-group">
+          <label for="jsonOutput">JSON Output:</label>
+          <textarea id="jsonOutput" rows="10" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function convertCSV() {
+      const csv = document.getElementById('csvInput').value;
+      const lines = csv.split('\n').filter(line => line.trim());
+      
+      if(lines.length < 2) {
+        document.getElementById('jsonOutput').value = 'Error: CSV harus minimal 2 baris (header + data)';
+        return;
+      }
+      
+      const headers = lines[0].split(',').map(h => h.trim());
+      const result = [];
+      
+      for(let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim());
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = values[index] || '';
+        });
+        result.push(obj);
+      }
+      
+      document.getElementById('jsonOutput').value = JSON.stringify(result, null, 2);
+    }
+  </script>
+</body>
+</html>

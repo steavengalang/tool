@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    .qr-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .qr-tab {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+    .qr-tab:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .qr-tab.active {
+      background: var(--accent);
+      color: var(--bg-primary);
+      border-color: var(--accent);
+    }
+    .qr-content-tab {
+      display: none;
+    }
+    .qr-content-tab.active {
+      display: block;
+    }
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 280px;
+      padding: 2rem;
+      background: white;
+      border-radius: var(--radius-md);
+      margin-top: 2rem;
+    }
+    #qrcode canvas,
+    #qrcode img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📱 QR Code Generator</h1>
+        <p>Generate QR Code untuk WhatsApp, Email, WiFi, vCard, URL, SMS, dan Text</p>
+      </div>
+
+      <div class="tool-content">
+        <!-- Tabs -->
+        <div class="qr-tabs">
+          <button class="qr-tab active" onclick="switchTab('text')">📝 Text</button>
+          <button class="qr-tab" onclick="switchTab('url')">🔗 URL</button>
+          <button class="qr-tab" onclick="switchTab('whatsapp')">💬 WhatsApp</button>
+          <button class="qr-tab" onclick="switchTab('email')">📧 Email</button>
+          <button class="qr-tab" onclick="switchTab('sms')">💬 SMS</button>
+          <button class="qr-tab" onclick="switchTab('wifi')">📶 WiFi</button>
+          <button class="qr-tab" onclick="switchTab('vcard')">👤 vCard</button>
+        </div>
+
+        <!-- Text Tab -->
+        <div id="tab-text" class="qr-content-tab active">
+          <div class="form-group">
+            <label for="text-input">Text:</label>
+            <textarea id="text-input" rows="4" placeholder="Masukkan text..."></textarea>
+          </div>
+        </div>
+
+        <!-- URL Tab -->
+        <div id="tab-url" class="qr-content-tab">
+          <div class="form-group">
+            <label for="url-input">URL:</label>
+            <input type="text" id="url-input" placeholder="https://example.com">
+          </div>
+        </div>
+
+        <!-- WhatsApp Tab -->
+        <div id="tab-whatsapp" class="qr-content-tab">
+          <div class="form-group">
+            <label for="wa-number">Nomor WhatsApp:</label>
+            <input type="text" id="wa-number" placeholder="628123456789 (tanpa +)">
+          </div>
+          <div class="form-group">
+            <label for="wa-message">Pesan (opsional):</label>
+            <textarea id="wa-message" rows="3" placeholder="Halo, saya tertarik dengan..."></textarea>
+          </div>
+        </div>
+
+        <!-- Email Tab -->
+        <div id="tab-email" class="qr-content-tab">
+          <div class="form-group">
+            <label for="email-to">Email:</label>
+            <input type="email" id="email-to" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label for="email-subject">Subject:</label>
+            <input type="text" id="email-subject" placeholder="Subjek email">
+          </div>
+          <div class="form-group">
+            <label for="email-body">Pesan:</label>
+            <textarea id="email-body" rows="3" placeholder="Isi pesan email..."></textarea>
+          </div>
+        </div>
+
+        <!-- SMS Tab -->
+        <div id="tab-sms" class="qr-content-tab">
+          <div class="form-group">
+            <label for="sms-number">Nomor Telepon:</label>
+            <input type="text" id="sms-number" placeholder="628123456789">
+          </div>
+          <div class="form-group">
+            <label for="sms-message">Pesan:</label>
+            <textarea id="sms-message" rows="3" placeholder="Isi pesan SMS..."></textarea>
+          </div>
+        </div>
+
+        <!-- WiFi Tab -->
+        <div id="tab-wifi" class="qr-content-tab">
+          <div class="form-group">
+            <label for="wifi-ssid">SSID (Nama WiFi):</label>
+            <input type="text" id="wifi-ssid" placeholder="MyWiFi">
+          </div>
+          <div class="form-group">
+            <label for="wifi-password">Password:</label>
+            <input type="text" id="wifi-password" placeholder="password123">
+          </div>
+          <div class="form-group">
+            <label for="wifi-type">Security Type:</label>
+            <select id="wifi-type">
+              <option value="WPA">WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">No Password</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="wifi-hidden"> Hidden Network
+            </label>
+          </div>
+        </div>
+
+        <!-- vCard Tab -->
+        <div id="tab-vcard" class="qr-content-tab">
+          <div class="form-group">
+            <label for="vcard-name">Nama Lengkap:</label>
+            <input type="text" id="vcard-name" placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="vcard-org">Organisasi/Perusahaan:</label>
+            <input type="text" id="vcard-org" placeholder="PT. Contoh">
+          </div>
+          <div class="form-group">
+            <label for="vcard-tel">Telepon:</label>
+            <input type="text" id="vcard-tel" placeholder="628123456789">
+          </div>
+          <div class="form-group">
+            <label for="vcard-email">Email:</label>
+            <input type="email" id="vcard-email" placeholder="john@example.com">
+          </div>
+          <div class="form-group">
+            <label for="vcard-url">Website:</label>
+            <input type="text" id="vcard-url" placeholder="https://example.com">
+          </div>
+          <div class="form-group">
+            <label for="vcard-address">Alamat:</label>
+            <textarea id="vcard-address" rows="2" placeholder="Jl. Contoh No. 123, Jakarta"></textarea>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button class="btn btn-primary" onclick="generateQR()" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Generate QR Code
+        </button>
+
+        <!-- QR Code Display -->
+        <div id="qrcode"></div>
+
+        <!-- Download Button -->
+        <button class="btn btn-secondary" id="downloadBtn" onclick="downloadQR()" style="width: 100%; justify-content: center; margin-top: 1rem; display: none;">
+          Download QR Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let qrcode = null;
+    let currentTab = 'text';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      
+      // Update active tab button
+      document.querySelectorAll('.qr-tab').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Update active content
+      document.querySelectorAll('.qr-content-tab').forEach(content => content.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      
+      // Clear QR code
+      document.getElementById('qrcode').innerHTML = '';
+      document.getElementById('downloadBtn').style.display = 'none';
+    }
+
+    function generateQR() {
+      let qrData = '';
+      
+      switch(currentTab) {
+        case 'text':
+          qrData = document.getElementById('text-input').value;
+          break;
+          
+        case 'url':
+          qrData = document.getElementById('url-input').value;
+          break;
+          
+        case 'whatsapp':
+          const waNumber = document.getElementById('wa-number').value;
+          const waMessage = document.getElementById('wa-message').value;
+          qrData = `https://wa.me/${waNumber}${waMessage ? '?text=' + encodeURIComponent(waMessage) : ''}`;
+          break;
+          
+        case 'email':
+          const emailTo = document.getElementById('email-to').value;
+          const emailSubject = document.getElementById('email-subject').value;
+          const emailBody = document.getElementById('email-body').value;
+          qrData = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+          break;
+          
+        case 'sms':
+          const smsNumber = document.getElementById('sms-number').value;
+          const smsMessage = document.getElementById('sms-message').value;
+          qrData = `sms:${smsNumber}${smsMessage ? '?body=' + encodeURIComponent(smsMessage) : ''}`;
+          break;
+          
+        case 'wifi':
+          const ssid = document.getElementById('wifi-ssid').value;
+          const password = document.getElementById('wifi-password').value;
+          const type = document.getElementById('wifi-type').value;
+          const hidden = document.getElementById('wifi-hidden').checked ? 'true' : 'false';
+          qrData = `WIFI:T:${type};S:${ssid};P:${password};H:${hidden};;`;
+          break;
+          
+        case 'vcard':
+          const name = document.getElementById('vcard-name').value;
+          const org = document.getElementById('vcard-org').value;
+          const tel = document.getElementById('vcard-tel').value;
+          const email = document.getElementById('vcard-email').value;
+          const url = document.getElementById('vcard-url').value;
+          const address = document.getElementById('vcard-address').value;
+          
+          qrData = `BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+ORG:${org}
+TEL:${tel}
+EMAIL:${email}
+URL:${url}
+ADR:${address}
+END:VCARD`;
+          break;
+      }
+      
+      if(!qrData) {
+        alert('Masukkan data terlebih dahulu!');
+        return;
+      }
+      
+      // Clear previous QR
+      const container = document.getElementById('qrcode');
+      container.innerHTML = '';
+      
+      // Generate new QR
+      qrcode = new QRCode(container, {
+        text: qrData,
+        width: 280,
+        height: 280,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+      
+      // Show download button
+      setTimeout(() => {
+        document.getElementById('downloadBtn').style.display = 'block';
+      }, 100);
+    }
+
+    function downloadQR() {
+      const canvas = document.querySelector('#qrcode canvas');
+      if(!canvas) {
+        const img = document.querySelector('#qrcode img');
+        if(img) {
+          const link = document.createElement('a');
+          link.download = 'qrcode.png';
+          link.href = img.src;
+          link.click();
+        }
+        return;
+      }
+      
+      const link = document.createElement('a');
+      link.download = 'qrcode.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Grid Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .grid-preview {
+      min-height: 400px;
+      background: rgba(212, 255, 58, 0.1);
+      border: 2px dashed var(--accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-6) 0;
+      display: grid;
+    }
+    .grid-item {
+      background: var(--accent);
+      color: var(--bg-primary);
+      padding: var(--space-4);
+      border-radius: var(--radius);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔲 CSS Grid Generator</h1>
+        <p>Generate CSS Grid layout code with live preview</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="grid-preview" id="preview"></div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4);">
+          <div class="form-group">
+            <label for="columns">Columns: <span id="colValue">3</span></label>
+            <input type="range" id="columns" min="1" max="6" value="3" oninput="updateGrid()">
+          </div>
+
+          <div class="form-group">
+            <label for="rows">Rows: <span id="rowValue">3</span></label>
+            <input type="range" id="rows" min="1" max="6" value="3" oninput="updateGrid()">
+          </div>
+
+          <div class="form-group">
+            <label for="columnGap">Column Gap: <span id="colGapValue">16</span>px</label>
+            <input type="range" id="columnGap" min="0" max="50" value="16" oninput="updateGrid()">
+          </div>
+
+          <div class="form-group">
+            <label for="rowGap">Row Gap: <span id="rowGapValue">16</span>px</label>
+            <input type="range" id="rowGap" min="0" max="50" value="16" oninput="updateGrid()">
+          </div>
+
+          <div class="form-group">
+            <label for="colSize">Column Size:</label>
+            <select id="colSize" onchange="updateGrid()">
+              <option value="1fr">1fr (equal)</option>
+              <option value="auto">auto</option>
+              <option value="100px">100px (fixed)</option>
+              <option value="minmax(100px, 1fr)">minmax(100px, 1fr)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rowSize">Row Size:</label>
+            <select id="rowSize" onchange="updateGrid()">
+              <option value="1fr">1fr (equal)</option>
+              <option value="auto">auto</option>
+              <option value="100px">100px (fixed)</option>
+              <option value="minmax(100px, 1fr)">minmax(100px, 1fr)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>CSS Code:</label>
+          <textarea id="cssOutput" rows="12" readonly></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="copyCSS()">
+          📋 Copy CSS Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function updateGrid() {
+      const preview = document.getElementById('preview');
+      const columns = document.getElementById('columns').value;
+      const rows = document.getElementById('rows').value;
+      const columnGap = document.getElementById('columnGap').value;
+      const rowGap = document.getElementById('rowGap').value;
+      const colSize = document.getElementById('colSize').value;
+      const rowSize = document.getElementById('rowSize').value;
+
+      document.getElementById('colValue').textContent = columns;
+      document.getElementById('rowValue').textContent = rows;
+      document.getElementById('colGapValue').textContent = columnGap;
+      document.getElementById('rowGapValue').textContent = rowGap;
+
+      const colTemplate = `repeat(${columns}, ${colSize})`;
+      const rowTemplate = `repeat(${rows}, ${rowSize})`;
+
+      preview.style.gridTemplateColumns = colTemplate;
+      preview.style.gridTemplateRows = rowTemplate;
+      preview.style.columnGap = columnGap + 'px';
+      preview.style.rowGap = rowGap + 'px';
+
+      // Generate items
+      const totalItems = columns * rows;
+      preview.innerHTML = '';
+      for (let i = 1; i <= totalItems; i++) {
+        const item = document.createElement('div');
+        item.className = 'grid-item';
+        item.textContent = i;
+        preview.appendChild(item);
+      }
+
+      const css = `.container {
+  display: grid;
+  grid-template-columns: ${colTemplate};
+  grid-template-rows: ${rowTemplate};
+  column-gap: ${columnGap}px;
+  row-gap: ${rowGap}px;
+  /* or use: gap: ${rowGap}px ${columnGap}px; */
+}`;
+
+      document.getElementById('cssOutput').value = css;
+    }
+
+    function copyCSS() {
+      const css = document.getElementById('cssOutput');
+      css.select();
+      document.execCommand('copy');
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => {
+        event.target.textContent = '📋 Copy CSS Code';
+      }, 2000);
+    }
+
+    window.onload = updateGrid;
+  </script>
+</body>
+</html>
