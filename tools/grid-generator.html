@@ -3,236 +3,308 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced CSS Grid Generator - ToolsKita</title>
+  <title>CSS Grid Generator - ToolsKita</title>
   <link rel="stylesheet" href="../css/style.css">
   <style>
-    .grid-workspace {
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: var(--space-6);
-      margin: var(--space-6) 0;
+    .generator-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--space-6);
     }
 
-    .grid-canvas-container {
-      background: rgba(212, 255, 58, 0.03);
-      border: 2px dashed var(--glass-border);
-      border-radius: var(--radius-lg);
+    .instructions {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      border: 1px solid var(--glass-border);
       padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-8);
+    }
+
+    .instructions h3 {
+      margin-bottom: var(--space-4);
+      color: var(--accent);
+      font-size: 1.125rem;
+    }
+
+    .instructions ol {
+      padding-left: var(--space-6);
+      line-height: 2;
+      color: var(--text-secondary);
+    }
+
+    .instructions ol li {
+      margin-bottom: var(--space-2);
+    }
+
+    .controls {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      border: 1px solid var(--glass-border);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+    }
+
+    .control-group button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.25rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .control-group button:hover {
+      background: var(--accent);
+      color: var(--bg-primary);
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .control-group span {
+      min-width: 80px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .control-group .value {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.125rem;
+    }
+
+    .canvas-wrapper {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      border: 1px solid var(--glass-border);
+      padding: var(--space-12);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: var(--space-8);
       min-height: 600px;
-      position: relative;
-      overflow: auto;
     }
 
     .grid-canvas {
       display: grid;
-      min-height: 500px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
       position: relative;
-      backdrop-filter: var(--blur-md);
-      box-shadow: var(--shadow-lg);
+      min-width: 600px;
+      min-height: 500px;
     }
 
     .grid-cell {
       border: 1px solid rgba(212, 255, 58, 0.2);
-      background: rgba(212, 255, 58, 0.05);
+      background: rgba(212, 255, 58, 0.03);
       position: relative;
+      min-height: 80px;
       transition: all 0.2s ease;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      color: var(--text-tertiary);
+      border-radius: 4px;
     }
 
     .grid-cell:hover {
-      background: rgba(212, 255, 58, 0.15);
-      border-color: var(--accent);
-      z-index: 1;
+      background: rgba(212, 255, 58, 0.08);
+      border-color: rgba(212, 255, 58, 0.4);
     }
 
-    .grid-cell.selected {
-      background: rgba(212, 255, 58, 0.25);
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 20px rgba(212, 255, 58, 0.3);
-      z-index: 2;
+    .add-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--bg-primary);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 300;
     }
 
-    .grid-cell.merged {
+    .grid-cell:hover .add-btn {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .grid-item {
       background: linear-gradient(135deg, rgba(212, 255, 58, 0.2), rgba(212, 255, 58, 0.1));
-      border: 2px solid var(--accent);
+      border: 2px solid rgba(212, 255, 58, 0.4);
+      border-radius: var(--radius);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--accent);
+      cursor: move;
+      min-height: 80px;
+      transition: all 0.2s ease;
     }
 
-    .grid-controls {
+    .grid-item:hover {
+      background: linear-gradient(135deg, rgba(212, 255, 58, 0.3), rgba(212, 255, 58, 0.15));
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(212, 255, 58, 0.3);
+      transform: scale(1.02);
+      z-index: 10;
+    }
+
+    .grid-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .resize-handle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      cursor: nwse-resize;
+      border-radius: 0 0 var(--radius) 0;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .resize-handle::before {
+      content: '⋮⋮';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      color: var(--bg-primary);
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .grid-item:hover .resize-handle {
+      opacity: 1;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      background: rgba(239, 68, 68, 0.9);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      opacity: 0;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .grid-item:hover .delete-btn {
+      opacity: 1;
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+      transform: scale(1.15);
+    }
+
+    .code-section {
       background: var(--glass-bg);
       backdrop-filter: var(--blur-md);
       border: 1px solid var(--glass-border);
+      padding: var(--space-8);
       border-radius: var(--radius-lg);
-      padding: var(--space-6);
-      height: fit-content;
-      position: sticky;
-      top: var(--space-6);
     }
 
-    .control-section {
-      margin-bottom: var(--space-6);
-      padding-bottom: var(--space-6);
-      border-bottom: 1px solid var(--glass-border);
-    }
-
-    .control-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .control-section h4 {
-      font-size: 0.875rem;
-      color: var(--accent);
+    .code-section h3 {
       margin-bottom: var(--space-4);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 700;
-    }
-
-    .number-input {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      margin-bottom: var(--space-3);
-    }
-
-    .number-input button {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--glass-border);
-      background: var(--glass-bg);
       color: var(--accent);
+      font-size: 1.125rem;
+    }
+
+    .code-tabs {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    .code-tab {
+      padding: var(--space-3) var(--space-5);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius);
+      color: var(--text-secondary);
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
       transition: all 0.2s ease;
     }
 
-    .number-input button:hover {
+    .code-tab.active {
       background: var(--accent);
       color: var(--bg-primary);
-      transform: scale(1.1);
-    }
-
-    .number-input input {
-      width: 60px;
-      text-align: center;
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      color: var(--text-primary);
-      font-weight: 700;
-    }
-
-    .size-inputs {
-      display: grid;
-      gap: var(--space-2);
-    }
-
-    .size-input-row {
-      display: flex;
-      gap: var(--space-2);
-      align-items: center;
-    }
-
-    .size-input-row input {
-      flex: 1;
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      color: var(--text-primary);
-      font-size: 0.875rem;
-    }
-
-    .size-input-row button {
-      padding: 6px 10px;
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid #ef4444;
-      color: #ef4444;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .action-buttons {
-      display: grid;
-      gap: var(--space-2);
-    }
-
-    .action-btn {
-      padding: 10px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      color: var(--text-primary);
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      text-align: left;
-    }
-
-    .action-btn:hover {
-      background: var(--accent-muted);
       border-color: var(--accent);
-      color: var(--accent);
-      transform: translateX(4px);
     }
 
-    .action-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .grid-lines {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.3;
-    }
-
-    .preset-grids {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-2);
-    }
-
-    .preset-btn {
-      padding: var(--space-3);
-      background: var(--glass-bg);
+    .code-box {
+      background: rgba(10, 10, 10, 0.9);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-      font-size: 0.75rem;
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+      position: relative;
     }
 
-    .preset-btn:hover {
-      border-color: var(--accent);
-      background: var(--accent-muted);
+    .code-box pre {
+      margin: 0;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.875rem;
+      line-height: 1.8;
+      color: #e0e0e0;
+      overflow-x: auto;
     }
 
-    @media (max-width: 1024px) {
-      .grid-workspace {
-        grid-template-columns: 1fr;
-      }
-      .grid-controls {
-        position: static;
-      }
-    }
+    .code-box .tag { color: #5ccfe6; }
+    .code-box .attr { color: #ffc66d; }
+    .code-box .string { color: #a9dc76; }
+    .code-box .property { color: #78dce8; }
+    .code-box .value { color: #d4ff3a; }
+    .code-box .selector { color: #fc9867; }
+    .code-box .comment { color: #5c6370; }
   </style>
 </head>
 <body>
@@ -245,116 +317,63 @@
   <main class="tool-page">
     <div class="container">
       <div class="tool-header">
-        <h1>🔲 Advanced CSS Grid Generator</h1>
-        <p>Visual drag & drop grid builder - Click cells to select and merge</p>
+        <h1>🔲 CSS Grid Generator</h1>
+        <p>Create custom CSS grid layouts with drag & drop • Click + to add items • Resize & reposition easily</p>
       </div>
 
       <div class="tool-content">
-        <div class="grid-workspace">
-          <!-- Canvas Area -->
-          <div class="grid-canvas-container">
+        <div class="generator-layout">
+          <div class="instructions">
+            <h3>How to use CSS Grid Generator?</h3>
+            <ol>
+              <li>Customize the number of columns, rows, and gaps to fit your needs.</li>
+              <li>Click the square with + sign to add a new element to the grid.</li>
+              <li>Resize the DIV using the handle in the bottom right corner.</li>
+              <li>Drag and drop the DIV to reposition it as desired.</li>
+              <li>Finally, copy the generated HTML and CSS code and paste it into your project.</li>
+            </ol>
+          </div>
+
+          <div class="controls">
+            <div class="control-group">
+              <button onclick="changeCols(-1)">−</button>
+              <span>Columns</span>
+              <span class="value" id="colsVal">5</span>
+              <button onclick="changeCols(1)">+</button>
+            </div>
+            <div class="control-group">
+              <button onclick="changeRows(-1)">−</button>
+              <span>Rows</span>
+              <span class="value" id="rowsVal">4</span>
+              <button onclick="changeRows(1)">+</button>
+            </div>
+            <div class="control-group">
+              <button onclick="changeGap(-2)">−</button>
+              <span>Gap</span>
+              <span class="value" id="gapVal">10</span>
+              <button onclick="changeGap(2)">+</button>
+            </div>
+          </div>
+
+          <div class="canvas-wrapper">
             <div class="grid-canvas" id="gridCanvas"></div>
           </div>
 
-          <!-- Controls Panel -->
-          <div class="grid-controls">
-            <!-- Grid Size -->
-            <div class="control-section">
-              <h4>📐 Grid Size</h4>
-              <div class="number-input">
-                <span style="flex: 1; font-size: 0.875rem;">Columns:</span>
-                <button onclick="changeColumns(-1)">−</button>
-                <input type="number" id="colCount" value="3" min="1" max="12" onchange="updateGrid()">
-                <button onclick="changeColumns(1)">+</button>
-              </div>
-              <div class="number-input">
-                <span style="flex: 1; font-size: 0.875rem;">Rows:</span>
-                <button onclick="changeRows(-1)">−</button>
-                <input type="number" id="rowCount" value="3" min="1" max="12" onchange="updateGrid()">
-                <button onclick="changeRows(1)">+</button>
-              </div>
+          <div class="code-section">
+            <h3>📝 Generated Code</h3>
+            
+            <div class="code-tabs">
+              <div class="code-tab active" onclick="switchTab('html')">HTML</div>
+              <div class="code-tab" onclick="switchTab('css')">CSS</div>
             </div>
 
-            <!-- Column Sizes -->
-            <div class="control-section">
-              <h4>📏 Column Sizes</h4>
-              <div class="size-inputs" id="columnSizes"></div>
-              <button class="btn btn-secondary" style="width: 100%; margin-top: var(--space-3); font-size: 0.875rem;" onclick="resetColumnSizes()">Reset All</button>
+            <div class="code-box" id="htmlCode" style="display: block;"></div>
+            <div class="code-box" id="cssCode" style="display: none;"></div>
+
+            <div class="button-group">
+              <button class="btn btn-primary" onclick="copyCode()">📋 Copy Code</button>
+              <button class="btn btn-secondary" onclick="copyAll()">Copy All</button>
             </div>
-
-            <!-- Row Sizes -->
-            <div class="control-section">
-              <h4>📐 Row Sizes</h4>
-              <div class="size-inputs" id="rowSizes"></div>
-              <button class="btn btn-secondary" style="width: 100%; margin-top: var(--space-3); font-size: 0.875rem;" onclick="resetRowSizes()">Reset All</button>
-            </div>
-
-            <!-- Gap Controls -->
-            <div class="control-section">
-              <h4>↔️ Gap</h4>
-              <div class="form-group">
-                <label for="columnGap" style="font-size: 0.875rem;">Column: <span id="colGapValue">16</span>px</label>
-                <input type="range" id="columnGap" min="0" max="50" value="16" oninput="updateGrid()">
-              </div>
-              <div class="form-group">
-                <label for="rowGap" style="font-size: 0.875rem;">Row: <span id="rowGapValue">16</span>px</label>
-                <input type="range" id="rowGap" min="0" max="50" value="16" oninput="updateGrid()">
-              </div>
-            </div>
-
-            <!-- Cell Actions -->
-            <div class="control-section">
-              <h4>🎯 Cell Actions</h4>
-              <div class="action-buttons">
-                <button class="action-btn" onclick="mergeCells()" id="mergeBtn" disabled>
-                  🔗 Merge Selected Cells
-                </button>
-                <button class="action-btn" onclick="clearSelection()">
-                  ❌ Clear Selection
-                </button>
-                <button class="action-btn" onclick="resetGrid()">
-                  🔄 Reset Grid
-                </button>
-              </div>
-            </div>
-
-            <!-- Quick Presets -->
-            <div class="control-section">
-              <h4>⚡ Quick Presets</h4>
-              <div class="preset-grids">
-                <button class="preset-btn" onclick="loadPreset('holy-grail')">
-                  Holy Grail<br>Layout
-                </button>
-                <button class="preset-btn" onclick="loadPreset('sidebar')">
-                  Sidebar<br>Layout
-                </button>
-                <button class="preset-btn" onclick="loadPreset('magazine')">
-                  Magazine<br>Layout
-                </button>
-                <button class="preset-btn" onclick="loadPreset('dashboard')">
-                  Dashboard<br>Layout
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Code Output -->
-        <div style="margin-top: var(--space-8);">
-          <div class="form-group">
-            <label>HTML Code:</label>
-            <textarea id="htmlOutput" rows="10" readonly></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>CSS Code:</label>
-            <textarea id="cssOutput" rows="15" readonly></textarea>
-          </div>
-
-          <div class="button-group">
-            <button class="btn btn-primary" onclick="copyAllCode()">📋 Copy All Code</button>
-            <button class="btn btn-secondary" onclick="copyCode('html')">Copy HTML</button>
-            <button class="btn btn-secondary" onclick="copyCode('css')">Copy CSS</button>
           </div>
         </div>
       </div>
@@ -362,349 +381,220 @@
   </main>
 
   <script>
-    let columns = 3;
-    let rows = 3;
-    let columnSizes = ['1fr', '1fr', '1fr'];
-    let rowSizes = ['1fr', '1fr', '1fr'];
-    let selectedCells = new Set();
-    let mergedCells = new Map();
+    let cols = 5;
+    let rows = 4;
+    let gap = 10;
+    let items = [];
+    let itemCounter = 0;
+    let draggedItem = null;
+    let currentTab = 'html';
 
-    function changeColumns(delta) {
-      const input = document.getElementById('colCount');
-      const newVal = parseInt(input.value) + delta;
-      if (newVal >= 1 && newVal <= 12) {
-        input.value = newVal;
-        updateGrid();
-      }
+    function changeCols(delta) {
+      cols = Math.max(1, Math.min(12, cols + delta));
+      render();
     }
 
     function changeRows(delta) {
-      const input = document.getElementById('rowCount');
-      const newVal = parseInt(input.value) + delta;
-      if (newVal >= 1 && newVal <= 12) {
-        input.value = newVal;
-        updateGrid();
+      rows = Math.max(1, Math.min(12, rows + delta));
+      render();
+    }
+
+    function changeGap(delta) {
+      gap = Math.max(0, Math.min(50, gap + delta));
+      render();
+    }
+
+    function addItemAtCell(col, row) {
+      const occupied = items.some(item => 
+        col >= item.col && col < item.col + item.colSpan &&
+        row >= item.row && row < item.row + item.rowSpan
+      );
+      
+      if (!occupied) {
+        itemCounter++;
+        items.push({
+          id: itemCounter,
+          col: col,
+          row: row,
+          colSpan: 1,
+          rowSpan: 1
+        });
+        render();
       }
     }
 
-    function updateGrid() {
-      columns = parseInt(document.getElementById('colCount').value) || 3;
-      rows = parseInt(document.getElementById('rowCount').value) || 3;
-      
-      // Adjust sizes arrays
-      while (columnSizes.length < columns) columnSizes.push('1fr');
-      while (columnSizes.length > columns) columnSizes.pop();
-      while (rowSizes.length < rows) rowSizes.push('1fr');
-      while (rowSizes.length > rows) rowSizes.pop();
-
-      renderGrid();
-      renderSizeControls();
-      generateCode();
+    function deleteItem(id) {
+      items = items.filter(item => item.id !== id);
+      render();
     }
 
-    function renderGrid() {
+    function render() {
+      document.getElementById('colsVal').textContent = cols;
+      document.getElementById('rowsVal').textContent = rows;
+      document.getElementById('gapVal').textContent = gap;
+
       const canvas = document.getElementById('gridCanvas');
-      const colGap = document.getElementById('columnGap').value;
-      const rowGap = document.getElementById('rowGap').value;
-      
-      document.getElementById('colGapValue').textContent = colGap;
-      document.getElementById('rowGapValue').textContent = rowGap;
-
-      canvas.style.gridTemplateColumns = columnSizes.join(' ');
-      canvas.style.gridTemplateRows = rowSizes.join(' ');
-      canvas.style.columnGap = colGap + 'px';
-      canvas.style.rowGap = rowGap + 'px';
-
-      // Clear and rebuild cells
+      canvas.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      canvas.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+      canvas.style.gap = `${gap}px`;
       canvas.innerHTML = '';
-      
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-          const cellId = `${r}-${c}`;
-          
-          // Skip if part of merged cell
-          if (isCellInMerged(r, c)) continue;
 
-          const cell = document.createElement('div');
-          cell.className = 'grid-cell';
-          cell.dataset.row = r;
-          cell.dataset.col = c;
-          cell.textContent = `${r + 1},${c + 1}`;
-          
-          // Check if merged
-          if (mergedCells.has(cellId)) {
-            const merge = mergedCells.get(cellId);
-            cell.style.gridColumn = `${c + 1} / span ${merge.colSpan}`;
-            cell.style.gridRow = `${r + 1} / span ${merge.rowSpan}`;
-            cell.classList.add('merged');
-            cell.textContent = `Merged (${merge.rowSpan}×${merge.colSpan})`;
+      for (let r = 1; r <= rows; r++) {
+        for (let c = 1; c <= cols; c++) {
+          const occupied = items.some(item => 
+            c >= item.col && c < item.col + item.colSpan &&
+            r >= item.row && r < item.row + item.rowSpan
+          );
+
+          if (!occupied) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            const addBtn = document.createElement('button');
+            addBtn.className = 'add-btn';
+            addBtn.textContent = '+';
+            addBtn.onclick = () => addItemAtCell(c, r);
+            cell.appendChild(addBtn);
+            canvas.appendChild(cell);
           }
+        }
+      }
 
-          if (selectedCells.has(cellId)) {
-            cell.classList.add('selected');
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'grid-item';
+        div.textContent = item.id;
+        div.draggable = true;
+        div.style.gridColumn = `${item.col} / span ${item.colSpan}`;
+        div.style.gridRow = `${item.row} / span ${item.rowSpan}`;
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.textContent = '×';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteItem(item.id);
+        };
+        div.appendChild(delBtn);
+
+        const handle = document.createElement('div');
+        handle.className = 'resize-handle';
+        handle.onmousedown = (e) => startResize(e, item);
+        div.appendChild(handle);
+
+        div.ondragstart = () => {
+          draggedItem = item;
+          div.classList.add('dragging');
+        };
+
+        div.ondragend = () => {
+          div.classList.remove('dragging');
+          draggedItem = null;
+        };
+
+        div.ondragover = (e) => e.preventDefault();
+
+        div.ondrop = (e) => {
+          e.preventDefault();
+          if (draggedItem && draggedItem !== item) {
+            const tempCol = item.col;
+            const tempRow = item.row;
+            item.col = draggedItem.col;
+            item.row = draggedItem.row;
+            draggedItem.col = tempCol;
+            draggedItem.row = tempRow;
+            render();
           }
+        };
 
-          cell.onclick = () => toggleCell(r, c);
-          canvas.appendChild(cell);
-        }
-      }
-    }
-
-    function isCellInMerged(row, col) {
-      for (let [key, merge] of mergedCells) {
-        const [r, c] = key.split('-').map(Number);
-        if (row >= r && row < r + merge.rowSpan &&
-            col >= c && col < c + merge.colSpan &&
-            !(row === r && col === c)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    function toggleCell(row, col) {
-      const cellId = `${row}-${col}`;
-      
-      if (selectedCells.has(cellId)) {
-        selectedCells.delete(cellId);
-      } else {
-        selectedCells.add(cellId);
-      }
-      
-      renderGrid();
-      updateMergeButton();
-    }
-
-    function updateMergeButton() {
-      const btn = document.getElementById('mergeBtn');
-      btn.disabled = selectedCells.size < 2;
-    }
-
-    function mergeCells() {
-      if (selectedCells.size < 2) return;
-
-      const cells = Array.from(selectedCells).map(id => {
-        const [r, c] = id.split('-').map(Number);
-        return { row: r, col: c };
+        canvas.appendChild(div);
       });
 
-      const minRow = Math.min(...cells.map(c => c.row));
-      const maxRow = Math.max(...cells.map(c => c.row));
-      const minCol = Math.min(...cells.map(c => c.col));
-      const maxCol = Math.max(...cells.map(c => c.col));
-
-      const rowSpan = maxRow - minRow + 1;
-      const colSpan = maxCol - minCol + 1;
-
-      mergedCells.set(`${minRow}-${minCol}`, { rowSpan, colSpan });
-      
-      // Remove other selected cells from merged
-      cells.forEach(cell => {
-        const id = `${cell.row}-${cell.col}`;
-        if (id !== `${minRow}-${minCol}`) {
-          mergedCells.delete(id);
-        }
-      });
-
-      clearSelection();
-      renderGrid();
       generateCode();
     }
 
-    function clearSelection() {
-      selectedCells.clear();
-      renderGrid();
-      updateMergeButton();
-    }
+    function startResize(e, item) {
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startColSpan = item.colSpan;
+      const startRowSpan = item.rowSpan;
 
-    function resetGrid() {
-      selectedCells.clear();
-      mergedCells.clear();
-      renderGrid();
-      generateCode();
-    }
+      const onMove = (e) => {
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        const newColSpan = Math.max(1, startColSpan + Math.round(deltaX / 80));
+        const newRowSpan = Math.max(1, startRowSpan + Math.round(deltaY / 80));
+        item.colSpan = Math.min(newColSpan, cols - item.col + 1);
+        item.rowSpan = Math.min(newRowSpan, rows - item.row + 1);
+        render();
+      };
 
-    function renderSizeControls() {
-      // Column sizes
-      const colContainer = document.getElementById('columnSizes');
-      colContainer.innerHTML = '';
-      columnSizes.forEach((size, i) => {
-        const div = document.createElement('div');
-        div.className = 'size-input-row';
-        div.innerHTML = `
-          <span style="min-width: 60px; font-size: 0.875rem;">Col ${i + 1}:</span>
-          <input type="text" value="${size}" onchange="updateColumnSize(${i}, this.value)">
-        `;
-        colContainer.appendChild(div);
-      });
+      const onUp = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
 
-      // Row sizes
-      const rowContainer = document.getElementById('rowSizes');
-      rowContainer.innerHTML = '';
-      rowSizes.forEach((size, i) => {
-        const div = document.createElement('div');
-        div.className = 'size-input-row';
-        div.innerHTML = `
-          <span style="min-width: 60px; font-size: 0.875rem;">Row ${i + 1}:</span>
-          <input type="text" value="${size}" onchange="updateRowSize(${i}, this.value)">
-        `;
-        rowContainer.appendChild(div);
-      });
-    }
-
-    function updateColumnSize(index, value) {
-      columnSizes[index] = value;
-      renderGrid();
-      generateCode();
-    }
-
-    function updateRowSize(index, value) {
-      rowSizes[index] = value;
-      renderGrid();
-      generateCode();
-    }
-
-    function resetColumnSizes() {
-      columnSizes = columnSizes.map(() => '1fr');
-      renderSizeControls();
-      renderGrid();
-      generateCode();
-    }
-
-    function resetRowSizes() {
-      rowSizes = rowSizes.map(() => '1fr');
-      renderSizeControls();
-      renderGrid();
-      generateCode();
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
     }
 
     function generateCode() {
-      const colGap = document.getElementById('columnGap').value;
-      const rowGap = document.getElementById('rowGap').value;
-
-      // HTML
-      let html = '<div class="grid-container">\n';
-      let itemIndex = 1;
+      let html = `<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"grid-container"</span><span class="tag">&gt;</span>\n`;
       
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-          if (isCellInMerged(r, c) && !mergedCells.has(`${r}-${c}`)) continue;
-          html += `  <div class="grid-item item-${itemIndex}">Item ${itemIndex}</div>\n`;
-          itemIndex++;
-        }
-      }
-      html += '</div>';
+      items.forEach(item => {
+        html += `  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"item-${item.id}"</span><span class="tag">&gt;</span>${item.id}<span class="tag">&lt;/div&gt;</span>\n`;
+      });
+      
+      html += `<span class="tag">&lt;/div&gt;</span>`;
 
-      // CSS
-      let css = `.grid-container {
-  display: grid;
-  grid-template-columns: ${columnSizes.join(' ')};
-  grid-template-rows: ${rowSizes.join(' ')};
-  column-gap: ${colGap}px;
-  row-gap: ${rowGap}px;
-}\n\n`;
+      let css = `<span class="selector">.grid-container</span> {\n`;
+      css += `  <span class="property">display</span>: <span class="value">grid</span>;\n`;
+      css += `  <span class="property">grid-template-columns</span>: <span class="value">repeat(${cols}, 1fr)</span>;\n`;
+      css += `  <span class="property">grid-template-rows</span>: <span class="value">repeat(${rows}, 1fr)</span>;\n`;
+      css += `  <span class="property">gap</span>: <span class="value">${gap}px</span>;\n}\n\n`;
 
-      // Add merged cell styles
-      itemIndex = 1;
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-          const cellId = `${r}-${c}`;
-          if (isCellInMerged(r, c) && !mergedCells.has(cellId)) continue;
-          
-          if (mergedCells.has(cellId)) {
-            const merge = mergedCells.get(cellId);
-            css += `.item-${itemIndex} {
-  grid-column: ${c + 1} / span ${merge.colSpan};
-  grid-row: ${r + 1} / span ${merge.rowSpan};
-}\n\n`;
-          }
-          itemIndex++;
-        }
-      }
+      items.forEach(item => {
+        css += `<span class="selector">.item-${item.id}</span> {\n`;
+        css += `  <span class="property">grid-column</span>: <span class="value">${item.col} / span ${item.colSpan}</span>;\n`;
+        css += `  <span class="property">grid-row</span>: <span class="value">${item.row} / span ${item.rowSpan}</span>;\n`;
+        css += `}\n\n`;
+      });
 
-      css += `.grid-item {
-  background: #d4ff3a;
-  padding: 20px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-}`;
-
-      document.getElementById('htmlOutput').value = html;
-      document.getElementById('cssOutput').value = css;
+      document.getElementById('htmlCode').innerHTML = `<pre>${html}</pre>`;
+      document.getElementById('cssCode').innerHTML = `<pre>${css}</pre>`;
     }
 
-    function loadPreset(type) {
-      clearSelection();
-      mergedCells.clear();
-
-      switch(type) {
-        case 'holy-grail':
-          columns = 3;
-          rows = 3;
-          columnSizes = ['200px', '1fr', '200px'];
-          rowSizes = ['80px', '1fr', '60px'];
-          document.getElementById('colCount').value = 3;
-          document.getElementById('rowCount').value = 3;
-          mergedCells.set('0-0', { rowSpan: 1, colSpan: 3 }); // Header
-          mergedCells.set('2-0', { rowSpan: 1, colSpan: 3 }); // Footer
-          break;
-        case 'sidebar':
-          columns = 2;
-          rows = 1;
-          columnSizes = ['250px', '1fr'];
-          rowSizes = ['1fr'];
-          document.getElementById('colCount').value = 2;
-          document.getElementById('rowCount').value = 1;
-          break;
-        case 'magazine':
-          columns = 4;
-          rows = 3;
-          columnSizes = ['1fr', '1fr', '1fr', '1fr'];
-          rowSizes = ['200px', '200px', '200px'];
-          document.getElementById('colCount').value = 4;
-          document.getElementById('rowCount').value = 3;
-          mergedCells.set('0-0', { rowSpan: 2, colSpan: 2 }); // Main article
-          break;
-        case 'dashboard':
-          columns = 3;
-          rows = 4;
-          columnSizes = ['1fr', '1fr', '1fr'];
-          rowSizes = ['80px', '200px', '200px', '200px'];
-          document.getElementById('colCount').value = 3;
-          document.getElementById('rowCount').value = 4;
-          mergedCells.set('0-0', { rowSpan: 1, colSpan: 3 }); // Header
-          break;
-      }
-
-      updateGrid();
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.getElementById('htmlCode').style.display = tab === 'html' ? 'block' : 'none';
+      document.getElementById('cssCode').style.display = tab === 'css' ? 'block' : 'none';
     }
 
-    function copyCode(type) {
-      const textarea = document.getElementById(type + 'Output');
-      textarea.select();
-      document.execCommand('copy');
+    function copyCode() {
+      const box = currentTab === 'html' ? document.getElementById('htmlCode') : document.getElementById('cssCode');
+      const text = box.textContent;
+      navigator.clipboard.writeText(text);
       event.target.textContent = '✓ Copied!';
       setTimeout(() => {
-        event.target.textContent = type === 'html' ? 'Copy HTML' : 'Copy CSS';
+        event.target.textContent = '📋 Copy Code';
       }, 2000);
     }
 
-    function copyAllCode() {
-      const html = document.getElementById('htmlOutput').value;
-      const css = document.getElementById('cssOutput').value;
-      const all = `<!-- HTML -->\n${html}\n\n/* CSS */\n${css}`;
-      navigator.clipboard.writeText(all);
+    function copyAll() {
+      const html = document.getElementById('htmlCode').textContent;
+      const css = document.getElementById('cssCode').textContent;
+      navigator.clipboard.writeText(html + '\n\n' + css);
       event.target.textContent = '✓ All Copied!';
       setTimeout(() => {
-        event.target.textContent = '📋 Copy All Code';
+        event.target.textContent = 'Copy All';
       }, 2000);
     }
 
-    // Initialize
-    window.onload = updateGrid;
+    window.onload = render;
   </script>
 </body>
 </html>

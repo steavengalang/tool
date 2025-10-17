@@ -15,13 +15,15 @@
     }
     .qr-tab {
       padding: 0.75rem 1.5rem;
-      background: var(--bg-secondary);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.2s ease;
       font-weight: 600;
       font-size: 0.9375rem;
+      color: var(--text-secondary);
     }
     .qr-tab:hover {
       border-color: var(--accent);
@@ -45,7 +47,7 @@
       min-height: 280px;
       padding: 2rem;
       background: white;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-lg);
       margin-top: 2rem;
     }
     #qrcode canvas,
@@ -200,7 +202,7 @@
 
         <!-- Download Button -->
         <button class="btn btn-secondary" id="downloadBtn" onclick="downloadQR()" style="width: 100%; justify-content: center; margin-top: 1rem; display: none;">
-          Download QR Code
+          📥 Download QR Code
         </button>
       </div>
     </div>
@@ -209,25 +211,23 @@
   <script>
     let qrcode = null;
     let currentTab = 'text';
+    let qrData = '';
 
     function switchTab(tab) {
       currentTab = tab;
       
-      // Update active tab button
       document.querySelectorAll('.qr-tab').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
       
-      // Update active content
       document.querySelectorAll('.qr-content-tab').forEach(content => content.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
       
-      // Clear QR code
       document.getElementById('qrcode').innerHTML = '';
       document.getElementById('downloadBtn').style.display = 'none';
     }
 
     function generateQR() {
-      let qrData = '';
+      qrData = '';
       
       switch(currentTab) {
         case 'text':
@@ -290,11 +290,9 @@ END:VCARD`;
         return;
       }
       
-      // Clear previous QR
       const container = document.getElementById('qrcode');
       container.innerHTML = '';
       
-      // Generate new QR
       qrcode = new QRCode(container, {
         text: qrData,
         width: 280,
@@ -304,7 +302,6 @@ END:VCARD`;
         correctLevel: QRCode.CorrectLevel.H
       });
       
-      // Show download button
       setTimeout(() => {
         document.getElementById('downloadBtn').style.display = 'block';
       }, 100);
@@ -312,20 +309,32 @@ END:VCARD`;
 
     function downloadQR() {
       const canvas = document.querySelector('#qrcode canvas');
-      if(!canvas) {
-        const img = document.querySelector('#qrcode img');
-        if(img) {
-          const link = document.createElement('a');
-          link.download = 'qrcode.png';
-          link.href = img.src;
-          link.click();
-        }
+      if (!canvas) {
+        alert('Generate QR Code terlebih dahulu!');
         return;
       }
-      
+
+      // Create new canvas with padding
+      const padding = 40; // White padding around QR code
+      const qrSize = canvas.width;
+      const finalSize = qrSize + (padding * 2);
+
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = finalSize;
+      finalCanvas.height = finalSize;
+      const ctx = finalCanvas.getContext('2d');
+
+      // Fill white background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, finalSize, finalSize);
+
+      // Draw QR code in center
+      ctx.drawImage(canvas, padding, padding);
+
+      // Download
       const link = document.createElement('a');
-      link.download = 'qrcode.png';
-      link.href = canvas.toDataURL();
+      link.download = `qrcode-${currentTab}-${Date.now()}.png`;
+      link.href = finalCanvas.toDataURL('image/png');
       link.click();
     }
   </script>
