@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -307,14 +308,32 @@
       overflow-x: auto;
     }
 
-    .code-box .tag { color: #5ccfe6; }
-    .code-box .attr { color: #ffc66d; }
-    .code-box .string { color: #a9dc76; }
-    .code-box .property { color: #78dce8; }
-    .code-box .value { color: #d4ff3a; }
-    .code-box .selector { color: #fc9867; }
+    .code-box .tag {
+      color: #5ccfe6;
+    }
+
+    .code-box .attr {
+      color: #ffc66d;
+    }
+
+    .code-box .string {
+      color: #a9dc76;
+    }
+
+    .code-box .property {
+      color: #78dce8;
+    }
+
+    .code-box .value {
+      color: #d4ff3a;
+    }
+
+    .code-box .selector {
+      color: #fc9867;
+    }
   </style>
 </head>
+
 <body>
   <nav class="navbar">
     <div class="container">
@@ -369,7 +388,7 @@
 
           <div class="code-section">
             <h3>📝 Generated Code</h3>
-            
+
             <div class="code-tabs">
               <div class="code-tab active" onclick="switchTab('html')">HTML</div>
               <div class="code-tab" onclick="switchTab('css')">CSS</div>
@@ -396,6 +415,7 @@
     let itemCounter = 0;
     let draggedItem = null;
     let currentTab = 'html';
+    let dragPreview = null;
 
     function changeCols(delta) {
       cols = Math.max(1, Math.min(12, cols + delta));
@@ -413,11 +433,11 @@
     }
 
     function addItemAtCell(col, row) {
-      const occupied = items.some(item => 
+      const occupied = items.some(item =>
         col >= item.col && col < item.col + item.colSpan &&
         row >= item.row && row < item.row + item.rowSpan
       );
-      
+
       if (!occupied) {
         itemCounter++;
         items.push({
@@ -436,6 +456,39 @@
       render();
     }
 
+    function getCellPosition(e) {
+      const canvas = document.getElementById('gridCanvas');
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const cellWidth = (rect.width - gap * (cols - 1)) / cols;
+      const cellHeight = (rect.height - gap * (rows - 1)) / rows;
+
+      let col = 1;
+      let row = 1;
+
+      let currentX = 0;
+      for (let c = 1; c <= cols; c++) {
+        if (x >= currentX && x < currentX + cellWidth) {
+          col = c;
+          break;
+        }
+        currentX += cellWidth + gap;
+      }
+
+      let currentY = 0;
+      for (let r = 1; r <= rows; r++) {
+        if (y >= currentY && y < currentY + cellHeight) {
+          row = r;
+          break;
+        }
+        currentY += cellHeight + gap;
+      }
+
+      return { col: Math.min(col, cols), row: Math.min(row, rows) };
+    }
+
     function render() {
       document.getElementById('colsVal').textContent = cols;
       document.getElementById('rowsVal').textContent = rows;
@@ -447,9 +500,10 @@
       canvas.style.gap = `${gap}px`;
       canvas.innerHTML = '';
 
+      // Create all cells first
       for (let r = 1; r <= rows; r++) {
         for (let c = 1; c <= cols; c++) {
-          const occupied = items.some(item => 
+          const occupied = items.some(item =>
             c >= item.col && c < item.col + item.colSpan &&
             r >= item.row && r < item.row + item.rowSpan
           );
@@ -457,16 +511,67 @@
           if (!occupied) {
             const cell = document.createElement('div');
             cell.className = 'grid-cell';
+            cell.dataset.col = c;
+            cell.dataset.row = r;
+
             const addBtn = document.createElement('button');
             addBtn.className = 'add-btn';
             addBtn.textContent = '+';
             addBtn.onclick = () => addItemAtCell(c, r);
+
             cell.appendChild(addBtn);
             canvas.appendChild(cell);
           }
         }
       }
 
+      // Add drag & drop to canvas
+      canvas.ondragover = (e) => {
+        e.preventDefault();
+        if (draggedItem) {
+          const pos = getCellPosition(e);
+
+          // Highlight target cells
+          document.querySelectorAll('.grid-cell').forEach(cell => {
+            const cellCol = parseInt(cell.dataset.col);
+            const cellRow = parseInt(cell.dataset.row);
+
+            if (cellCol >= pos.col && cellCol < pos.col + draggedItem.colSpan &&
+              cellRow >= pos.row && cellRow < pos.row + draggedItem.rowSpan) {
+              cell.style.background = 'rgba(212, 255, 58, 0.2)';
+              cell.style.borderColor = 'rgba(212, 255, 58, 0.6)';
+            } else {
+              cell.style.background = '';
+              cell.style.borderColor = '';
+            }
+          });
+        }
+      };
+
+      canvas.ondrop = (e) => {
+        e.preventDefault();
+        if (draggedItem) {
+          const pos = getCellPosition(e);
+
+          // Check if position is valid
+          const maxCol = Math.min(pos.col, cols - draggedItem.colSpan + 1);
+          const maxRow = Math.min(pos.row, rows - draggedItem.rowSpan + 1);
+
+          draggedItem.col = maxCol;
+          draggedItem.row = maxRow;
+
+          // Clear highlights
+          document.querySelectorAll('.grid-cell').forEach(cell => {
+            cell.style.background = '';
+            cell.style.borderColor = '';
+          });
+
+          draggedItem = null;
+          render();
+        }
+      };
+
+      // Render items
       items.forEach(item => {
         const div = document.createElement('div');
         div.className = 'grid-item';
@@ -489,59 +594,32 @@
         handle.onmousedown = (e) => startResize(e, item);
         div.appendChild(handle);
 
-        // Smooth drag events
+        // Drag start
         div.ondragstart = (e) => {
           draggedItem = item;
           setTimeout(() => {
-            div.classList.add('dragging');
+            div.style.opacity = '0.3';
           }, 0);
-          e.dataTransfer.effectAllowed = 'move';
+
+          // Create custom drag image
+          const dragImage = div.cloneNode(true);
+          dragImage.style.position = 'absolute';
+          dragImage.style.top = '-1000px';
+          document.body.appendChild(dragImage);
+          e.dataTransfer.setDragImage(dragImage, e.offsetX, e.offsetY);
+          setTimeout(() => dragImage.remove(), 0);
         };
 
+        // Drag end
         div.ondragend = () => {
-          div.classList.remove('dragging');
+          div.style.opacity = '';
           draggedItem = null;
-          // Remove all drag-over classes
-          document.querySelectorAll('.grid-item').forEach(el => {
-            el.classList.remove('drag-over');
+
+          // Clear all highlights
+          document.querySelectorAll('.grid-cell').forEach(cell => {
+            cell.style.background = '';
+            cell.style.borderColor = '';
           });
-        };
-
-        div.ondragover = (e) => {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = 'move';
-        };
-
-        div.ondragenter = (e) => {
-          e.preventDefault();
-          if (draggedItem && draggedItem !== item) {
-            div.classList.add('drag-over');
-          }
-        };
-
-        div.ondragleave = (e) => {
-          if (e.target === div) {
-            div.classList.remove('drag-over');
-          }
-        };
-
-        div.ondrop = (e) => {
-          e.preventDefault();
-          div.classList.remove('drag-over');
-          
-          if (draggedItem && draggedItem !== item) {
-            const tempCol = item.col;
-            const tempRow = item.row;
-            item.col = draggedItem.col;
-            item.row = draggedItem.row;
-            draggedItem.col = tempCol;
-            draggedItem.row = tempRow;
-            
-            // Smooth transition
-            requestAnimationFrame(() => {
-              render();
-            });
-          }
         };
 
         canvas.appendChild(div);
@@ -561,11 +639,11 @@
       const onMove = (e) => {
         const deltaX = e.clientX - startX;
         const deltaY = e.clientY - startY;
-        const newColSpan = Math.max(1, startColSpan + Math.round(deltaX / 80));
-        const newRowSpan = Math.max(1, startRowSpan + Math.round(deltaY / 80));
+        const newColSpan = Math.max(1, startColSpan + Math.round(deltaX / 100));
+        const newRowSpan = Math.max(1, startRowSpan + Math.round(deltaY / 100));
         item.colSpan = Math.min(newColSpan, cols - item.col + 1);
         item.rowSpan = Math.min(newRowSpan, rows - item.row + 1);
-        
+
         requestAnimationFrame(() => {
           render();
         });
@@ -582,11 +660,11 @@
 
     function generateCode() {
       let html = `<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"grid-container"</span><span class="tag">&gt;</span>\n`;
-      
+
       items.forEach(item => {
         html += `  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"item-${item.id}"</span><span class="tag">&gt;</span>${item.id}<span class="tag">&lt;/div&gt;</span>\n`;
       });
-      
+
       html += `<span class="tag">&lt;/div&gt;</span>`;
 
       let css = `<span class="selector">.grid-container</span> {\n`;
@@ -610,7 +688,7 @@
       currentTab = tab;
       document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
-      
+
       document.getElementById('htmlCode').style.display = tab === 'html' ? 'block' : 'none';
       document.getElementById('cssCode').style.display = tab === 'css' ? 'block' : 'none';
     }
@@ -636,6 +714,8 @@
     }
 
     window.onload = render;
+
   </script>
 </body>
+
 </html>
