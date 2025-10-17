@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,10 +31,6 @@
       padding-left: var(--space-6);
       line-height: 2;
       color: var(--text-secondary);
-    }
-
-    .instructions ol li {
-      margin-bottom: var(--space-2);
     }
 
     .controls {
@@ -76,15 +71,7 @@
     .control-group button:hover {
       background: var(--accent);
       color: var(--bg-primary);
-      border-color: var(--accent);
       transform: scale(1.1);
-    }
-
-    .control-group span {
-      min-width: 80px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.9375rem;
     }
 
     .control-group .value {
@@ -101,50 +88,51 @@
       border: 1px solid var(--glass-border);
       padding: var(--space-12);
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xl);
+      margin-bottom: var(--space-8);
+      min-height: 600px;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: var(--space-8);
-      min-height: 600px;
     }
 
     .grid-canvas {
       display: grid;
       position: relative;
-      min-width: 600px;
+      width: 100%;
+      max-width: 800px;
       min-height: 500px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .grid-cell {
-      border: 1px solid rgba(212, 255, 58, 0.2);
-      background: rgba(212, 255, 58, 0.03);
+      border: 1px solid rgba(212, 255, 58, 0.15);
+      background: rgba(212, 255, 58, 0.02);
       position: relative;
-      min-height: 80px;
-      transition: all 0.2s ease;
+      min-height: 60px;
+      transition: all 0.15s ease;
       cursor: pointer;
-      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .grid-cell:hover {
       background: rgba(212, 255, 58, 0.08);
-      border-color: rgba(212, 255, 58, 0.4);
+      border-color: rgba(212, 255, 58, 0.3);
+    }
+
+    .grid-cell.highlight {
+      background: rgba(212, 255, 58, 0.15);
+      border-color: rgba(212, 255, 58, 0.5);
     }
 
     .add-btn {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background: var(--accent);
       border: none;
       border-radius: var(--radius);
       color: var(--bg-primary);
       font-size: 1.5rem;
-      line-height: 1;
       cursor: pointer;
       opacity: 0;
       transition: all 0.2s ease;
@@ -152,16 +140,17 @@
       align-items: center;
       justify-content: center;
       font-weight: 300;
+      line-height: 1;
     }
 
     .grid-cell:hover .add-btn {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1.1);
+      transform: scale(1.1);
     }
 
     .grid-item {
-      background: linear-gradient(135deg, rgba(212, 255, 58, 0.2), rgba(212, 255, 58, 0.1));
-      border: 2px solid rgba(212, 255, 58, 0.4);
+      background: linear-gradient(135deg, rgba(212, 255, 58, 0.25), rgba(212, 255, 58, 0.12));
+      border: 2px solid rgba(212, 255, 58, 0.5);
       border-radius: var(--radius);
       position: relative;
       display: flex;
@@ -169,53 +158,45 @@
       justify-content: center;
       font-weight: 700;
       color: var(--accent);
-      cursor: move;
-      min-height: 80px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform;
+      cursor: grab;
+      min-height: 60px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
     }
 
     .grid-item:hover {
-      background: linear-gradient(135deg, rgba(212, 255, 58, 0.3), rgba(212, 255, 58, 0.15));
+      background: linear-gradient(135deg, rgba(212, 255, 58, 0.35), rgba(212, 255, 58, 0.2));
       border-color: var(--accent);
       box-shadow: 0 4px 20px rgba(212, 255, 58, 0.3);
-      transform: scale(1.02);
       z-index: 10;
     }
 
     .grid-item.dragging {
-      opacity: 0.5;
+      opacity: 0.4;
       cursor: grabbing;
-      transform: scale(0.95);
-    }
-
-    .grid-item.drag-over {
-      border-color: var(--accent);
-      background: linear-gradient(135deg, rgba(212, 255, 58, 0.35), rgba(212, 255, 58, 0.2));
-      box-shadow: 0 0 0 3px rgba(212, 255, 58, 0.2);
     }
 
     .resize-handle {
       position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 20px;
-      height: 20px;
+      bottom: 2px;
+      right: 2px;
+      width: 18px;
+      height: 18px;
       background: var(--accent);
       cursor: nwse-resize;
-      border-radius: 0 0 var(--radius) 0;
+      border-radius: 0 0 6px 0;
       opacity: 0;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--bg-primary);
     }
 
-    .resize-handle::before {
+    .resize-handle::after {
       content: '⋮⋮';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      color: var(--bg-primary);
-      font-size: 0.75rem;
+      transform: rotate(-45deg);
       font-weight: 900;
     }
 
@@ -227,21 +208,21 @@
       position: absolute;
       top: 4px;
       right: 4px;
-      width: 24px;
-      height: 24px;
-      background: rgba(239, 68, 68, 0.9);
+      width: 22px;
+      height: 22px;
+      background: #ef4444;
       border: none;
       border-radius: 50%;
       color: white;
       cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
       opacity: 0;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
+      font-size: 14px;
+      line-height: 1;
     }
 
     .grid-item:hover .delete-btn {
@@ -261,12 +242,6 @@
       border-radius: var(--radius-lg);
     }
 
-    .code-section h3 {
-      margin-bottom: var(--space-4);
-      color: var(--accent);
-      font-size: 1.125rem;
-    }
-
     .code-tabs {
       display: flex;
       gap: var(--space-2);
@@ -281,13 +256,12 @@
       color: var(--text-secondary);
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
 
     .code-tab.active {
       background: var(--accent);
       color: var(--bg-primary);
-      border-color: var(--accent);
     }
 
     .code-box {
@@ -296,7 +270,6 @@
       border-radius: var(--radius);
       padding: var(--space-5);
       margin-bottom: var(--space-4);
-      position: relative;
     }
 
     .code-box pre {
@@ -308,32 +281,14 @@
       overflow-x: auto;
     }
 
-    .code-box .tag {
-      color: #5ccfe6;
-    }
-
-    .code-box .attr {
-      color: #ffc66d;
-    }
-
-    .code-box .string {
-      color: #a9dc76;
-    }
-
-    .code-box .property {
-      color: #78dce8;
-    }
-
-    .code-box .value {
-      color: #d4ff3a;
-    }
-
-    .code-box .selector {
-      color: #fc9867;
-    }
+    .tag { color: #5ccfe6; }
+    .attr { color: #ffc66d; }
+    .string { color: #a9dc76; }
+    .property { color: #78dce8; }
+    .value { color: #d4ff3a; }
+    .selector { color: #fc9867; }
   </style>
 </head>
-
 <body>
   <nav class="navbar">
     <div class="container">
@@ -345,19 +300,19 @@
     <div class="container">
       <div class="tool-header">
         <h1>🔲 CSS Grid Generator</h1>
-        <p>Create custom CSS grid layouts with drag & drop • Click + to add items • Resize & reposition easily</p>
+        <p>Create custom CSS grid layouts with drag & drop</p>
       </div>
 
       <div class="tool-content">
         <div class="generator-layout">
           <div class="instructions">
-            <h3>How to use CSS Grid Generator?</h3>
+            <h3>How to use?</h3>
             <ol>
-              <li>Customize the number of columns, rows, and gaps to fit your needs.</li>
-              <li>Click the square with + sign to add a new element to the grid.</li>
-              <li>Resize the DIV using the handle in the bottom right corner.</li>
-              <li>Drag and drop the DIV to reposition it as desired.</li>
-              <li>Finally, copy the generated HTML and CSS code and paste it into your project.</li>
+              <li>Adjust columns, rows, and gap</li>
+              <li>Click + to add items</li>
+              <li>Drag items to reposition</li>
+              <li>Resize using bottom-right handle</li>
+              <li>Copy generated code</li>
             </ol>
           </div>
 
@@ -388,17 +343,14 @@
 
           <div class="code-section">
             <h3>📝 Generated Code</h3>
-
             <div class="code-tabs">
               <div class="code-tab active" onclick="switchTab('html')">HTML</div>
               <div class="code-tab" onclick="switchTab('css')">CSS</div>
             </div>
-
-            <div class="code-box" id="htmlCode" style="display: block;"></div>
-            <div class="code-box" id="cssCode" style="display: none;"></div>
-
+            <div class="code-box" id="htmlCode"></div>
+            <div class="code-box" id="cssCode" style="display:none;"></div>
             <div class="button-group">
-              <button class="btn btn-primary" onclick="copyCode()">📋 Copy Code</button>
+              <button class="btn btn-primary" onclick="copyCode()">📋 Copy</button>
               <button class="btn btn-secondary" onclick="copyAll()">Copy All</button>
             </div>
           </div>
@@ -408,84 +360,39 @@
   </main>
 
   <script>
-    let cols = 5;
-    let rows = 4;
-    let gap = 10;
+    let cols = 5, rows = 4, gap = 10;
     let items = [];
     let itemCounter = 0;
     let draggedItem = null;
     let currentTab = 'html';
-    let dragPreview = null;
 
-    function changeCols(delta) {
-      cols = Math.max(1, Math.min(12, cols + delta));
-      render();
-    }
+    function changeCols(d) { cols = Math.max(1, Math.min(12, cols + d)); render(); }
+    function changeRows(d) { rows = Math.max(1, Math.min(12, rows + d)); render(); }
+    function changeGap(d) { gap = Math.max(0, Math.min(50, gap + d)); render(); }
 
-    function changeRows(delta) {
-      rows = Math.max(1, Math.min(12, rows + delta));
-      render();
-    }
-
-    function changeGap(delta) {
-      gap = Math.max(0, Math.min(50, gap + delta));
-      render();
-    }
-
-    function addItemAtCell(col, row) {
-      const occupied = items.some(item =>
-        col >= item.col && col < item.col + item.colSpan &&
-        row >= item.row && row < item.row + item.rowSpan
-      );
-
-      if (!occupied) {
-        itemCounter++;
-        items.push({
-          id: itemCounter,
-          col: col,
-          row: row,
-          colSpan: 1,
-          rowSpan: 1
-        });
-        render();
-      }
-    }
-
-    function deleteItem(id) {
-      items = items.filter(item => item.id !== id);
-      render();
-    }
-
-    function getCellPosition(e) {
+    function getCellFromPoint(x, y) {
       const canvas = document.getElementById('gridCanvas');
       const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const cellWidth = (rect.width - gap * (cols - 1)) / cols;
-      const cellHeight = (rect.height - gap * (rows - 1)) / rows;
-
-      let col = 1;
-      let row = 1;
-
-      let currentX = 0;
+      const relX = x - rect.left;
+      const relY = y - rect.top;
+      
+      const cellW = (rect.width - gap * (cols - 1)) / cols;
+      const cellH = (rect.height - gap * (rows - 1)) / rows;
+      
+      let col = 1, row = 1;
+      let posX = 0;
+      
       for (let c = 1; c <= cols; c++) {
-        if (x >= currentX && x < currentX + cellWidth) {
-          col = c;
-          break;
-        }
-        currentX += cellWidth + gap;
+        if (relX >= posX && relX < posX + cellW) { col = c; break; }
+        posX += cellW + gap;
       }
-
-      let currentY = 0;
+      
+      let posY = 0;
       for (let r = 1; r <= rows; r++) {
-        if (y >= currentY && y < currentY + cellHeight) {
-          row = r;
-          break;
-        }
-        currentY += cellHeight + gap;
+        if (relY >= posY && relY < posY + cellH) { row = r; break; }
+        posY += cellH + gap;
       }
-
+      
       return { col: Math.min(col, cols), row: Math.min(row, rows) };
     }
 
@@ -500,12 +407,12 @@
       canvas.style.gap = `${gap}px`;
       canvas.innerHTML = '';
 
-      // Create all cells first
+      // Create cells
       for (let r = 1; r <= rows; r++) {
         for (let c = 1; c <= cols; c++) {
-          const occupied = items.some(item =>
-            c >= item.col && c < item.col + item.colSpan &&
-            r >= item.row && r < item.row + item.rowSpan
+          const occupied = items.some(i => 
+            c >= i.col && c < i.col + i.colSpan &&
+            r >= i.row && r < i.row + i.rowSpan
           );
 
           if (!occupied) {
@@ -513,63 +420,44 @@
             cell.className = 'grid-cell';
             cell.dataset.col = c;
             cell.dataset.row = r;
-
-            const addBtn = document.createElement('button');
-            addBtn.className = 'add-btn';
-            addBtn.textContent = '+';
-            addBtn.onclick = () => addItemAtCell(c, r);
-
-            cell.appendChild(addBtn);
+            
+            const btn = document.createElement('button');
+            btn.className = 'add-btn';
+            btn.textContent = '+';
+            btn.onclick = () => {
+              itemCounter++;
+              items.push({ id: itemCounter, col: c, row: r, colSpan: 1, rowSpan: 1 });
+              render();
+            };
+            
+            cell.appendChild(btn);
             canvas.appendChild(cell);
           }
         }
       }
 
-      // Add drag & drop to canvas
+      // Canvas drag events
       canvas.ondragover = (e) => {
         e.preventDefault();
         if (draggedItem) {
-          const pos = getCellPosition(e);
-
-          // Highlight target cells
-          document.querySelectorAll('.grid-cell').forEach(cell => {
-            const cellCol = parseInt(cell.dataset.col);
-            const cellRow = parseInt(cell.dataset.row);
-
-            if (cellCol >= pos.col && cellCol < pos.col + draggedItem.colSpan &&
-              cellRow >= pos.row && cellRow < pos.row + draggedItem.rowSpan) {
-              cell.style.background = 'rgba(212, 255, 58, 0.2)';
-              cell.style.borderColor = 'rgba(212, 255, 58, 0.6)';
-            } else {
-              cell.style.background = '';
-              cell.style.borderColor = '';
-            }
-          });
+          const pos = getCellFromPoint(e.clientX, e.clientY);
+          highlightCells(pos);
         }
       };
 
       canvas.ondrop = (e) => {
         e.preventDefault();
         if (draggedItem) {
-          const pos = getCellPosition(e);
-
-          // Check if position is valid
-          const maxCol = Math.min(pos.col, cols - draggedItem.colSpan + 1);
-          const maxRow = Math.min(pos.row, rows - draggedItem.rowSpan + 1);
-
-          draggedItem.col = maxCol;
-          draggedItem.row = maxRow;
-
-          // Clear highlights
-          document.querySelectorAll('.grid-cell').forEach(cell => {
-            cell.style.background = '';
-            cell.style.borderColor = '';
-          });
-
+          const pos = getCellFromPoint(e.clientX, e.clientY);
+          draggedItem.col = Math.min(pos.col, cols - draggedItem.colSpan + 1);
+          draggedItem.row = Math.min(pos.row, rows - draggedItem.rowSpan + 1);
+          clearHighlights();
           draggedItem = null;
           render();
         }
       };
+
+      canvas.ondragleave = () => clearHighlights();
 
       // Render items
       items.forEach(item => {
@@ -580,46 +468,50 @@
         div.style.gridColumn = `${item.col} / span ${item.colSpan}`;
         div.style.gridRow = `${item.row} / span ${item.rowSpan}`;
 
-        const delBtn = document.createElement('button');
-        delBtn.className = 'delete-btn';
-        delBtn.textContent = '×';
-        delBtn.onclick = (e) => {
+        const del = document.createElement('button');
+        del.className = 'delete-btn';
+        del.textContent = '×';
+        del.onclick = (e) => {
           e.stopPropagation();
-          deleteItem(item.id);
+          items = items.filter(i => i.id !== item.id);
+          render();
         };
-        div.appendChild(delBtn);
+        div.appendChild(del);
 
         const handle = document.createElement('div');
         handle.className = 'resize-handle';
-        handle.onmousedown = (e) => startResize(e, item);
+        handle.onmousedown = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const startX = e.clientX, startY = e.clientY;
+          const startCS = item.colSpan, startRS = item.rowSpan;
+
+          const onMove = (e) => {
+            const dX = Math.round((e.clientX - startX) / 80);
+            const dY = Math.round((e.clientY - startY) / 80);
+            item.colSpan = Math.max(1, Math.min(startCS + dX, cols - item.col + 1));
+            item.rowSpan = Math.max(1, Math.min(startRS + dY, rows - item.row + 1));
+            render();
+          };
+
+          const onUp = () => {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+          };
+
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        };
         div.appendChild(handle);
 
-        // Drag start
-        div.ondragstart = (e) => {
+        div.ondragstart = () => {
           draggedItem = item;
-          setTimeout(() => {
-            div.style.opacity = '0.3';
-          }, 0);
-
-          // Create custom drag image
-          const dragImage = div.cloneNode(true);
-          dragImage.style.position = 'absolute';
-          dragImage.style.top = '-1000px';
-          document.body.appendChild(dragImage);
-          e.dataTransfer.setDragImage(dragImage, e.offsetX, e.offsetY);
-          setTimeout(() => dragImage.remove(), 0);
+          setTimeout(() => div.classList.add('dragging'), 0);
         };
 
-        // Drag end
         div.ondragend = () => {
-          div.style.opacity = '';
-          draggedItem = null;
-
-          // Clear all highlights
-          document.querySelectorAll('.grid-cell').forEach(cell => {
-            cell.style.background = '';
-            cell.style.borderColor = '';
-          });
+          div.classList.remove('dragging');
+          clearHighlights();
         };
 
         canvas.appendChild(div);
@@ -628,43 +520,29 @@
       generateCode();
     }
 
-    function startResize(e, item) {
-      e.preventDefault();
-      e.stopPropagation();
-      const startX = e.clientX;
-      const startY = e.clientY;
-      const startColSpan = item.colSpan;
-      const startRowSpan = item.rowSpan;
+    function highlightCells(pos) {
+      if (!draggedItem) return;
+      document.querySelectorAll('.grid-cell').forEach(cell => {
+        const c = parseInt(cell.dataset.col);
+        const r = parseInt(cell.dataset.row);
+        if (c >= pos.col && c < pos.col + draggedItem.colSpan &&
+            r >= pos.row && r < pos.row + draggedItem.rowSpan) {
+          cell.classList.add('highlight');
+        } else {
+          cell.classList.remove('highlight');
+        }
+      });
+    }
 
-      const onMove = (e) => {
-        const deltaX = e.clientX - startX;
-        const deltaY = e.clientY - startY;
-        const newColSpan = Math.max(1, startColSpan + Math.round(deltaX / 100));
-        const newRowSpan = Math.max(1, startRowSpan + Math.round(deltaY / 100));
-        item.colSpan = Math.min(newColSpan, cols - item.col + 1);
-        item.rowSpan = Math.min(newRowSpan, rows - item.row + 1);
-
-        requestAnimationFrame(() => {
-          render();
-        });
-      };
-
-      const onUp = () => {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      };
-
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
+    function clearHighlights() {
+      document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('highlight'));
     }
 
     function generateCode() {
       let html = `<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"grid-container"</span><span class="tag">&gt;</span>\n`;
-
-      items.forEach(item => {
-        html += `  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"item-${item.id}"</span><span class="tag">&gt;</span>${item.id}<span class="tag">&lt;/div&gt;</span>\n`;
+      items.forEach(i => {
+        html += `  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"item-${i.id}"</span><span class="tag">&gt;</span>${i.id}<span class="tag">&lt;/div&gt;</span>\n`;
       });
-
       html += `<span class="tag">&lt;/div&gt;</span>`;
 
       let css = `<span class="selector">.grid-container</span> {\n`;
@@ -673,11 +551,10 @@
       css += `  <span class="property">grid-template-rows</span>: <span class="value">repeat(${rows}, 1fr)</span>;\n`;
       css += `  <span class="property">gap</span>: <span class="value">${gap}px</span>;\n}\n\n`;
 
-      items.forEach(item => {
-        css += `<span class="selector">.item-${item.id}</span> {\n`;
-        css += `  <span class="property">grid-column</span>: <span class="value">${item.col} / span ${item.colSpan}</span>;\n`;
-        css += `  <span class="property">grid-row</span>: <span class="value">${item.row} / span ${item.rowSpan}</span>;\n`;
-        css += `}\n\n`;
+      items.forEach(i => {
+        css += `<span class="selector">.item-${i.id}</span> {\n`;
+        css += `  <span class="property">grid-column</span>: <span class="value">${i.col} / span ${i.colSpan}</span>;\n`;
+        css += `  <span class="property">grid-row</span>: <span class="value">${i.row} / span ${i.rowSpan}</span>;\n}\n\n`;
       });
 
       document.getElementById('htmlCode').innerHTML = `<pre>${html}</pre>`;
@@ -688,34 +565,25 @@
       currentTab = tab;
       document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
-
       document.getElementById('htmlCode').style.display = tab === 'html' ? 'block' : 'none';
       document.getElementById('cssCode').style.display = tab === 'css' ? 'block' : 'none';
     }
 
     function copyCode() {
-      const box = currentTab === 'html' ? document.getElementById('htmlCode') : document.getElementById('cssCode');
-      const text = box.textContent;
-      navigator.clipboard.writeText(text);
+      const txt = (currentTab === 'html' ? document.getElementById('htmlCode') : document.getElementById('cssCode')).textContent;
+      navigator.clipboard.writeText(txt);
       event.target.textContent = '✓ Copied!';
-      setTimeout(() => {
-        event.target.textContent = '📋 Copy Code';
-      }, 2000);
+      setTimeout(() => event.target.textContent = '📋 Copy', 2000);
     }
 
     function copyAll() {
-      const html = document.getElementById('htmlCode').textContent;
-      const css = document.getElementById('cssCode').textContent;
-      navigator.clipboard.writeText(html + '\n\n' + css);
-      event.target.textContent = '✓ All Copied!';
-      setTimeout(() => {
-        event.target.textContent = 'Copy All';
-      }, 2000);
+      const txt = document.getElementById('htmlCode').textContent + '\n\n' + document.getElementById('cssCode').textContent;
+      navigator.clipboard.writeText(txt);
+      event.target.textContent = '✓ Copied!';
+      setTimeout(() => event.target.textContent = 'Copy All', 2000);
     }
 
-    window.onload = render;
-
+    render();
   </script>
 </body>
-
 </html>
