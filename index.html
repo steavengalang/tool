@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ToolsKita - 100+ Free Modern Online Tools for Developers</title>
-  
+  <title>ToolsKita - Modern Tools Collection</title>
+
   <!-- SEO Meta Tags -->
-  <meta name="description" content="ToolsKita - Koleksi lengkap 100+ online tools gratis untuk developer & kreator. Text tools, converters, generators, CSS/HTML/JS tools, kalkulator, dan banyak lagi!">
-  <meta name="keywords" content="online tools, developer tools, free tools, web developer, text converter, css generator, json formatter, password generator, image compressor, kalkulator online, toolskita">
-  <meta name="author" content="ToolsKita by chillcode">
+  <meta name="description"
+    content="ToolsKita - Koleksi lengkap 30+ online tools gratis untuk developer. Text tools, converters, generators, CSS/HTML tools, PHP CRUD generator, dan banyak lagi!">
+  <meta name="keywords"
+    content="online tools, developer tools, text converter, css generator, php crud, code beautifier, free tools, web developer">
+  <meta name="author" content="ToolsKita">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://toolskita.vercel.app/">
+  <meta name="language" content="Indonesian">
+  <link rel="canonical" href="https://toolskita.com/">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://toolskita.vercel.app/">
-  <meta property="og:title" content="ToolsKita - 100+ Free Modern Online Tools">
-  <meta property="og:description" content="Koleksi lengkap 100+ online tools gratis untuk developer. Text tools, converters, generators, CSS/HTML/JS tools, dan banyak lagi!">
-  <meta property="og:image" content="https://toolskita.vercel.app/assets/og-image.jpg">
+  <meta property="og:url" content="https://toolskita.com/">
+  <meta property="og:title" content="ToolsKita - 30+ Free Online Developer Tools">
+  <meta property="og:description"
+    content="Koleksi lengkap online tools gratis untuk developer. Text tools, CSS generators, PHP CRUD, dan banyak lagi!">
+  <meta property="og:image" content="https://toolskita.com/assets/og-image.jpg">
   <meta property="og:site_name" content="ToolsKita">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://toolskita.vercel.app/">
-  <meta name="twitter:title" content="ToolsKita - 100+ Free Modern Online Tools">
-  <meta name="twitter:description" content="Koleksi lengkap 100+ online tools gratis untuk developer. Text tools, CSS generators, dan banyak lagi!">
-  <meta name="twitter:image" content="https://toolskita.vercel.app/assets/og-image.jpg">
+  <meta name="twitter:url" content="https://toolskita.com/">
+  <meta name="twitter:title" content="ToolsKita - 30+ Free Online Developer Tools">
+  <meta name="twitter:description"
+    content="Koleksi lengkap online tools gratis untuk developer. Text tools, CSS generators, PHP CRUD, dan banyak lagi!">
+  <meta name="twitter:image" content="https://toolskita.com/assets/og-image.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -33,11 +39,11 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-  <!-- Google Analytics (Ganti dengan ID Anda) -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXXXXX');
   </script>
@@ -48,35 +54,144 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "ToolsKita",
-    "url": "https://toolskita.vercel.app",
-    "description": "Koleksi lengkap 100+ online tools gratis untuk developer",
+    "url": "https://toolskita.com",
+    "description": "Koleksi lengkap 30+ online tools gratis untuk developer",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://toolskita.vercel.app/?q={search_term_string}",
+      "target": "https://toolskita.com/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
   </script>
-  
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ToolsKita",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1250"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="css/style.css">
-  
+
   <style>
-    /* CSS inline ini spesifik untuk halaman utama */
-    .search-wrapper { padding: var(--space-8) 0 var(--space-12); background: linear-gradient(180deg, rgba(212,255,58,0.05) 0%, transparent 100%); }
-    .search-container { max-width: 700px; margin: 0 auto; }
-    .search-box { position: relative; }
-    .search-input { width: 100%; padding: 1.25rem 4rem 1.25rem 4rem; background: var(--glass-bg); backdrop-filter: var(--blur-md); border: 2px solid var(--glass-border); border-radius: var(--radius-lg); color: var(--text-primary); font-size: 1.0625rem; transition: all 0.3s ease; }
-    .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(212,255,58,0.1); }
-    .search-input::placeholder { color: var(--text-tertiary); }
-    .search-icon { position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%); font-size: 1.5rem; pointer-events: none; opacity: 0.5; }
-    .clear-btn { position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-tertiary); font-size: 1.75rem; cursor: pointer; display: none; padding: 0; line-height: 1; transition: all 0.2s ease; }
-    .clear-btn:hover { color: var(--accent); transform: translateY(-50%) scale(1.2); }
-    .search-info { text-align: center; margin-top: var(--space-4); color: var(--text-secondary); font-size: 0.9375rem; min-height: 1.2rem; }
-    .tool-card.hidden { display: none; }
-    .no-results { text-align: center; padding: var(--space-16) var(--space-6); display: none; }
-    .no-results.show { display: block; }
+    .search-wrapper {
+      padding: var(--space-8) 0 var(--space-12);
+      background: linear-gradient(180deg, rgba(212, 255, 58, 0.05) 0%, transparent 100%);
+    }
+
+    .search-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1.25rem 4rem 1.25rem 4rem;
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur-md);
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      color: var(--text-primary);
+      font-size: 1.0625rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(212, 255, 58, 0.1);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      pointer-events: none;
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      font-size: 1.75rem;
+      cursor: pointer;
+      display: none;
+      padding: 0;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+
+    .clear-btn:hover {
+      color: var(--accent);
+      transform: translateY(-50%) scale(1.2);
+    }
+
+    .search-info {
+      text-align: center;
+      margin-top: var(--space-4);
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .tool-card.hidden {
+      display: none;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: var(--space-16) var(--space-6);
+      display: none;
+    }
+
+    .no-results.show {
+      display: block;
+    }
+
+    .no-results-icon {
+      font-size: 5rem;
+      margin-bottom: var(--space-6);
+      opacity: 0.3;
+    }
+
+    .no-results h3 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin-bottom: var(--space-3);
+    }
+
+    .no-results p {
+      color: var(--text-secondary);
+      font-size: 1.0625rem;
+    }
   </style>
 </head>
+
 <body>
   <nav class="navbar">
     <div class="container">
@@ -86,7 +201,9 @@
         <li><a href="#tools">Tools</a></li>
         <li><a href="#about">About</a></li>
       </ul>
-      <button class="mobile-toggle" aria-label="Toggle Menu"><span></span><span></span><span></span></button>
+      <button class="mobile-toggle" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -94,16 +211,30 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">✨ Free & Modern Tools</div>
-        <h1 class="hero-title">Koleksi Tools <span class="accent">Premium</span><br>Untuk Produktivitas Maksimal</h1>
-        <p class="hero-subtitle">100+ tools gratis, elegan, dan powerful untuk developer dan kreator Indonesia.</p>
+        <h1 class="hero-title">
+          Koleksi Tools <span class="accent">Premium</span><br>
+          Untuk Produktivitas Maksimal
+        </h1>
+        <p class="hero-subtitle">
+          30+ tools gratis, elegan, dan powerful untuk developer dan kreator Indonesia.
+        </p>
         <div class="hero-buttons">
           <a href="#tools" class="btn btn-primary">Explore Tools</a>
-          <a href="https://github.com" class="btn btn-secondary" target="_blank">View on GitHub</a>
+          <a href="#about" class="btn btn-secondary">Learn More</a>
         </div>
         <div class="hero-stats">
-          <div class="stat-item"><div class="stat-number">100+</div><div class="stat-label">Tools</div></div>
-          <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Free</div></div>
-          <div class="stat-item"><div class="stat-number">25K+</div><div class="stat-label">Users</div></div>
+          <div class="stat-item">
+            <div class="stat-number">30+</div>
+            <div class="stat-label">Tools</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Free</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Users</div>
+          </div>
         </div>
       </div>
     </div>
@@ -117,7 +248,8 @@
           <h2 class="section-title" style="margin-bottom: var(--space-6);">Find Your Tool</h2>
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search tools... (e.g. JSON, password, calculator)" autocomplete="off">
+            <input type="text" id="searchInput" class="search-input"
+              placeholder="Search tools... (e.g. JSON, password, calculator)" autocomplete="off">
             <button class="clear-btn" id="clearBtn">×</button>
           </div>
           <div class="search-info" id="searchInfo"></div>
@@ -125,122 +257,726 @@
       </div>
 
       <h2 class="section-title">All Tools</h2>
-      
+
       <div class="no-results" id="noResults">
-        <div class="no-results-icon">🤷‍♂️</div>
+        <div class="no-results-icon">🔍</div>
         <h3>No tools found</h3>
         <p>Try searching with different keywords</p>
       </div>
 
       <div class="tools-grid" id="toolsGrid">
-        <!-- ORIGINAL TOOLS -->
-        <a href="tools/word-counter.html" class="tool-card" data-keywords="word counter hitung kata karakter paragraf text">
-            <div class="tool-icon">📝</div><div class="tool-info"><h3>Word Counter</h3><p>Hitung kata, karakter, paragraf</p></div></a>
-        <a href="tools/case-converter-advanced.html" class="tool-card" data-keywords="case converter upper lower title camel text transform snake kebab pascal">
-            <div class="tool-icon">Aa</div><div class="tool-info"><h3>Case Converter</h3><p>Upper, lower, title, camel, snake case</p></div></a>
-        <a href="tools/text-reverser.html" class="tool-card" data-keywords="text reverser balik reverse karakter kata baris">
-            <div class="tool-icon">🔄</div><div class="tool-info"><h3>Text Reverser</h3><p>Balik karakter, kata, baris</p></div></a>
-        <a href="tools/visual-diff-checker.html" class="tool-card" data-keywords="text diff compare comparison beda perbedaan visual">
-            <div class="tool-icon">🔍</div><div class="tool-info"><h3>Visual Diff Checker</h3><p>Bandingkan dua teks secara visual</p></div></a>
-        <a href="tools/base64-encoder.html" class="tool-card" data-keywords="base64 encoder decoder encode decode encryption">
-            <div class="tool-icon">🔐</div><div class="tool-info"><h3>Base64 Encoder</h3><p>Encode/decode base64</p></div></a>
+        <a href="tools/word-counter.html" class="tool-card"
+          data-keywords="word counter hitung kata karakter paragraf text">
+          <div class="tool-icon">📝</div>
+          <div class="tool-info">
+            <h3>Word Counter</h3>
+            <p>Hitung kata, karakter, paragraf</p>
+          </div>
+        </a>
+        <a href="tools/case-converter-advanced.html" class="tool-card"
+          data-keywords="case converter upper lower title camel text transform snake kebab pascal">
+          <div class="tool-icon">Aa</div>
+          <div class="tool-info">
+            <h3>Advanced Case Converter</h3>
+            <p>Upper, lower, snake, kebab, & lainnya</p>
+          </div>
+        </a>
+        <a href="tools/text-reverser.html" class="tool-card"
+          data-keywords="text reverser balik reverse karakter kata baris">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-info">
+            <h3>Text Reverser</h3>
+            <p>Balik karakter, kata, baris</p>
+          </div>
+        </a>
+        <a href="tools/visual-diff-checker.html" class="tool-card"
+          data-keywords="text diff compare comparison beda perbedaan visual">
+          <div class="tool-icon">🔍</div>
+          <div class="tool-info">
+            <h3>Visual Diff Checker</h3>
+            <p>Bandingkan dua teks secara visual</p>
+          </div>
+        </a>
+        <a href="tools/base64-encoder.html" class="tool-card"
+          data-keywords="base64 encoder decoder encode decode encryption">
+          <div class="tool-icon">🔐</div>
+          <div class="tool-info">
+            <h3>Base64 Encoder</h3>
+            <p>Encode/decode base64</p>
+          </div>
+        </a>
         <a href="tools/url-encoder.html" class="tool-card" data-keywords="url encoder decoder encode decode link">
-            <div class="tool-icon">🔗</div><div class="tool-info"><h3>URL Encoder</h3><p>Encode/decode URL</p></div></a>
-        <a href="tools/html-entities.html" class="tool-card" data-keywords="html entities encode decode special characters">
-            <div class="tool-icon">&lt;/&gt;</div><div class="tool-info"><h3>HTML Entities</h3><p>Convert HTML entities</p></div></a>
-        <a href="tools/markdown-live-editor.html" class="tool-card" data-keywords="markdown html convert converter md live editor preview">
-            <div class="tool-icon">✍️</div><div class="tool-info"><h3>Markdown Live Editor</h3><p>Convert MD ke HTML dengan preview</p></div></a>
+          <div class="tool-icon">🔗</div>
+          <div class="tool-info">
+            <h3>URL Encoder</h3>
+            <p>Encode/decode URL</p>
+          </div>
+        </a>
+        <a href="tools/html-entities.html" class="tool-card"
+          data-keywords="html entities encode decode special characters">
+          <div class="tool-icon">&lt;/&gt;</div>
+          <div class="tool-info">
+            <h3>HTML Entities</h3>
+            <p>Convert HTML entities</p>
+          </div>
+        </a>
+        <a href="tools/markdown-live-editor.html" class="tool-card"
+          data-keywords="markdown html convert converter md live editor preview">
+          <div class="tool-icon">✍️</div>
+          <div class="tool-info">
+            <h3>Markdown Live Editor</h3>
+            <p>Editor MD dengan live preview HTML</p>
+          </div>
+        </a>
         <a href="tools/csv-to-json.html" class="tool-card" data-keywords="csv json convert converter data">
-            <div class="tool-icon">📊</div><div class="tool-info"><h3>CSV to JSON</h3><p>Convert CSV ke JSON</p></div></a>
-        <a href="tools/timestamp-converter.html" class="tool-card" data-keywords="timestamp converter unix time date waktu">
-            <div class="tool-icon">⏰</div><div class="tool-info"><h3>Timestamp Converter</h3><p>Konversi Unix timestamp</p></div></a>
-        
-        <!-- NEW TOOLS (DARI GENERASI SEBELUMNYA) -->
-        <a href="tools/password-generator.html" class="tool-card" data-keywords="password generator strong secure random sandi"><div class="tool-icon">🔑</div><div class="tool-info"><h3>Password Generator</h3><p>Buat kata sandi yang kuat & acak</p></div></a>
-        <a href="tools/qr-generator.html" class="tool-card" data-keywords="qr code generator barcode tautan link"><div class="tool-icon">📱</div><div class="tool-info"><h3>QR Code Generator</h3><p>Buat kode QR untuk URL atau teks</p></div></a>
-        <a href="tools/lorem-ipsum-generator.html" class="tool-card" data-keywords="lorem ipsum dummy text placeholder generator"><div class="tool-icon">📰</div><div class="tool-info"><h3>Lorem Ipsum Generator</h3><p>Hasilkan teks placeholder kustom</p></div></a>
-        <a href="tools/uuid-generator.html" class="tool-card" data-keywords="uuid guid generator unique id identifier"><div class="tool-icon">🆔</div><div class="tool-info"><h3>UUID Generator</h3><p>Buat ID unik universal (v4)</p></div></a>
-        <a href="tools/random-number.html" class="tool-card" data-keywords="random number generator angka acak dadu"><div class="tool-icon">🎲</div><div class="tool-info"><h3>Random Number Generator</h3><p>Hasilkan angka acak dalam rentang</p></div></a>
-        <a href="tools/bmi-calculator.html" class="tool-card" data-keywords="bmi calculator body mass index kesehatan berat tinggi"><div class="tool-icon">⚖️</div><div class="tool-info"><h3>BMI Calculator</h3><p>Hitung Indeks Massa Tubuh Anda</p></div></a>
-        <a href="tools/percentage-calculator.html" class="tool-card" data-keywords="percentage calculator persen persentase matematika"><div class="tool-icon">%</div><div class="tool-info"><h3>Percentage Calculator</h3><p>Kalkulasi nilai persentase</p></div></a>
-        <a href="tools/json-formatter.html" class="tool-card" data-keywords="json formatter beautify validate parser"><div class="tool-icon">{ }</div><div class="tool-info"><h3>JSON Formatter</h3><p>Rapikan & validasi data JSON</p></div></a>
-        <a href="tools/hash-generator.html" class="tool-card" data-keywords="hash generator md5 sha256 sha1 enkripsi"><div class="tool-icon">#</div><div class="tool-info"><h3>Hash Generator</h3><p>Buat hash MD5, SHA-1, SHA-256</p></div></a>
-        <a href="tools/color-picker-from-image.html" class="tool-card" data-keywords="color picker palette hex rgb from image warna gambar"><div class="tool-icon">🎨</div><div class="tool-info"><h3>Color Picker from Image</h3><p>Ambil warna dari gambar</p></div></a>
-        <a href="tools/css-minifier.html" class="tool-card" data-keywords="css minifier minify beautify compress optimasi"><div class="tool-icon">✨</div><div class="tool-info"><h3>CSS Minifier</h3><p>Minify & rapikan kode CSS</p></div></a>
-        <a href="tools/js-minifier.html" class="tool-card" data-keywords="javascript js minifier minify beautify compress optimasi"><div class="tool-icon">⚡</div><div class="tool-info"><h3>JS Minifier</h3><p>Minify & rapikan kode JavaScript</p></div></a>
-        <a href="tools/regex-tester.html" class="tool-card" data-keywords="regex tester regular expression pattern match"><div class="tool-icon">.*</div><div class="tool-info"><h3>Regex Tester</h3><p>Uji coba pola Regular Expression</p></div></a>
-        <a href="tools/image-compressor.html" class="tool-card" data-keywords="image compressor kompres gambar foto ukuran"><div class="tool-icon">🖼️</div><div class="tool-info"><h3>Image Compressor</h3><p>Kompres ukuran gambar online</p></div></a>
-        <a href="tools/text-to-slug.html" class="tool-card" data-keywords="text slug url friendly convert seo"><div class="tool-icon">🔗</div><div class="tool-info"><h3>Text to Slug</h3><p>Ubah teks menjadi URL-friendly slug</p></div></a>
-        <a href="tools/code-beautifier.html" class="tool-card" data-keywords="code beautifier html css js formatter rapikan"><div class="tool-icon">💅</div><div class="tool-info"><h3>Code Beautifier</h3><p>Rapikan kode HTML, CSS, JS</p></div></a>
-        <a href="tools/gradient-generator.html" class="tool-card" data-keywords="gradient generator css linear radial warna"><div class="tool-icon">🌈</div><div class="tool-info"><h3>Gradient Generator</h3><p>Buat gradasi warna CSS</p></div></a>
-        <a href="tools/unit-converter.html" class="tool-card" data-keywords="unit converter px rem em css satuan"><div class="tool-icon">📏</div><div class="tool-info"><h3>Unit Converter</h3><p>Konversi satuan CSS (px, rem, em)</p></div></a>
-        <a href="tools/json-to-csv.html" class="tool-card" data-keywords="json csv convert converter data export"><div class="tool-icon">📊</div><div class="tool-info"><h3>JSON to CSV</h3><p>Ubah data JSON menjadi CSV</p></div></a>
-        <a href="tools/color-contrast.html" class="tool-card" data-keywords="color contrast wcag accessibility aksesibilitas warna"><div class="tool-icon">👁️</div><div class="tool-info"><h3>Color Contrast Checker</h3><p>Cek rasio kontras warna (WCAG)</p></div></a>
-        <a href="tools/open-graph-generator.html" class="tool-card" data-keywords="meta tags generator seo open graph og twitter"><div class="tool-icon">🏷️</div><div class="tool-info"><h3>Meta Tags Generator</h3><p>Buat meta tag untuk SEO</p></div></a>
-        <a href="tools/box-shadow-generator.html" class="tool-card" data-keywords="box shadow generator css efek bayangan"><div class="tool-icon">💎</div><div class="tool-info"><h3>Box Shadow Generator</h3><p>Buat efek bayangan CSS</p></div></a>
-        <a href="tools/ascii-art-generator.html" class="tool-card" data-keywords="ascii art generator teks convert seni"><div class="tool-icon">🎨</div><div class="tool-info"><h3>ASCII Art Generator</h3><p>Ubah teks menjadi seni ASCII</p></div></a>
-        <a href="tools/emoji-picker.html" class="tool-card" data-keywords="emoji picker copy paste emoticon simbol"><div class="tool-icon">😀</div><div class="tool-info"><h3>Emoji Picker</h3><p>Salin emoji dengan mudah</p></div></a>
-        <a href="tools/ipv4-calculator.html" class="tool-card" data-keywords="ipv4 calculator subnet ip jaringan network"><div class="tool-icon">🌐</div><div class="tool-info"><h3>IPv4 Calculator</h3><p>Kalkulator subnet & IP</p></div></a>
-        <a href="tools/flexbox-generator.html" class="tool-card" data-keywords="flexbox generator css layout flex"><div class="tool-icon">📦</div><div class="tool-info"><h3>Flexbox Generator</h3><p>Buat kode layout flexbox CSS</p></div></a>
-        <a href="tools/grid-generator.html" class="tool-card" data-keywords="css grid generator layout template"><div class="tool-icon">🔲</div><div class="tool-info"><h3>CSS Grid Generator</h3><p>Buat kode layout grid CSS</p></div></a>
-        <a href="tools/button-generator.html" class="tool-card" data-keywords="button generator css custom style tombol"><div class="tool-icon">🔘</div><div class="tool-info"><h3>Button Generator</h3><p>Desain tombol CSS kustom</p></div></a>
-        <a href="tools/border-radius.html" class="tool-card" data-keywords="border radius generator css rounded corner sudut"><div class="tool-icon">⭕</div><div class="tool-info"><h3>Border Radius Generator</h3><p>Buat border-radius CSS</p></div></a>
-        <a href="tools/animation-generator.html" class="tool-card" data-keywords="animation generator css keyframes motion animasi"><div class="tool-icon">⚡</div><div class="tool-info"><h3>Animation Generator</h3><p>Buat animasi CSS sederhana</p></div></a>
-        <a href="tools/form-generator.html" class="tool-card" data-keywords="form generator html input field formulir"><div class="tool-icon">📝</div><div class="tool-info"><h3>Form Generator</h3><p>Buat formulir HTML dasar</p></div></a>
-        <a href="tools/dropdown-generator.html" class="tool-card" data-keywords="dropdown generator select menu custom"><div class="tool-icon">📂</div><div class="tool-info"><h3>Dropdown Generator</h3><p>Buat dropdown kustom</p></div></a>
-        <a href="tools/php-crud-generator.html" class="tool-card" data-keywords="php crud generator database mysql sql"><div class="tool-icon">🐘</div><div class="tool-info"><h3>PHP CRUD Generator</h3><p>Buat operasi PHP CRUD</p></div></a>
-        <a href="tools/sql-query-builder.html" class="tool-card" data-keywords="sql query builder database mysql visual"><div class="tool-icon">🗄️</div><div class="tool-info"><h3>SQL Query Builder</h3><p>Bangun query SQL secara visual</p></div></a>
-        <a href="tools/api-endpoint-generator.html" class="tool-card" data-keywords="api endpoint generator rest http"><div class="tool-icon">🔌</div><div class="tool-info"><h3>API Endpoint Generator</h3><p>Buat endpoint REST API</p></div></a>
-        <a href="tools/aspect-ratio-calculator.html" class="tool-card" data-keywords="aspect ratio calculator rasio aspek gambar video"><div class="tool-icon">📐</div><div class="tool-info"><h3>Aspect Ratio Calculator</h3><p>Hitung rasio aspek (16:9, 4:3)</p></div></a>
-        <a href="tools/date-difference-calculator.html" class="tool-card" data-keywords="date difference calculator selisih tanggal hari durasi"><div class="tool-icon">🗓️</div><div class="tool-info"><h3>Date Difference Calculator</h3><p>Hitung selisih antar tanggal</p></div></a>
-        <a href="tools/vat-calculator.html" class="tool-card" data-keywords="vat calculator ppn pajak kalkulator harga"><div class="tool-icon">🧾</div><div class="tool-info"><h3>VAT Calculator</h3><p>Hitung harga dengan/tanpa PPN</p></div></a>
-        <a href="tools/discount-calculator.html" class="tool-card" data-keywords="discount calculator diskon potongan harga"><div class="tool-icon">✂️</div><div class="tool-info"><h3>Discount Calculator</h3><p>Hitung harga setelah diskon</p></div></a>
-        <a href="tools/tip-calculator.html" class="tool-card" data-keywords="tip calculator tip uang makan bagi tagihan"><div class="tool-icon">💰</div><div class="tool-info"><h3>Tip Calculator</h3><p>Hitung tip & bagi tagihan</p></div></a>
-        <a href="tools/compound-interest-calculator.html" class="tool-card" data-keywords="compound interest calculator bunga majemuk investasi"><div class="tool-icon">📈</div><div class="tool-info"><h3>Compound Interest Calculator</h3><p>Kalkulator bunga majemuk</p></div></a>
-        <a href="tools/salary-calculator.html" class="tool-card" data-keywords="salary calculator gaji bersih kotor pph21"><div class="tool-icon">💸</div><div class="tool-info"><h3>Salary Calculator</h3><p>Perkiraan gaji bersih (nett)</p></div></a>
-        <a href="tools/star-rating-calculator.html" class="tool-card" data-keywords="star rating calculator peringkat bintang rata-rata"><div class="tool-icon">⭐</div><div class="tool-info"><h3>Star Rating Calculator</h3><p>Hitung rata-rata peringkat bintang</p></div></a>
-        <a href="tools/time-unit-converter.html" class="tool-card" data-keywords="time unit converter waktu detik menit jam"><div class="tool-icon">⏱️</div><div class="tool-info"><h3>Time Unit Converter</h3><p>Konversi satuan waktu</p></div></a>
-        <a href="tools/roman-numeral-converter.html" class="tool-card" data-keywords="roman numeral converter angka romawi"><div class="tool-icon">🏛️</div><div class="tool-info"><h3>Roman Numeral Converter</h3><p>Konversi angka Romawi</p></div></a>
-        <a href="tools/number-system-converter.html" class="tool-card" data-keywords="number system converter biner desimal oktal hex"><div class="tool-icon">🔢</div><div class="tool-info"><h3>Number System Converter</h3><p>Konversi sistem bilangan</p></div></a>
-        <a href="tools/length-unit-converter.html" class="tool-card" data-keywords="length unit converter panjang meter km mil"><div class="tool-icon">📏</div><div class="tool-info"><h3>Length Unit Converter</h3><p>Konversi satuan panjang</p></div></a>
-        <a href="tools/weight-unit-converter.html" class="tool-card" data-keywords="weight unit converter berat kg gram pon ons"><div class="tool-icon">⚖️</div><div class="tool-info"><h3>Weight Unit Converter</h3><p>Konversi satuan berat</p></div></a>
-        <a href="tools/temperature-converter.html" class="tool-card" data-keywords="temperature converter suhu celsius fahrenheit kelvin"><div class="tool-icon">🌡️</div><div class="tool-info"><h3>Temperature Converter</h3><p>Konversi satuan suhu</p></div></a>
-        <a href="tools/digital-storage-converter.html" class="tool-card" data-keywords="digital storage converter byte kb mb gb tb"><div class="tool-icon">💾</div><div class="tool-info"><h3>Digital Storage Converter</h3><p>Konversi satuan data</p></div></a>
-        <a href="tools/json-to-yaml-converter.html" class="tool-card" data-keywords="json yaml convert converter data"><div class="tool-icon">🔄</div><div class="tool-info"><h3>JSON to YAML Converter</h3><p>Ubah JSON menjadi YAML</p></div></a>
-        <a href="tools/image-to-base64-converter.html" class="tool-card" data-keywords="image base64 converter encode gambar"><div class="tool-icon">🖼️</div><div class="tool-info"><h3>Image to Base64 Converter</h3><p>Ubah gambar ke teks Base64</p></div></a>
-        <a href="tools/text-to-binary-converter.html" class="tool-card" data-keywords="text binary converter biner teks"><div class="tool-icon">🔡</div><div class="tool-info"><h3>Text to Binary Converter</h3><p>Konversi teks ke biner</p></div></a>
-        <a href="tools/css-clippath-generator.html" class="tool-card" data-keywords="css clip-path generator bentuk custom"><div class="tool-icon">✨</div><div class="tool-info"><h3>CSS Clip-path Generator</h3><p>Buat bentuk CSS kustom</p></div></a>
-        <a href="tools/css-filter-generator.html" class="tool-card" data-keywords="css filter generator blur brightness saturate"><div class="tool-icon">🎨</div><div class="tool-info"><h3>CSS Filter Generator</h3><p>Eksperimen dengan filter CSS</p></div></a>
-        <a href="tools/cubic-bezier-generator.html" class="tool-card" data-keywords="cubic bezier generator css animasi timing"><div class="tool-icon">〰️</div><div class="tool-info"><h3>Cubic Bezier Generator</h3><p>Buat timing animasi kustom</p></div></a>
-        <a href="tools/css-triangle-generator.html" class="tool-card" data-keywords="css triangle generator segitiga border"><div class="tool-icon">🔺</div><div class="tool-info"><h3>CSS Triangle Generator</h3><p>Buat segitiga dengan CSS</p></div></a>
-        <a href="tools/image-placeholder-generator.html" class="tool-card" data-keywords="image placeholder generator gambar dummy"><div class="tool-icon">🖼️</div><div class="tool-info"><h3>Image Placeholder Generator</h3><p>Buat gambar placeholder</p></div></a>
-        <a href="tools/html-table-generator.html" class="tool-card" data-keywords="html table generator tabel"><div class="tool-icon">📝</div><div class="tool-info"><h3>HTML Table Generator</h3><p>Buat struktur tabel HTML</p></div></a>
-        <a href="tools/word-frequency-counter.html" class="tool-card" data-keywords="word frequency counter hitung frekuensi kata"><div class="tool-icon">📊</div><div class="tool-info"><h3>Word Frequency Counter</h3><p>Hitung frekuensi kata</p></div></a>
-        <a href="tools/duplicate-line-remover.html" class="tool-card" data-keywords="duplicate line remover hapus baris duplikat"><div class="tool-icon">🧹</div><div class="tool-info"><h3>Duplicate Line Remover</h3><p>Hapus baris duplikat</p></div></a>
-        <a href="tools/line-sorter.html" class="tool-card" data-keywords="line sorter urutkan baris abjad"><div class="tool-icon">🔠</div><div class="tool-info"><h3>Line Sorter</h3><p>Urutkan baris teks</p></div></a>
-        <a href="tools/url-parser.html" class="tool-card" data-keywords="url parser parse pecah link"><div class="tool-icon">🔗</div><div class="tool-info"><h3>URL Parser</h3><p>Pecah komponen URL</p></div></a>
-        <a href="tools/keyboard-keycode-info.html" class="tool-card" data-keywords="keyboard keycode info event key"><div class="tool-icon">⌨️</div><div class="tool-info"><h3>Keyboard KeyCode Info</h3><p>Lihat info tombol keyboard</p></div></a>
-        <a href="tools/screen-resolution-detector.html" class="tool-card" data-keywords="screen resolution detector viewport ukuran layar"><div class="tool-icon">🖥️</div><div class="tool-info"><h3>Screen Resolution Detector</h3><p>Deteksi resolusi layar</p></div></a>
-        <a href="tools/palindrome-checker.html" class="tool-card" data-keywords="palindrome checker palindrom kata"><div class="tool-icon">🔄</div><div class="tool-info"><h3>Palindrome Checker</h3><p>Cek kata palindrom</p></div></a>
-        <a href="tools/css-transform-playground.html" class="tool-card" data-keywords="css transform playground scale rotate skew"><div class="tool-icon">🔲</div><div class="tool-info"><h3>CSS Transform Playground</h3><p>Eksperimen dengan transformasi CSS</p></div></a>
-        <a href="tools/yaml-to-json-converter.html" class="tool-card" data-keywords="yaml json convert converter data"><div class="tool-icon">🔄</div><div class="tool-info"><h3>YAML to JSON Converter</h3><p>Ubah YAML menjadi JSON</p></div></a>
-        <a href="tools/html-list-generator.html" class="tool-card" data-keywords="html list generator daftar ul ol"><div class="tool-icon">📋</div><div class="tool-info"><h3>HTML List Generator</h3><p>Buat daftar HTML dari teks</p></div></a>
-        <a href="tools/email-url-extractor.html" class="tool-card" data-keywords="email url extractor ekstrak link"><div class="tool-icon">📤</div><div class="tool-info"><h3>Email & URL Extractor</h3><p>Ekstrak email atau URL dari teks</p></div></a>
-        <a href="tools/whitespace-remover.html" class="tool-card" data-keywords="whitespace remover spasi kosong hapus"><div class="tool-icon">🚫</div><div class="tool-info"><h3>Whitespace Remover</h3><p>Hapus spasi berlebih</p></div></a>
-        <a href="tools/line-prefix-suffix-adder.html" class="tool-card" data-keywords="line prefix suffix adder tambah awalan akhiran"><div class="tool-icon">+</div><div class="tool-info"><h3>Line Prefix/Suffix Adder</h3><p>Tambah awalan/akhiran baris</p></div></a>
-        <a href="tools/find-and-replace.html" class="tool-card" data-keywords="find and replace cari ganti teks"><div class="tool-icon">🔍</div><div class="tool-info"><h3>Find and Replace</h3><p>Cari & ganti teks</p></div></a>
-        <a href="tools/svg-minifier.html" class="tool-card" data-keywords="svg minifier minify optimasi"><div class="tool-icon">📉</div><div class="tool-info"><h3>SVG Minifier</h3><p>Optimasi kode SVG</p></div></a>
-        <a href="tools/mouse-tracker.html" class="tool-card" data-keywords="mouse tracker koordinat kursor gerak"><div class="tool-icon">🖱️</div><div class="tool-info"><h3>Mouse Tracker</h3><p>Lacak posisi kursor mouse</p></div></a>
-        <a href="tools/localstorage-viewer.html" class="tool-card" data-keywords="localstorage viewer penyimpanan browser"><div class="tool-icon">📦</div><div class="tool-info"><h3>localStorage Viewer</h3><p>Lihat data localStorage</p></div></a>
-        <a href="tools/browser-feature-detector.html" class="tool-card" data-keywords="browser feature detector html5 css3 support"><div class="tool-icon">🔬</div><div class="tool-info"><h3>Browser Feature Detector</h3><p>Cek dukungan fitur browser</p></div></a>
-        <a href="tools/text-shadow-generator.html" class="tool-card" data-keywords="text shadow generator css efek bayangan teks"><div class="tool-icon">🔠</div><div class="tool-info"><h3>Text Shadow Generator</h3><p>Buat bayangan pada teks</p></div></a>
-        <a href="tools/iframe-generator.html" class="tool-card" data-keywords="iframe generator sematkan embed"><div class="tool-icon">🖼️</div><div class="tool-info"><h3>Iframe Generator</h3><p>Buat kode sematan iframe</p></div></a>
-        <a href="tools/details-element-generator.html" class="tool-card" data-keywords="details element generator akordeon accordion"><div class="tool-icon">➕</div><div class="tool-info"><h3>Details Element Generator</h3><p>Buat elemen akordeon</p></div></a>
-        <a href="tools/font-face-generator.html" class="tool-card" data-keywords="font-face generator css font webfont"><div class="tool-icon">🔡</div><div class="tool-info"><h3>@font-face Generator</h3><p>Buat aturan @font-face CSS</p></div></a>
-        <a href="tools/image-flipper-rotator.html" class="tool-card" data-keywords="image flipper rotator balik putar gambar"><div class="tool-icon">🔄</div><div class="tool-info"><h3>Image Flipper & Rotator</h3><p>Balik atau putar gambar</p></div></a>
-        <a href="tools/favicon-generator.html" class="tool-card" data-keywords="favicon generator ikon situs web"><div class="tool-icon">⭐</div><div class="tool-info"><h3>Favicon Generator</h3><p>Buat ikon untuk situs web</p></div></a>
-        
+          <div class="tool-icon">📊</div>
+          <div class="tool-info">
+            <h3>CSV to JSON</h3>
+            <p>Convert CSV ke JSON</p>
+          </div>
+        </a>
+        <a href="tools/timestamp-converter.html" class="tool-card"
+          data-keywords="timestamp converter unix time date waktu">
+          <div class="tool-icon">⏰</div>
+          <div class="tool-info">
+            <h3>Timestamp Converter</h3>
+            <p>Konversi Unix timestamp</p>
+          </div>
+        </a>
+        <a href="tools/password-generator.html" class="tool-card"
+          data-keywords="password generator strong secure random sandi">
+          <div class="tool-icon">🔑</div>
+          <div class="tool-info">
+            <h3>Password Generator</h3>
+            <p>Buat kata sandi yang kuat & acak</p>
+          </div>
+        </a>
+        <a href="tools/qr-generator.html" class="tool-card" data-keywords="qr code generator barcode tautan link">
+          <div class="tool-icon">📱</div>
+          <div class="tool-info">
+            <h3>QR Code Generator</h3>
+            <p>Buat kode QR untuk URL atau teks</p>
+          </div>
+        </a>
+        <a href="tools/lorem-ipsum-generator.html" class="tool-card"
+          data-keywords="lorem ipsum dummy text placeholder generator">
+          <div class="tool-icon">📰</div>
+          <div class="tool-info">
+            <h3>Lorem Ipsum Generator</h3>
+            <p>Hasilkan teks placeholder kustom</p>
+          </div>
+        </a>
+        <a href="tools/uuid-generator.html" class="tool-card" data-keywords="uuid guid generator unique id identifier">
+          <div class="tool-icon">🆔</div>
+          <div class="tool-info">
+            <h3>UUID Generator</h3>
+            <p>Buat ID unik universal (v4)</p>
+          </div>
+        </a>
+        <a href="tools/random-number.html" class="tool-card" data-keywords="random number generator angka acak dadu">
+          <div class="tool-icon">🎲</div>
+          <div class="tool-info">
+            <h3>Random Number Generator</h3>
+            <p>Hasilkan angka acak dalam rentang</p>
+          </div>
+        </a>
+        <a href="tools/bmi-calculator.html" class="tool-card"
+          data-keywords="bmi calculator body mass index kesehatan berat tinggi">
+          <div class="tool-icon">⚖️</div>
+          <div class="tool-info">
+            <h3>BMI Calculator</h3>
+            <p>Hitung Indeks Massa Tubuh Anda</p>
+          </div>
+        </a>
+        <a href="tools/percentage-calculator.html" class="tool-card"
+          data-keywords="percentage calculator persen persentase matematika">
+          <div class="tool-icon">%</div>
+          <div class="tool-info">
+            <h3>Percentage Calculator</h3>
+            <p>Kalkulasi nilai persentase</p>
+          </div>
+        </a>
+        <a href="tools/json-formatter.html" class="tool-card" data-keywords="json formatter beautify validate parser">
+          <div class="tool-icon">{ }</div>
+          <div class="tool-info">
+            <h3>JSON Formatter</h3>
+            <p>Rapikan & validasi data JSON</p>
+          </div>
+        </a>
+        <a href="tools/hash-generator.html" class="tool-card" data-keywords="hash generator md5 sha256 sha1 enkripsi">
+          <div class="tool-icon">#</div>
+          <div class="tool-info">
+            <h3>Hash Generator</h3>
+            <p>Buat hash MD5, SHA-1, SHA-256</p>
+          </div>
+        </a>
+        <a href="tools/color-picker-from-image.html" class="tool-card"
+          data-keywords="color picker palette hex rgb from image warna gambar">
+          <div class="tool-icon">🎨</div>
+          <div class="tool-info">
+            <h3>Color Picker from Image</h3>
+            <p>Ambil warna dari gambar</p>
+          </div>
+        </a>
+        <a href="tools/css-minifier.html" class="tool-card"
+          data-keywords="css minifier minify beautify compress optimasi">
+          <div class="tool-icon">✨</div>
+          <div class="tool-info">
+            <h3>CSS Minifier</h3>
+            <p>Minify & rapikan kode CSS</p>
+          </div>
+        </a>
+        <a href="tools/js-minifier.html" class="tool-card"
+          data-keywords="javascript js minifier minify beautify compress optimasi">
+          <div class="tool-icon">⚡</div>
+          <div class="tool-info">
+            <h3>JS Minifier</h3>
+            <p>Minify & rapikan kode JavaScript</p>
+          </div>
+        </a>
+        <a href="tools/regex-tester.html" class="tool-card"
+          data-keywords="regex tester regular expression pattern match">
+          <div class="tool-icon">.*</div>
+          <div class="tool-info">
+            <h3>Regex Tester</h3>
+            <p>Uji coba pola Regular Expression</p>
+          </div>
+        </a>
+        <a href="tools/image-compressor.html" class="tool-card"
+          data-keywords="image compressor kompres gambar foto ukuran">
+          <div class="tool-icon">🖼️</div>
+          <div class="tool-info">
+            <h3>Image Compressor</h3>
+            <p>Kompres ukuran gambar online</p>
+          </div>
+        </a>
+        <a href="tools/text-to-slug.html" class="tool-card" data-keywords="text slug url friendly convert seo">
+          <div class="tool-icon">🔗</div>
+          <div class="tool-info">
+            <h3>Text to Slug</h3>
+            <p>Ubah teks menjadi URL-friendly slug</p>
+          </div>
+        </a>
+        <a href="tools/code-beautifier.html" class="tool-card"
+          data-keywords="code beautifier html css js formatter rapikan">
+          <div class="tool-icon">💅</div>
+          <div class="tool-info">
+            <h3>Code Beautifier</h3>
+            <p>Rapikan kode HTML, CSS, JS</p>
+          </div>
+        </a>
+        <a href="tools/gradient-generator.html" class="tool-card"
+          data-keywords="gradient generator css linear radial warna">
+          <div class="tool-icon">🌈</div>
+          <div class="tool-info">
+            <h3>Gradient Generator</h3>
+            <p>Buat gradasi warna CSS</p>
+          </div>
+        </a>
+        <a href="tools/unit-converter.html" class="tool-card" data-keywords="unit converter px rem em css satuan">
+          <div class="tool-icon">📏</div>
+          <div class="tool-info">
+            <h3>Unit Converter</h3>
+            <p>Konversi satuan CSS (px, rem, em)</p>
+          </div>
+        </a>
+        <a href="tools/json-to-csv.html" class="tool-card" data-keywords="json csv convert converter data export">
+          <div class="tool-icon">📊</div>
+          <div class="tool-info">
+            <h3>JSON to CSV</h3>
+            <p>Ubah data JSON menjadi CSV</p>
+          </div>
+        </a>
+        <a href="tools/color-contrast.html" class="tool-card"
+          data-keywords="color contrast wcag accessibility aksesibilitas warna">
+          <div class="tool-icon">👁️</div>
+          <div class="tool-info">
+            <h3>Color Contrast Checker</h3>
+            <p>Cek rasio kontras warna (WCAG)</p>
+          </div>
+        </a>
+        <a href="tools/open-graph-generator.html" class="tool-card"
+          data-keywords="meta tags generator seo open graph og twitter">
+          <div class="tool-icon">🏷️</div>
+          <div class="tool-info">
+            <h3>Meta Tags Generator</h3>
+            <p>Buat meta tag untuk SEO</p>
+          </div>
+        </a>
+        <a href="tools/box-shadow-generator.html" class="tool-card"
+          data-keywords="box shadow generator css efek bayangan">
+          <div class="tool-icon">💎</div>
+          <div class="tool-info">
+            <h3>Box Shadow Generator</h3>
+            <p>Buat efek bayangan CSS</p>
+          </div>
+        </a>
+        <a href="tools/ascii-art-generator.html" class="tool-card"
+          data-keywords="ascii art generator teks convert seni">
+          <div class="tool-icon">🎨</div>
+          <div class="tool-info">
+            <h3>ASCII Art Generator</h3>
+            <p>Ubah teks menjadi seni ASCII</p>
+          </div>
+        </a>
+        <a href="tools/emoji-picker.html" class="tool-card" data-keywords="emoji picker copy paste emoticon simbol">
+          <div class="tool-icon">😀</div>
+          <div class="tool-info">
+            <h3>Emoji Picker</h3>
+            <p>Salin emoji dengan mudah</p>
+          </div>
+        </a>
+        <a href="tools/ipv4-calculator.html" class="tool-card"
+          data-keywords="ipv4 calculator subnet ip jaringan network">
+          <div class="tool-icon">🌐</div>
+          <div class="tool-info">
+            <h3>IPv4 Calculator</h3>
+            <p>Kalkulator subnet & IP</p>
+          </div>
+        </a>
+        <a href="tools/flexbox-generator.html" class="tool-card" data-keywords="flexbox generator css layout flex">
+          <div class="tool-icon">📦</div>
+          <div class="tool-info">
+            <h3>Flexbox Generator</h3>
+            <p>Buat kode layout flexbox CSS</p>
+          </div>
+        </a>
+        <a href="tools/grid-generator.html" class="tool-card" data-keywords="css grid generator layout template">
+          <div class="tool-icon">🔲</div>
+          <div class="tool-info">
+            <h3>CSS Grid Generator</h3>
+            <p>Buat kode layout grid CSS</p>
+          </div>
+        </a>
+        <a href="tools/button-generator.html" class="tool-card"
+          data-keywords="button generator css custom style tombol">
+          <div class="tool-icon">🔘</div>
+          <div class="tool-info">
+            <h3>Button Generator</h3>
+            <p>Desain tombol CSS kustom</p>
+          </div>
+        </a>
+        <a href="tools/border-radius.html" class="tool-card"
+          data-keywords="border radius generator css rounded corner sudut">
+          <div class="tool-icon">⭕</div>
+          <div class="tool-info">
+            <h3>Border Radius Generator</h3>
+            <p>Buat border-radius CSS</p>
+          </div>
+        </a>
+        <a href="tools/animation-generator.html" class="tool-card"
+          data-keywords="animation generator css keyframes motion animasi">
+          <div class="tool-icon">⚡</div>
+          <div class="tool-info">
+            <h3>Animation Generator</h3>
+            <p>Buat animasi CSS sederhana</p>
+          </div>
+        </a>
+        <a href="tools/form-generator.html" class="tool-card" data-keywords="form generator html input field formulir">
+          <div class="tool-icon">📝</div>
+          <div class="tool-info">
+            <h3>Form Generator</h3>
+            <p>Buat formulir HTML dasar</p>
+          </div>
+        </a>
+        <a href="tools/dropdown-generator.html" class="tool-card" data-keywords="dropdown generator select menu custom">
+          <div class="tool-icon">📂</div>
+          <div class="tool-info">
+            <h3>Dropdown Generator</h3>
+            <p>Buat dropdown kustom</p>
+          </div>
+        </a>
+        <a href="tools/php-crud-generator.html" class="tool-card" data-keywords="php crud generator database mysql sql">
+          <div class="tool-icon">🐘</div>
+          <div class="tool-info">
+            <h3>PHP CRUD Generator</h3>
+            <p>Buat operasi PHP CRUD</p>
+          </div>
+        </a>
+        <a href="tools/sql-query-builder.html" class="tool-card"
+          data-keywords="sql query builder database mysql visual">
+          <div class="tool-icon">🗄️</div>
+          <div class="tool-info">
+            <h3>SQL Query Builder</h3>
+            <p>Bangun query SQL secara visual</p>
+          </div>
+        </a>
+        <a href="tools/api-endpoint-generator.html" class="tool-card" data-keywords="api endpoint generator rest http">
+          <div class="tool-icon">🔌</div>
+          <div class="tool-info">
+            <h3>API Endpoint Generator</h3>
+            <p>Buat endpoint REST API</p>
+          </div>
+        </a>
+        <a href="tools/aspect-ratio-calculator.html" class="tool-card"
+          data-keywords="aspect ratio calculator rasio aspek gambar video">
+          <div class="tool-icon">📐</div>
+          <div class="tool-info">
+            <h3>Aspect Ratio Calculator</h3>
+            <p>Hitung rasio aspek (16:9, 4:3)</p>
+          </div>
+        </a>
+        <a href="tools/date-difference-calculator.html" class="tool-card"
+          data-keywords="date difference calculator selisih tanggal hari durasi">
+          <div class="tool-icon">🗓️</div>
+          <div class="tool-info">
+            <h3>Date Difference Calculator</h3>
+            <p>Hitung selisih antar tanggal</p>
+          </div>
+        </a>
+        <a href="tools/vat-calculator.html" class="tool-card" data-keywords="vat calculator ppn pajak kalkulator harga">
+          <div class="tool-icon">🧾</div>
+          <div class="tool-info">
+            <h3>VAT Calculator</h3>
+            <p>Hitung harga dengan/tanpa PPN</p>
+          </div>
+        </a>
+        <a href="tools/discount-calculator.html" class="tool-card"
+          data-keywords="discount calculator diskon potongan harga">
+          <div class="tool-icon">✂️</div>
+          <div class="tool-info">
+            <h3>Discount Calculator</h3>
+            <p>Hitung harga setelah diskon</p>
+          </div>
+        </a>
+        <a href="tools/tip-calculator.html" class="tool-card"
+          data-keywords="tip calculator tip uang makan bagi tagihan">
+          <div class="tool-icon">💰</div>
+          <div class="tool-info">
+            <h3>Tip Calculator</h3>
+            <p>Hitung tip & bagi tagihan</p>
+          </div>
+        </a>
+        <a href="tools/compound-interest-calculator.html" class="tool-card"
+          data-keywords="compound interest calculator bunga majemuk investasi">
+          <div class="tool-icon">📈</div>
+          <div class="tool-info">
+            <h3>Compound Interest Calculator</h3>
+            <p>Kalkulator bunga majemuk</p>
+          </div>
+        </a>
+        <a href="tools/salary-calculator.html" class="tool-card"
+          data-keywords="salary calculator gaji bersih kotor pph21">
+          <div class="tool-icon">💸</div>
+          <div class="tool-info">
+            <h3>Salary Calculator</h3>
+            <p>Perkiraan gaji bersih (nett)</p>
+          </div>
+        </a>
+        <a href="tools/star-rating-calculator.html" class="tool-card"
+          data-keywords="star rating calculator peringkat bintang rata-rata">
+          <div class="tool-icon">⭐</div>
+          <div class="tool-info">
+            <h3>Star Rating Calculator</h3>
+            <p>Hitung rata-rata peringkat bintang</p>
+          </div>
+        </a>
+        <a href="tools/time-unit-converter.html" class="tool-card"
+          data-keywords="time unit converter waktu detik menit jam">
+          <div class="tool-icon">⏱️</div>
+          <div class="tool-info">
+            <h3>Time Unit Converter</h3>
+            <p>Konversi satuan waktu</p>
+          </div>
+        </a>
+        <a href="tools/roman-numeral-converter.html" class="tool-card"
+          data-keywords="roman numeral converter angka romawi">
+          <div class="tool-icon">🏛️</div>
+          <div class="tool-info">
+            <h3>Roman Numeral Converter</h3>
+            <p>Konversi angka Romawi</p>
+          </div>
+        </a>
+        <a href="tools/number-system-converter.html" class="tool-card"
+          data-keywords="number system converter biner desimal oktal hex">
+          <div class="tool-icon">🔢</div>
+          <div class="tool-info">
+            <h3>Number System Converter</h3>
+            <p>Konversi sistem bilangan</p>
+          </div>
+        </a>
+        <a href="tools/length-unit-converter.html" class="tool-card"
+          data-keywords="length unit converter panjang meter km mil">
+          <div class="tool-icon">📏</div>
+          <div class="tool-info">
+            <h3>Length Unit Converter</h3>
+            <p>Konversi satuan panjang</p>
+          </div>
+        </a>
+        <a href="tools/weight-unit-converter.html" class="tool-card"
+          data-keywords="weight unit converter berat kg gram pon ons">
+          <div class="tool-icon">⚖️</div>
+          <div class="tool-info">
+            <h3>Weight Unit Converter</h3>
+            <p>Konversi satuan berat</p>
+          </div>
+        </a>
+        <a href="tools/temperature-converter.html" class="tool-card"
+          data-keywords="temperature converter suhu celsius fahrenheit kelvin">
+          <div class="tool-icon">🌡️</div>
+          <div class="tool-info">
+            <h3>Temperature Converter</h3>
+            <p>Konversi satuan suhu</p>
+          </div>
+        </a>
+        <a href="tools/digital-storage-converter.html" class="tool-card"
+          data-keywords="digital storage converter byte kb mb gb tb">
+          <div class="tool-icon">💾</div>
+          <div class="tool-info">
+            <h3>Digital Storage Converter</h3>
+            <p>Konversi satuan data</p>
+          </div>
+        </a>
+        <a href="tools/json-to-yaml-converter.html" class="tool-card" data-keywords="json yaml convert converter data">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-info">
+            <h3>JSON to YAML Converter</h3>
+            <p>Ubah JSON menjadi YAML</p>
+          </div>
+        </a>
+        <a href="tools/image-to-base64-converter.html" class="tool-card"
+          data-keywords="image base64 converter encode gambar">
+          <div class="tool-icon">🖼️</div>
+          <div class="tool-info">
+            <h3>Image to Base64 Converter</h3>
+            <p>Ubah gambar ke teks Base64</p>
+          </div>
+        </a>
+        <a href="tools/text-to-binary-converter.html" class="tool-card"
+          data-keywords="text binary converter biner teks">
+          <div class="tool-icon">🔡</div>
+          <div class="tool-info">
+            <h3>Text to Binary Converter</h3>
+            <p>Konversi teks ke biner</p>
+          </div>
+        </a>
+        <a href="tools/css-clippath-generator.html" class="tool-card"
+          data-keywords="css clip-path generator bentuk custom">
+          <div class="tool-icon">✨</div>
+          <div class="tool-info">
+            <h3>CSS Clip-path Generator</h3>
+            <p>Buat bentuk CSS kustom</p>
+          </div>
+        </a>
+        <a href="tools/css-filter-generator.html" class="tool-card"
+          data-keywords="css filter generator blur brightness saturate">
+          <div class="tool-icon">🎨</div>
+          <div class="tool-info">
+            <h3>CSS Filter Generator</h3>
+            <p>Eksperimen dengan filter CSS</p>
+          </div>
+        </a>
+        <a href="tools/cubic-bezier-generator.html" class="tool-card"
+          data-keywords="cubic bezier generator css animasi timing">
+          <div class="tool-icon">〰️</div>
+          <div class="tool-info">
+            <h3>Cubic Bezier Generator</h3>
+            <p>Buat timing animasi kustom</p>
+          </div>
+        </a>
+        <a href="tools/css-triangle-generator.html" class="tool-card"
+          data-keywords="css triangle generator segitiga border">
+          <div class="tool-icon">🔺</div>
+          <div class="tool-info">
+            <h3>CSS Triangle Generator</h3>
+            <p>Buat segitiga dengan CSS</p>
+          </div>
+        </a>
+        <a href="tools/image-placeholder-generator.html" class="tool-card"
+          data-keywords="image placeholder generator gambar dummy">
+          <div class="tool-icon">🖼️</div>
+          <div class="tool-info">
+            <h3>Image Placeholder Generator</h3>
+            <p>Buat gambar placeholder</p>
+          </div>
+        </a>
+        <a href="tools/html-table-generator.html" class="tool-card" data-keywords="html table generator tabel">
+          <div class="tool-icon">📝</div>
+          <div class="tool-info">
+            <h3>HTML Table Generator</h3>
+            <p>Buat struktur tabel HTML</p>
+          </div>
+        </a>
+        <a href="tools/word-frequency-counter.html" class="tool-card"
+          data-keywords="word frequency counter hitung frekuensi kata">
+          <div class="tool-icon">📊</div>
+          <div class="tool-info">
+            <h3>Word Frequency Counter</h3>
+            <p>Hitung frekuensi kata</p>
+          </div>
+        </a>
+        <a href="tools/duplicate-line-remover.html" class="tool-card"
+          data-keywords="duplicate line remover hapus baris duplikat">
+          <div class="tool-icon">🧹</div>
+          <div class="tool-info">
+            <h3>Duplicate Line Remover</h3>
+            <p>Hapus baris duplikat</p>
+          </div>
+        </a>
+        <a href="tools/line-sorter.html" class="tool-card" data-keywords="line sorter urutkan baris abjad">
+          <div class="tool-icon">🔠</div>
+          <div class="tool-info">
+            <h3>Line Sorter</h3>
+            <p>Urutkan baris teks</p>
+          </div>
+        </a>
+        <a href="tools/url-parser.html" class="tool-card" data-keywords="url parser parse pecah link">
+          <div class="tool-icon">🔗</div>
+          <div class="tool-info">
+            <h3>URL Parser</h3>
+            <p>Pecah komponen URL</p>
+          </div>
+        </a>
+        <a href="tools/keyboard-keycode-info.html" class="tool-card" data-keywords="keyboard keycode info event key">
+          <div class="tool-icon">⌨️</div>
+          <div class="tool-info">
+            <h3>Keyboard KeyCode Info</h3>
+            <p>Lihat info tombol keyboard</p>
+          </div>
+        </a>
+        <a href="tools/screen-resolution-detector.html" class="tool-card"
+          data-keywords="screen resolution detector viewport ukuran layar">
+          <div class="tool-icon">🖥️</div>
+          <div class="tool-info">
+            <h3>Screen Resolution Detector</h3>
+            <p>Deteksi resolusi layar</p>
+          </div>
+        </a>
+        <a href="tools/palindrome-checker.html" class="tool-card" data-keywords="palindrome checker palindrom kata">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-info">
+            <h3>Palindrome Checker</h3>
+            <p>Cek kata palindrom</p>
+          </div>
+        </a>
+        <a href="tools/css-transform-playground.html" class="tool-card"
+          data-keywords="css transform playground scale rotate skew">
+          <div class="tool-icon">🔲</div>
+          <div class="tool-info">
+            <h3>CSS Transform Playground</h3>
+            <p>Eksperimen dengan transformasi CSS</p>
+          </div>
+        </a>
+        <a href="tools/yaml-to-json-converter.html" class="tool-card" data-keywords="yaml json convert converter data">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-info">
+            <h3>YAML to JSON Converter</h3>
+            <p>Ubah YAML menjadi JSON</p>
+          </div>
+        </a>
+        <a href="tools/html-list-generator.html" class="tool-card" data-keywords="html list generator daftar ul ol">
+          <div class="tool-icon">📋</div>
+          <div class="tool-info">
+            <h3>HTML List Generator</h3>
+            <p>Buat daftar HTML dari teks</p>
+          </div>
+        </a>
+        <a href="tools/email-url-extractor.html" class="tool-card" data-keywords="email url extractor ekstrak link">
+          <div class="tool-icon">📤</div>
+          <div class="tool-info">
+            <h3>Email & URL Extractor</h3>
+            <p>Ekstrak email atau URL dari teks</p>
+          </div>
+        </a>
+        <a href="tools/whitespace-remover.html" class="tool-card" data-keywords="whitespace remover spasi kosong hapus">
+          <div class="tool-icon">🚫</div>
+          <div class="tool-info">
+            <h3>Whitespace Remover</h3>
+            <p>Hapus spasi berlebih</p>
+          </div>
+        </a>
+        <a href="tools/line-prefix-suffix-adder.html" class="tool-card"
+          data-keywords="line prefix suffix adder tambah awalan akhiran">
+          <div class="tool-icon">+</div>
+          <div class="tool-info">
+            <h3>Line Prefix/Suffix Adder</h3>
+            <p>Tambah awalan/akhiran baris</p>
+          </div>
+        </a>
+        <a href="tools/find-and-replace.html" class="tool-card" data-keywords="find and replace cari ganti teks">
+          <div class="tool-icon">🔍</div>
+          <div class="tool-info">
+            <h3>Find and Replace</h3>
+            <p>Cari & ganti teks</p>
+          </div>
+        </a>
+        <a href="tools/svg-minifier.html" class="tool-card" data-keywords="svg minifier minify optimasi">
+          <div class="tool-icon">📉</div>
+          <div class="tool-info">
+            <h3>SVG Minifier</h3>
+            <p>Optimasi kode SVG</p>
+          </div>
+        </a>
+        <a href="tools/mouse-tracker.html" class="tool-card" data-keywords="mouse tracker koordinat kursor gerak">
+          <div class="tool-icon">🖱️</div>
+          <div class="tool-info">
+            <h3>Mouse Tracker</h3>
+            <p>Lacak posisi kursor mouse</p>
+          </div>
+        </a>
+        <a href="tools/localstorage-viewer.html" class="tool-card"
+          data-keywords="localstorage viewer penyimpanan browser">
+          <div class="tool-icon">📦</div>
+          <div class="tool-info">
+            <h3>localStorage Viewer</h3>
+            <p>Lihat data localStorage</p>
+          </div>
+        </a>
+        <a href="tools/browser-feature-detector.html" class="tool-card"
+          data-keywords="browser feature detector html5 css3 support">
+          <div class="tool-icon">🔬</div>
+          <div class="tool-info">
+            <h3>Browser Feature Detector</h3>
+            <p>Cek dukungan fitur browser</p>
+          </div>
+        </a>
+        <a href="tools/text-shadow-generator.html" class="tool-card"
+          data-keywords="text shadow generator css efek bayangan teks">
+          <div class="tool-icon">🔠</div>
+          <div class="tool-info">
+            <h3>Text Shadow Generator</h3>
+            <p>Buat bayangan pada teks</p>
+          </div>
+        </a>
+        <a href="tools/iframe-generator.html" class="tool-card" data-keywords="iframe generator sematkan embed">
+          <div class="tool-icon">🖼️</div>
+          <div class="tool-info">
+            <h3>Iframe Generator</h3>
+            <p>Buat kode sematan iframe</p>
+          </div>
+        </a>
+        <a href="tools/details-element-generator.html" class="tool-card"
+          data-keywords="details element generator akordeon accordion">
+          <div class="tool-icon">➕</div>
+          <div class="tool-info">
+            <h3>Details Element Generator</h3>
+            <p>Buat elemen akordeon</p>
+          </div>
+        </a>
+        <a href="tools/font-face-generator.html" class="tool-card" data-keywords="font-face generator css font webfont">
+          <div class="tool-icon">🔡</div>
+          <div class="tool-info">
+            <h3>@font-face Generator</h3>
+            <p>Buat aturan @font-face CSS</p>
+          </div>
+        </a>
+        <a href="tools/image-flipper-rotator.html" class="tool-card"
+          data-keywords="image flipper rotator balik putar gambar">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-info">
+            <h3>Image Flipper & Rotator</h3>
+            <p>Balik atau putar gambar</p>
+          </div>
+        </a>
+        <a href="tools/favicon-generator.html" class="tool-card" data-keywords="favicon generator ikon situs web">
+          <div class="tool-icon">⭐</div>
+          <div class="tool-info">
+            <h3>Favicon Generator</h3>
+            <p>Buat ikon untuk situs web</p>
+          </div>
+        </a>
       </div>
+
     </div>
   </section>
 
@@ -248,11 +984,30 @@
     <div class="container">
       <div class="about-content">
         <h2>Kenapa Pilih ToolsKita?</h2>
-        <p>ToolsKita adalah koleksi tools online gratis, modern, dan elegan yang dirancang khusus untuk developer dan kreator Indonesia. Semua tools 100% gratis tanpa iklan mengganggu.</p>
+        <p>ToolsKita adalah koleksi tools online gratis, modern, dan elegan yang dirancang khusus untuk developer dan
+          kreator Indonesia. Semua tools 100% gratis tanpa iklan mengganggu.</p>
         <div class="about-features">
-          <div class="feature-item"><div class="feature-icon">⚡</div><div class="feature-text"><h4>Super Fast</h4><p>Semua proses instan tanpa loading</p></div></div>
-          <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-text"><h4>Privacy First</h4><p>Data diproses di browser kamu</p></div></div>
-          <div class="feature-item"><div class="feature-icon">💎</div><div class="feature-text"><h4>Premium Quality</h4><p>Desain elegan dan modern</p></div></div>
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-text">
+              <h4>Super Fast</h4>
+              <p>Semua proses instant tanpa loading</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-text">
+              <h4>Privacy First</h4>
+              <p>Data diproses di browser kamu</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">💎</div>
+            <div class="feature-text">
+              <h4>Premium Quality</h4>
+              <p>Desain elegan dan modern</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -275,18 +1030,40 @@
     const toolCards = document.querySelectorAll('.tool-card');
     const totalTools = toolCards.length;
 
+    searchInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase().trim();
+      if (query.length > 0) {
+        clearBtn.style.display = 'block';
+        filterTools(query);
+      } else {
+        clearBtn.style.display = 'none';
+        showAllTools();
+      }
+    });
+
+    clearBtn.addEventListener('click', function () {
+      searchInput.value = '';
+      clearBtn.style.display = 'none';
+      showAllTools();
+      searchInput.focus();
+    });
+
     function filterTools(query) {
       let visibleCount = 0;
       toolCards.forEach(card => {
         const keywords = card.getAttribute('data-keywords') || '';
-        if (keywords.includes(query)) {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        const searchText = `${keywords} ${title} ${desc}`.toLowerCase();
+
+        if (searchText.includes(query)) {
           card.classList.remove('hidden');
           visibleCount++;
         } else {
           card.classList.add('hidden');
         }
       });
-      
+
       if (visibleCount === 0) {
         noResults.classList.add('show');
         toolsGrid.style.display = 'none';
@@ -304,28 +1081,10 @@
       toolsGrid.style.display = 'grid';
       searchInfo.textContent = `Showing all ${totalTools} tools`;
     }
-    
-    searchInput.addEventListener('input', function() {
-      const query = this.value.toLowerCase().trim();
-      if (query.length > 0) {
-        clearBtn.style.display = 'block';
-        filterTools(query);
-      } else {
-        clearBtn.style.display = 'none';
-        showAllTools();
-      }
-    });
 
-    clearBtn.addEventListener('click', function() {
-      searchInput.value = '';
-      clearBtn.style.display = 'none';
-      showAllTools();
-      searchInput.focus();
-    });
-
-    // Inisialisasi tampilan awal
     showAllTools();
   </script>
   <script src="js/main.js"></script>
 </body>
+
 </html>
