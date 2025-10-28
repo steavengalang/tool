@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Satuan Waktu - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .converter-row input {
+        flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⏱️ Konverter Satuan Waktu</h1>
+        <p>Konversi nilai antar satuan waktu: detik, menit, jam, hari, minggu.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group converter-row">
+            <input type="number" id="weeks" oninput="convertTime(this.id, this.value)">
+            <label for="weeks">Minggu</label>
+        </div>
+        <div class="form-group converter-row">
+            <input type="number" id="days" oninput="convertTime(this.id, this.value)">
+            <label for="days">Hari</label>
+        </div>
+        <div class="form-group converter-row">
+            <input type="number" id="hours" oninput="convertTime(this.id, this.value)">
+            <label for="hours">Jam</label>
+        </div>
+        <div class="form-group converter-row">
+            <input type="number" id="minutes" oninput="convertTime(this.id, this.value)">
+            <label for="minutes">Menit</label>
+        </div>
+        <div class="form-group converter-row">
+            <input type="number" id="seconds" oninput="convertTime(this.id, this.value)">
+            <label for="seconds">Detik</label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const inputs = {
+        weeks: document.getElementById('weeks'),
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds')
+    };
+
+    const factors = {
+        weeks: 604800,
+        days: 86400,
+        hours: 3600,
+        minutes: 60,
+        seconds: 1
+    };
+
+    function convertTime(sourceId, value) {
+        if (value === '') {
+            Object.values(inputs).forEach(input => input.value = '');
+            return;
+        }
+
+        const valueInSeconds = parseFloat(value) * factors[sourceId];
+
+        for (const unit in inputs) {
+            if (unit !== sourceId) {
+                const result = valueInSeconds / factors[unit];
+                // Tampilkan hasil dengan presisi yang wajar
+                inputs[unit].value = parseFloat(result.toPrecision(6));
+            }
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Satuan Panjang - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-row { display: flex; align-items: center; gap: 1rem; }
+    .converter-row input { flex-grow: 1; }
+    .converter-row label { min-width: 80px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📏 Konverter Satuan Panjang</h1>
+        <p>Konversi antara kilometer, meter, mil, kaki, inci, dan lainnya.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group converter-row">
+          <input type="number" id="km" oninput="convert('km', this.value)">
+          <label for="km">Kilometer (km)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="m" oninput="convert('m', this.value)">
+          <label for="m">Meter (m)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="cm" oninput="convert('cm', this.value)">
+          <label for="cm">Sentimeter (cm)</label>
+        </div>
+        <hr>
+        <div class="form-group converter-row">
+          <input type="number" id="mi" oninput="convert('mi', this.value)">
+          <label for="mi">Mil (mi)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="ft" oninput="convert('ft', this.value)">
+          <label for="ft">Kaki (ft)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="in" oninput="convert('in', this.value)">
+          <label for="in">Inci (in)</label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const inputs = {
+      km: document.getElementById('km'), m: document.getElementById('m'), cm: document.getElementById('cm'),
+      mi: document.getElementById('mi'), ft: document.getElementById('ft'), in: document.getElementById('in')
+    };
+
+    // Faktor konversi ke meter (unit dasar)
+    const factors = {
+      km: 1000, m: 1, cm: 0.01,
+      mi: 1609.34, ft: 0.3048, in: 0.0254
+    };
+
+    function convert(sourceId, value) {
+      if (value.trim() === '') {
+        Object.values(inputs).forEach(input => input.value = '');
+        return;
+      }
+      const valueInMeters = parseFloat(value) * factors[sourceId];
+      for (const unit in inputs) {
+        if (unit !== sourceId) {
+          const result = valueInMeters / factors[unit];
+          inputs[unit].value = parseFloat(result.toPrecision(6));
+        }
+      }
+    }
+  </script>
+</body>
+</html>

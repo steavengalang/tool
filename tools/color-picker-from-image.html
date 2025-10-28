@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengekstrak Warna dari Gambar - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    #canvas { cursor: crosshair; max-width: 100%; border-radius: 4px; }
+    #resultPreview { width: 50px; height: 50px; border: 1px solid #ccc; display: inline-block; vertical-align: middle; }
+    #resultHex { font-family: monospace; font-size: 1.2rem; margin-left: 1rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🎨 Pengekstrak Warna dari Gambar</h1><p>Unggah gambar dan klik untuk mengambil kode warna dari titik mana pun.</p></div>
+      <div class="tool-content">
+        <input type="file" id="imageLoader" accept="image/*">
+        <canvas id="canvas" style="margin-top:1rem;"></canvas>
+        <div id="result" style="margin-top:1rem; align-items:center; display:none;">
+          <div id="resultPreview"></div>
+          <span id="resultHex"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const imageLoader = document.getElementById('imageLoader');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const resultDiv = document.getElementById('result');
+    const previewDiv = document.getElementById('resultPreview');
+    const hexSpan = document.getElementById('resultHex');
+
+    imageLoader.addEventListener('change', (e) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+        }
+        img.src = event.target.result;
+      }
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const pixelData = ctx.getImageData(x, y, 1, 1).data;
+      const hex = `#${("000000" + ((pixelData[0] << 16) | (pixelData[1] << 8) | pixelData[2]).toString(16)).slice(-6)}`;
+      
+      resultDiv.style.display = 'flex';
+      previewDiv.style.backgroundColor = hex;
+      hexSpan.textContent = hex.toUpperCase();
+    });
+  </script>
+</body>
+</html>

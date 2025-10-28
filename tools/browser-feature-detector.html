@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pendeteksi Fitur Browser - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>li{list-style:none;padding:0.5rem;border-bottom:1px solid #eee;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🔬 Pendeteksi Fitur Browser</h1><p>Cek apakah fitur HTML5/CSS3 tertentu didukung oleh browser.</p></div>
+<div class="tool-content"><ul id="featureList"></ul></div></div></main>
+<script>
+const features = {
+  'localStorage': () => 'localStorage' in window,
+  'Web Workers': () => 'Worker' in window,
+  'Drag and Drop': () => 'draggable' in document.createElement('div'),
+  'CSS Grid': () => 'grid' in document.createElement('div').style,
+  'Flexbox': () => 'flex' in document.createElement('div').style
+};
+const list = document.getElementById('featureList');
+for (const feature in features) {
+  const supported = features[feature]();
+  list.innerHTML += `<li>${feature}: ${supported ? '✅ Didukung' : '❌ Tidak Didukung'}</li>`;
+}
+</script></body></html>

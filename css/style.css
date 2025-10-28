@@ -2034,3 +2034,284 @@ a:focus-visible {
 
 /* ========== END OF STYLES ========== */
 
+/*
+==========================================================================
+  TAMBAHAN & PERBAIKAN UNTUK KOMPONEN FORM DAN UTILITAS
+==========================================================================
+*/
+
+/*
+--- Form-Specific Layouts ---
+Gunakan kelas ini pada container spesifik di halaman tool Anda
+jika Anda membutuhkan layout yang berbeda dari .tool-content default.
+*/
+.generator-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+
+.converter-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .converter-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.preview-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  min-height: 300px;
+}
+
+/*
+--- Unstyled & Reset ---
+Kelas `.unstyled` ini bisa Anda tambahkan ke elemen form apa pun
+(input, textarea, select, button) untuk menghapus semua style bawaan
+browser dan menerapkan style dasar yang sesuai tema.
+*/
+.unstyled {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: inline-block;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* --- Unstyled Text Input & Select --- */
+input[type="text"].unstyled,
+input[type="number"].unstyled,
+input[type="email"].unstyled,
+select.unstyled,
+textarea.unstyled {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+input[type="text"].unstyled:focus,
+input[type="number"].unstyled:focus,
+input[type="email"].unstyled:focus,
+select.unstyled:focus,
+textarea.unstyled:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+
+textarea.unstyled {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* --- Unstyled Checkbox & Radio --- */
+.checkbox-group label,
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    padding: var(--space-3);
+    border-radius: var(--radius);
+    transition: background-color var(--duration-fast);
+}
+.checkbox-group label:hover,
+.radio-group label:hover {
+    background-color: var(--accent-muted);
+}
+
+input[type="checkbox"].unstyled,
+input[type="radio"].unstyled {
+    -webkit-appearance: none;
+    appearance: none;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--glass-border);
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+input[type="radio"].unstyled {
+    border-radius: 50%;
+}
+
+input[type="checkbox"].unstyled:checked {
+    background-color: var(--accent);
+    border-color: var(--accent-dark);
+}
+
+input[type="radio"].unstyled:checked {
+    border-color: var(--accent);
+}
+
+input[type="checkbox"].unstyled:checked::after {
+    content: '\2713'; /* Checkmark symbol */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: var(--bg-primary);
+    font-weight: bold;
+}
+
+input[type="radio"].unstyled:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--accent);
+}
+
+
+/* --- Error Message Styling --- */
+.error-message {
+  color: #ff6b6b; /* Warna error yang kontras */
+  font-size: 0.875rem;
+  margin-top: var(--space-2);
+  min-height: 1rem;
+}
+
+/*
+--- Specific Component Fixes ---
+Beberapa kelas untuk komponen yang Anda buat agar tampilannya
+lebih rapi dan konsisten.
+*/
+.ratio-inputs, .calc-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.ratio-inputs span, .calc-row span {
+  font-size: 1.5rem;
+  color: var(--text-tertiary);
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.result-card, .result-display, .results-tip {
+    background-color: var(--bg-tertiary);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--glass-border);
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: var(--glass-border);
+  margin: var(--space-8) 0;
+}
+/*
+==========================================================================
+  ULTIMATE FORM STYLING FIX (ANTI RIBET)
+  Target langsung elemen form yang belum di-style.
+==========================================================================
+*/
+
+/* 
+  Target semua input teks, nomor, email, dll.
+  KECUALI: input yang sudah punya class, dan tipe khusus seperti checkbox/radio/range.
+*/
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="reset"]):not([type="button"]),
+textarea,
+select {
+  /* Terapkan style dasar yang mewah dari variabel Anda */
+  width: 100%;
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  background-color: rgba(12, 12, 12, 0.6);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  transition: all var(--duration-normal) var(--ease-standard);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) inset;
+  appearance: none; /* Hapus style bawaan browser */
+  -webkit-appearance: none;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="reset"]):not([type="button"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  background-color: rgba(18, 18, 18, 0.7);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(212, 255, 58, 0.12), 0 2px 8px rgba(0, 0, 0, 0.25) inset;
+  transform: translateY(-1px);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 140px;
+    font-family: Monaco, Courier New, monospace;
+    line-height: 1.7;
+}
+
+/* 
+  Target semua tombol yang TIDAK punya class .btn utama
+  Ini akan men-style tombol 'Copy', 'Generate', dll. agar konsisten.
+*/
+button:not(.btn) {
+    /* Style ini meniru .btn-secondary Anda agar konsisten */
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-lg);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    transition: all var(--duration-normal) var(--ease-standard);
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.06);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm), var(--shadow-inner);
+}
+
+button:not(.btn):hover {
+    background-color: var(--accent-muted);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 0 32px var(--accent-glow), var(--shadow-md);
+}
+
+button:not(.btn):active {
+    transform: scale(0.98);
+}

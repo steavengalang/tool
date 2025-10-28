@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Perekam Gerakan Mouse - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>#tracker-box{height:300px;border:2px dashed #ccc;display:flex;align-items:center;justify-content:center;font-size:2rem;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🖱️ Perekam Gerakan Mouse</h1><p>Lacak dan tampilkan koordinat X/Y dari kursor mouse Anda.</p></div>
+<div class="tool-content">
+  <div id="tracker-box">Gerakkan mouse di sini</div>
+</div></div></main>
+<script>
+const box = document.getElementById('tracker-box');
+box.addEventListener('mousemove', (e) => {
+  const rect = box.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  box.textContent = `X: ${Math.round(x)}, Y: ${Math.round(y)}`;
+});
+box.addEventListener('mouseleave', () => {
+  box.textContent = 'Gerakkan mouse di sini';
+});
+</script></body></html>

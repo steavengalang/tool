@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>@font-face Generator - ToolsKita</title><link rel="stylesheet" href="../css/style.css"></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🔡 @font-face Generator</h1><p>Buat blok CSS @font-face dengan mudah.</p></div>
+<div class="tool-content">
+  <div class="form-group"><label>Font Family Name:</label><input type="text" id="fontName" value="MyFont" oninput="generate()"></div>
+  <div class="form-group"><label>URL ke File Font (.woff2):</label><input type="text" id="fontUrl" value="/fonts/myfont.woff2" oninput="generate()"></div>
+  <textarea id="resultCode" readonly style="height:150px;"></textarea>
+</div></div></main>
+<script>
+function generate() {
+  const name = document.getElementById('fontName').value;
+  const url = document.getElementById('fontUrl').value;
+  const code = `@font-face {\\n  font-family: '${name}';\\n  src: url('${url}') format('woff2');\\n  font-weight: normal;\\n  font-style: normal;\\n}`;
+  document.getElementById('resultCode').value = code;
+}
+window.onload=generate;
+</script></body></html>

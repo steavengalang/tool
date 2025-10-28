@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Parser - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .result-table { width: 100%; margin-top: 1.5rem; border-collapse: collapse; }
+    .result-table td { border: 1px solid #ddd; padding: 8px; font-family: monospace; }
+    .result-table td:first-child { background-color: #f8f9fa; font-weight: bold; width: 120px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔗 URL Parser</h1><p>Pecah URL menjadi komponen-komponennya: protokol, host, path, dll.</p></div>
+      <div class="tool-content">
+        <input type="text" id="urlInput" placeholder="https://toolskita.vercel.app/path?query=1" oninput="parseURL()">
+        <table class="result-table">
+          <tbody>
+            <tr><td>Protocol</td><td id="protocol"></td></tr>
+            <tr><td>Hostname</td><td id="hostname"></td></tr>
+            <tr><td>Port</td><td id="port"></td></tr>
+            <tr><td>Pathname</td><td id="pathname"></td></tr>
+            <tr><td>Search</td><td id="search"></td></tr>
+            <tr><td>Hash</td><td id="hash"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <script>
+    function parseURL() {
+      const urlInput = document.getElementById('urlInput').value;
+      try {
+        const url = new URL(urlInput);
+        document.getElementById('protocol').textContent = url.protocol;
+        document.getElementById('hostname').textContent = url.hostname;
+        document.getElementById('port').textContent = url.port;
+        document.getElementById('pathname').textContent = url.pathname;
+        document.getElementById('search').textContent = url.search;
+        document.getElementById('hash').textContent = url.hash;
+      } catch (e) {
+        // Kosongkan jika URL tidak valid
+        document.getElementById('protocol').textContent = '';
+        document.getElementById('hostname').textContent = '';
+        document.getElementById('port').textContent = '';
+        document.getElementById('pathname').textContent = '';
+        document.getElementById('search').textContent = '';
+        document.getElementById('hash').textContent = '';
+      }
+    }
+  </script>
+</body>
+</html>

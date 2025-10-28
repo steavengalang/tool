@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembersih Baris Duplikat - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style> textarea { height: 400px; } </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🧹 Pembersih Baris Duplikat</h1><p>Hapus semua baris yang sama persis dari daftar Anda.</p></div>
+      <div class="tool-content">
+        <textarea id="textInput" placeholder="Tempel daftar Anda di sini..."></textarea>
+        <button class="btn" onclick="removeDuplicates()" style="margin-top: 1rem;">Hapus Duplikat</button>
+      </div>
+    </div>
+  </main>
+  <script>
+    function removeDuplicates() {
+      const inputArea = document.getElementById('textInput');
+      const lines = inputArea.value.split('\\n');
+      // Gunakan Set untuk mendapatkan baris yang unik
+      const uniqueLines = [...new Set(lines)];
+      inputArea.value = uniqueLines.join('\\n');
+    }
+  </script>
+</body>
+</html>

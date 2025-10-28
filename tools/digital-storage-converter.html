@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Satuan Digital - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-row { display: flex; align-items: center; gap: 1rem; }
+    .converter-row input { flex-grow: 1; }
+    .converter-row label { min-width: 90px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>💾 Konverter Satuan Digital</h1>
+        <p>Konversi kapasitas penyimpanan data: Byte, Kilobyte, Megabyte, dst.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group converter-row">
+          <input type="number" id="tb" oninput="convert('tb', this.value)">
+          <label for="tb">Terabyte (TB)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="gb" oninput="convert('gb', this.value)">
+          <label for="gb">Gigabyte (GB)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="mb" oninput="convert('mb', this.value)">
+          <label for="mb">Megabyte (MB)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="kb" oninput="convert('kb', this.value)">
+          <label for="kb">Kilobyte (KB)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="b" oninput="convert('b', this.value)">
+          <label for="b">Byte (B)</label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const inputs = {
+      tb: document.getElementById('tb'), gb: document.getElementById('gb'),
+      mb: document.getElementById('mb'), kb: document.getElementById('kb'), b: document.getElementById('b')
+    };
+    
+    // Faktor konversi ke byte (unit dasar)
+    const factors = {
+      tb: 1e12, gb: 1e9, mb: 1e6, kb: 1e3, b: 1
+    };
+
+    function convert(sourceId, value) {
+      if (value.trim() === '') {
+        Object.values(inputs).forEach(input => input.value = '');
+        return;
+      }
+      const valueInBytes = parseFloat(value) * factors[sourceId];
+      for (const unit in inputs) {
+        if (unit !== sourceId) {
+          const result = valueInBytes / factors[unit];
+          inputs[unit].value = parseFloat(result.toPrecision(9));
+        }
+      }
+    }
+  </script>
+</body>
+</html>

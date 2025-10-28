@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Diff Checker - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .diff-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    textarea { height: 300px; }
+    #result { margin-top: 1.5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap; font-family: monospace; }
+    ins { background-color: #d4edda; text-decoration: none; }
+    del { background-color: #f8d7da; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔍 Visual Diff Checker</h1><p>Bandingkan dua teks dan lihat perbedaannya dengan sorotan warna.</p></div>
+      <div class="tool-content">
+        <div class="diff-layout">
+          <textarea id="text1" placeholder="Teks asli..."></textarea>
+          <textarea id="text2" placeholder="Teks yang diubah..."></textarea>
+        </div>
+        <button class="btn" onclick="compareTexts()" style="margin-top: 1rem;">Bandingkan</button>
+        <h3>Hasil Perbandingan:</h3>
+        <div id="result"></div>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
+  <script>
+    function compareTexts() {
+      const text1 = document.getElementById('text1').value;
+      const text2 = document.getElementById('text2').value;
+      const resultDiv = document.getElementById('result');
+      
+      const diff = Diff.diffChars(text1, text2);
+      let fragment = document.createDocumentFragment();
+      
+      diff.forEach((part) => {
+        const color = part.added ? 'ins' : part.removed ? 'del' : 'span';
+        const span = document.createElement(color);
+        span.appendChild(document.createTextNode(part.value));
+        fragment.appendChild(span);
+      });
+      
+      resultDiv.innerHTML = '';
+      resultDiv.appendChild(fragment);
+    }
+  </script>
+</body>
+</html>

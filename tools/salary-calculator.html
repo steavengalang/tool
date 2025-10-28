@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Gaji - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .salary-results {
+        margin-top: 2rem;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    .salary-results .result-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    .salary-results .result-row:last-child {
+        border-bottom: none;
+    }
+    .salary-results .final-salary {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+    .disclaimer {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 1rem;
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>💸 Kalkulator Gaji (Nett vs Gross)</h1>
+        <p>Perkirakan gaji bersih Anda setelah potongan pajak dan iuran.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="grossSalary">Gaji Kotor Bulanan (Rp):</label>
+          <input type="number" id="grossSalary" placeholder="e.g., 8000000" oninput="calculateNetSalary()">
+        </div>
+        
+        <div class="form-group">
+          <label for="ptkpStatus">Status PTKP (Penghasilan Tidak Kena Pajak):</label>
+          <select id="ptkpStatus" onchange="calculateNetSalary()">
+            <option value="54000000" selected>TK/0 - Lajang</option>
+            <option value="58500000">K/0 - Menikah, 0 Tanggungan</option>
+            <option value="63000000">K/1 - Menikah, 1 Tanggungan</option>
+            <option value="67500000">K/2 - Menikah, 2 Tanggungan</option>
+            <option value="72000000">K/3 - Menikah, 3 Tanggungan</option>
+          </select>
+        </div>
+
+        <div class="salary-results">
+            <div class="result-row">
+                <span>Gaji Kotor Tahunan:</span>
+                <span id="grossYearly">Rp 0</span>
+            </div>
+            <div class="result-row">
+                <span>(-) Biaya Jabatan (5%):</span>
+                <span id="deductionPosition">Rp 0</span>
+            </div>
+            <div class="result-row">
+                <span>(-) PTKP:</span>
+                <span id="deductionPTKP">Rp 0</span>
+            </div>
+            <div class="result-row">
+                <span>Penghasilan Kena Pajak (PKP):</span>
+                <span id="pkp">Rp 0</span>
+            </div>
+            <div class="result-row">
+                <span>PPh 21 Tahunan:</span>
+                <span id="pph21Yearly">Rp 0</span>
+            </div>
+            <hr>
+            <div class="result-row">
+                <span>Gaji Bersih Bulanan (Take-Home Pay):</span>
+                <span id="netMonthly" class="final-salary">Rp 0</span>
+            </div>
+        </div>
+
+        <p class="disclaimer">*Kalkulator ini adalah simulasi sederhana dan mungkin tidak 100% akurat sesuai peraturan terbaru. Potongan lain seperti BPJS tidak termasuk.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function formatCurrency(value) {
+      if (isNaN(value)) return 'Rp 0';
+      return 'Rp ' + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function calculateNetSalary() {
+        const grossMonthly = parseFloat(document.getElementById('grossSalary').value) || 0;
+        const ptkp = parseFloat(document.getElementById('ptkpStatus').value) || 0;
+
+        const grossYearly = grossMonthly * 12;
+        
+        // Biaya Jabatan (5% dari gaji kotor, maks 6jt/tahun atau 500rb/bulan)
+        let deductionPosition = grossYearly * 0.05;
+        if (deductionPosition > 6000000) {
+            deductionPosition = 6000000;
+        }
+
+        const netYearlyBeforeTax = grossYearly - deductionPosition;
+        
+        let pkp = netYearlyBeforeTax - ptkp;
+        if (pkp < 0) pkp = 0;
+
+        // Perhitungan PPh 21 progresif (berdasarkan tarif UU HPP)
+        let pph21Yearly = 0;
+        if (pkp > 0) {
+            if (pkp <= 60000000) {
+                pph21Yearly = pkp * 0.05;
+            } else if (pkp <= 250000000) {
+                pph21Yearly = (60000000 * 0.05) + ((pkp - 60000000) * 0.15);
+            } else if (pkp <= 500000000) {
+                pph21Yearly = (60000000 * 0.05) + (190000000 * 0.15) + ((pkp - 250000000) * 0.25);
+            } else if (pkp <= 5000000000) {
+                pph21Yearly = (60000000 * 0.05) + (190000000 * 0.15) + (250000000 * 0.25) + ((pkp - 500000000) * 0.30);
+            } else {
+                pph21Yearly = (60000000 * 0.05) + (190000000 * 0.15) + (250000000 * 0.25) + (4500000000 * 0.30) + ((pkp - 5000000000) * 0.35);
+            }
+        }
+        
+        const pph21Monthly = pph21Yearly / 12;
+        const netMonthly = grossMonthly - pph21Monthly;
+
+        // Tampilkan hasil
+        document.getElementById('grossYearly').textContent = formatCurrency(grossYearly);
+        document.getElementById('deductionPosition').textContent = formatCurrency(deductionPosition);
+        document.getElementById('deductionPTKP').textContent = formatCurrency(ptkp);
+        document.getElementById('pkp').textContent = formatCurrency(pkp);
+        document.getElementById('pph21Yearly').textContent = formatCurrency(pph21Yearly);
+        document.getElementById('netMonthly').textContent = formatCurrency(netMonthly);
+    }
+
+    window.onload = calculateNetSalary;
+  </script>
+</body>
+</html>

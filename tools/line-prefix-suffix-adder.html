@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Penambah Awalan/Akhiran - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>textarea{height:250px;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>+ Penambah Awalan/Akhiran</h1><p>Tambahkan teks yang sama di awal atau akhir setiap baris.</p></div>
+<div class="tool-content">
+  <textarea id="textInput" placeholder="Daftar item..."></textarea>
+  <div class="form-group" style="margin-top:1rem;">
+    <label>Awalan (Prefix):</label><input type="text" id="prefix">
+    <label>Akhiran (Suffix):</label><input type="text" id="suffix">
+  </div>
+  <button class="btn" onclick="addFixes()">Terapkan</button>
+</div></div></main>
+<script>
+function addFixes() {
+  const area = document.getElementById('textInput');
+  const prefix = document.getElementById('prefix').value;
+  const suffix = document.getElementById('suffix').value;
+  const lines = area.value.split('\n');
+  const result = lines.map(line => line.trim() === '' ? '' : prefix + line + suffix).join('\n');
+  area.value = result;
+}
+</script></body></html>

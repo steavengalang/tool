@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Perbedaan Tanggal - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Anda bisa memindahkan style ini ke style.css utama jika diinginkan */
+    .date-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .result-card {
+      background-color: #f9f9f9; /* Ganti dengan warna dari tema Anda */
+      padding: 1.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+    .result-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2.25rem;
+      color: #333; /* Ganti dengan warna dari tema Anda */
+    }
+    .result-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    #summary {
+      margin-top: 2rem;
+      padding: 1rem;
+      font-size: 1.2rem;
+      text-align: center;
+      font-weight: 500;
+      background-color: #f0f5ff; /* Ganti dengan warna dari tema Anda */
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🗓️ Kalkulator Perbedaan Tanggal</h1>
+        <p>Hitung durasi antara dua tanggal dalam tahun, bulan, minggu, dan hari.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group date-inputs">
+          <div>
+            <label for="startDate">Tanggal Mulai:</label>
+            <input type="date" id="startDate" onchange="calculateDifference()">
+          </div>
+          <div>
+            <label for="endDate">Tanggal Selesai:</label>
+            <input type="date" id="endDate" onchange="calculateDifference()">
+          </div>
+        </div>
+
+        <div id="summary">Silakan pilih tanggal...</div>
+        <div id="results" class="results-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const resultsDiv = document.getElementById('results');
+    const summaryDiv = document.getElementById('summary');
+
+    function calculateDifference() {
+      const startDateVal = startDateInput.value;
+      const endDateVal = endDateInput.value;
+
+      if (!startDateVal || !endDateVal) {
+        summaryDiv.innerHTML = 'Silakan pilih kedua tanggal.';
+        resultsDiv.innerHTML = '';
+        return;
+      }
+      
+      const d1 = new Date(startDateVal);
+      const d2 = new Date(endDateVal);
+
+      if (d1 > d2) {
+        summaryDiv.innerHTML = 'Tanggal mulai tidak boleh setelah tanggal selesai.';
+        resultsDiv.innerHTML = '';
+        return;
+      }
+
+      // 1. Kalkulasi durasi tepat: Tahun, Bulan, Hari
+      let years = d2.getFullYear() - d1.getFullYear();
+      let months = d2.getMonth() - d1.getMonth();
+      let days = d2.getDate() - d1.getDate();
+
+      if (days < 0) {
+        months--;
+        // Pinjam hari dari bulan sebelumnya
+        const lastDayOfPrevMonth = new Date(d2.getFullYear(), d2.getMonth(), 0).getDate();
+        days += lastDayOfPrevMonth;
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      summaryDiv.innerHTML = `Durasi Tepat: <strong>${years}</strong> tahun, <strong>${months}</strong> bulan, dan <strong>${days}</strong> hari`;
+
+      // 2. Kalkulasi total dalam satuan
+      const diffTime = Math.abs(d2 - d1);
+      const totalDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+      const totalWeeks = (totalDays / 7).toFixed(1);
+      const totalMonthsApprox = (totalDays / 30.4375).toFixed(1);
+
+      resultsDiv.innerHTML = `
+        <div class="result-card">
+          <h3>${totalDays.toLocaleString('id-ID')}</h3>
+          <p>Total Hari</p>
+        </div>
+        <div class="result-card">
+          <h3>${parseFloat(totalWeeks).toLocaleString('id-ID')}</h3>
+          <p>Total Minggu</p>
+        </div>
+        <div class="result-card">
+          <h3>${parseFloat(totalMonthsApprox).toLocaleString('id-ID')}</h3>
+          <p>Total Bulan (rata-rata)</p>
+        </div>
+      `;
+    }
+
+    window.onload = function() {
+      const today = new Date();
+      const nextWeek = new Date();
+      nextWeek.setDate(today.getDate() + 7);
+      
+      startDateInput.value = today.toISOString().split('T')[0];
+      endDateInput.value = nextWeek.toISOString().split('T')[0];
+      calculateDifference();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Text Shadow Generator - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>#preview{font-size:3rem;font-weight:bold;text-align:center;padding:2rem;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🔠 Text Shadow Generator</h1><p>Buat efek bayangan pada teks secara visual.</p></div>
+<div class="tool-content">
+  <div id="preview">Hello World</div>
+  <div class="form-group"><label>Horizontal:</label><input type="range" id="offsetX" min="-20" max="20" value="4" oninput="update()"></div>
+  <div class="form-group"><label>Vertical:</label><input type="range" id="offsetY" min="-20" max="20" value="4" oninput="update()"></div>
+  <div class="form-group"><label>Blur:</label><input type="range" id="blur" min="0" max="20" value="2" oninput="update()"></div>
+  <div class="form-group"><label>Warna:</label><input type="color" id="color" value="#888888" oninput="update()"></div>
+  <input type="text" id="resultCode" readonly>
+</div></div></main>
+<script>
+function update() {
+  const h = document.getElementById('offsetX').value + 'px';
+  const v = document.getElementById('offsetY').value + 'px';
+  const b = document.getElementById('blur').value + 'px';
+  const c = document.getElementById('color').value;
+  const shadow = `${h} ${v} ${b} ${c}`;
+  document.getElementById('preview').style.textShadow = shadow;
+  document.getElementById('resultCode').value = `text-shadow: ${shadow};`;
+}
+window.onload = update;
+</script></body></html>

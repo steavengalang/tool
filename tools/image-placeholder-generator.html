@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Placeholder Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🖼️ Image Placeholder Generator</h1>
+        <p>Buat gambar placeholder dengan ukuran dan teks kustom.</p>
+      </div>
+      <div class="tool-content">
+        <div class="form-group">
+          <label>Ukuran (lebar x tinggi):</label>
+          <input type="number" id="width" value="300" oninput="generatePlaceholder()"> x 
+          <input type="number" id="height" value="200" oninput="generatePlaceholder()">
+        </div>
+        <div class="form-group">
+          <label for="bgColor">Warna Latar:</label> <input type="color" id="bgColor" value="#cccccc" oninput="generatePlaceholder()">
+        </div>
+        <div class="form-group">
+          <label for="textColor">Warna Teks:</label> <input type="color" id="textColor" value="#888888" oninput="generatePlaceholder()">
+        </div>
+        <h3>Hasil Pratinjau:</h3>
+        <img id="preview" src="" alt="Placeholder Preview">
+        <div class="form-group" style="margin-top:1rem;">
+          <label for="resultUrl">URL Gambar:</label>
+          <input type="text" id="resultUrl" readonly>
+          <button class="btn" onclick="copyURL()">Copy URL</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const bgColorInput = document.getElementById('bgColor');
+    const textColorInput = document.getElementById('textColor');
+    const previewImg = document.getElementById('preview');
+    const resultUrlInput = document.getElementById('resultUrl');
+
+    function generatePlaceholder() {
+      const w = widthInput.value;
+      const h = heightInput.value;
+      const bg = bgColorInput.value.substring(1); // remove #
+      const tc = textColorInput.value.substring(1);
+      const text = `${w} x ${h}`;
+      
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <rect fill="#${bg}" width="${w}" height="${h}"/>
+        <text fill="#${tc}" font-family="sans-serif" font-size="20" dy="10" font-weight="bold" x="50%" y="50%" text-anchor="middle">${text}</text>
+      </svg>`;
+      
+      // Encode SVG to be used in Data URL
+      const encodedSvg = encodeURIComponent(svg)
+          .replace(/'/g, '%27')
+          .replace(/"/g, '%22');
+      
+      const dataUrl = `data:image/svg+xml,${encodedSvg}`;
+      
+      previewImg.src = dataUrl;
+      resultUrlInput.value = dataUrl;
+    }
+
+    function copyURL() {
+      resultUrlInput.select();
+      document.execCommand('copy');
+      alert('URL disalin!');
+    }
+
+    window.onload = generatePlaceholder;
+  </script>
+</body>
+</html>

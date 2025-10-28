@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SVG Minifier - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>textarea{height:250px;font-family:monospace;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>📉 SVG Minifier</h1><p>Hapus data yang tidak perlu dari kode SVG untuk mengurangi ukuran.</p></div>
+<div class="tool-content">
+  <textarea id="svgInput" placeholder="Tempel kode SVG di sini..."></textarea>
+  <button class="btn" style="margin-top:1rem" onclick="minifySVG()">Minify</button>
+</div></div></main>
+<script>
+function minifySVG() {
+  const area = document.getElementById('svgInput');
+  let svg = area.value;
+  svg = svg.replace(/\\n/g, ''); // Hapus newlines
+  svg = svg.replace(/\\s{2,}/g, ' '); // Hapus spasi ganda
+  svg = svg.replace(/>\\s+</g, '><'); // Hapus spasi antar tag
+  area.value = svg;
+}
+</script></body></html>

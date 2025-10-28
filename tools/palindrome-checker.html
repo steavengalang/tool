@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemeriksa Palindrom - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    #result { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-size: 1.2rem; text-align: center; }
+    #result.yes { background-color: #d4edda; color: #155724; }
+    #result.no { background-color: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔄 Pemeriksa Palindrom</h1><p>Cek apakah sebuah kata atau kalimat adalah palindrom.</p></div>
+      <div class="tool-content">
+        <input type="text" id="textInput" placeholder="Ketik kata di sini..." oninput="checkPalindrome()">
+        <div id="result"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    function checkPalindrome() {
+      const input = document.getElementById('textInput').value;
+      const resultDiv = document.getElementById('result');
+      
+      if (input.trim() === '') {
+        resultDiv.innerHTML = '';
+        resultDiv.className = '';
+        return;
+      }
+      
+      // Bersihkan string dari spasi dan tanda baca, lalu ubah ke huruf kecil
+      const cleanStr = input.toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+      const reversedStr = cleanStr.split('').reverse().join('');
+      
+      if (cleanStr === reversedStr) {
+        resultDiv.textContent = 'Ya, ini adalah palindrom!';
+        resultDiv.className = 'yes';
+      } else {
+        resultDiv.textContent = 'Bukan, ini bukan palindrom.';
+        resultDiv.className = 'no';
+      }
+    }
+  </script>
+</body>
+</html>

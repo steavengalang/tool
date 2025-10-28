@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Case Converter - ToolsKita</title><link rel="stylesheet" href="../css/style.css"></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🔄 Case Converter</h1><p>Ubah teks ke berbagai format case.</p></div>
+<div class="tool-content">
+  <textarea id="textInput" style="height:200px;"></textarea>
+  <button class="btn" onclick="convert('upper')">UPPERCASE</button>
+  <button class="btn" onclick="convert('lower')">lowercase</button>
+  <button class="btn" onclick="convert('title')">Title Case</button>
+  <button class="btn" onclick="convert('camel')">camelCase</button>
+  <button class="btn" onclick="convert('pascal')">PascalCase</button>
+  <button class="btn" onclick="convert('kebab')">kebab-case</button>
+  <button class="btn" onclick="convert('snake')">snake_case</button>
+</div></div></main>
+<script>
+function convert(type) {
+  const area = document.getElementById('textInput');
+  let text = area.value;
+  switch(type) {
+    case 'upper': text = text.toUpperCase(); break;
+    case 'lower': text = text.toLowerCase(); break;
+    case 'title': text = text.replace(/\\w\\S*/g, (w) => w.charAt(0).toUpperCase() + w.substr(1).toLowerCase()); break;
+    case 'camel': text = text.toLowerCase().replace(/[^a-zA-Z0-9]+(.)?/g, (m, c) => c ? c.toUpperCase() : ''); break;
+    case 'pascal': text = text.replace(/(\\w)(\\w*)/g, (g0, g1, g2) => g1.toUpperCase() + g2.toLowerCase()).replace(/\\W/g, ''); break;
+    case 'kebab': text = text.toLowerCase().replace(/\\s+/g, '-'); break;
+    case 'snake': text = text.toLowerCase().replace(/\\s+/g, '_'); break;
+  }
+  area.value = text;
+}
+</script></body></html>

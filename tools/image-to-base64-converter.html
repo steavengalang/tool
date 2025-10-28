@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image ke Base64 Converter - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    #dropZone {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 3rem;
+      text-align: center;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    #dropZone.drag-over {
+      background-color: #e9e9e9;
+      border-color: #aaa;
+    }
+    #imagePreview {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 1rem;
+      border-radius: 4px;
+    }
+    #base64Output {
+      height: 150px;
+      font-family: monospace;
+      word-wrap: break-word;
+    }
+    .output-group {
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🖼️ Image ke Base64 Converter</h1>
+        <p>Ubah gambar menjadi format teks Base64 untuk disematkan di web.</p>
+      </div>
+
+      <div class="tool-content">
+        <div id="dropZone">
+          <p>Seret & lepas gambar ke sini, atau klik untuk memilih file.</p>
+          <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div id="previewContainer" style="text-align: center; margin-top: 1rem;"></div>
+
+        <div class="form-group" style="margin-top: 1.5rem;">
+          <label for="base64Output">Base64 String:</label>
+          <div class="output-group">
+            <textarea id="base64Output" readonly></textarea>
+            <button class="btn copy-btn" onclick="copyResult()">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const base64Output = document.getElementById('base64Output');
+
+    dropZone.onclick = () => fileInput.click();
+    
+    // Drag and Drop Events
+    dropZone.ondragover = (event) => {
+      event.preventDefault();
+      dropZone.classList.add('drag-over');
+    };
+    dropZone.ondragleave = () => dropZone.classList.remove('drag-over');
+    dropZone.ondrop = (event) => {
+      event.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = event.dataTransfer.files[0];
+      if (file) {
+        handleFile(file);
+      }
+    };
+    fileInput.onchange = () => {
+        if(fileInput.files[0]) handleFile(fileInput.files[0]);
+    };
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar!');
+        return;
+      }
+      
+      // Tampilkan pratinjau gambar
+      previewContainer.innerHTML = ''; // Bersihkan pratinjau lama
+      const img = document.createElement('img');
+      img.id = 'imagePreview';
+      img.src = URL.createObjectURL(file);
+      previewContainer.appendChild(img);
+
+      // Konversi ke Base64
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        base64Output.value = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function copyResult() {
+        if (base64Output.value) {
+            navigator.clipboard.writeText(base64Output.value).then(() => {
+                alert('Teks Base64 berhasil disalin!');
+            }, () => {
+                alert('Gagal menyalin teks.');
+            });
+        }
+    }
+  </script>
+</body>
+</html>

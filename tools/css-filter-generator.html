@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Filter Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .generator-layout { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
+    .controls { border-right: 1px solid #eee; padding-right: 2rem; }
+    #imagePreview {
+        width: 100%;
+        max-width: 400px;
+        transition: filter 0.2s;
+    }
+    #resultCode { width: 100%; margin-top: 1rem; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🎨 CSS Filter Generator</h1>
+        <p>Eksperimen dengan berbagai filter CSS secara visual dan dapatkan kodenya.</p>
+      </div>
+
+      <div class="tool-content generator-layout">
+        <div class="controls">
+          <div class="form-group">
+            <label>Blur: <span id="blurValue">0</span>px</label>
+            <input type="range" class="filter-control" id="blur" min="0" max="20" value="0" step="0.1">
+          </div>
+          <div class="form-group">
+            <label>Brightness: <span id="brightnessValue">100</span>%</label>
+            <input type="range" class="filter-control" id="brightness" min="0" max="200" value="100">
+          </div>
+          <div class="form-group">
+            <label>Contrast: <span id="contrastValue">100</span>%</label>
+            <input type="range" class="filter-control" id="contrast" min="0" max="200" value="100">
+          </div>
+          <div class="form-group">
+            <label>Saturate: <span id="saturateValue">100</span>%</label>
+            <input type="range" class="filter-control" id="saturate" min="0" max="200" value="100">
+          </div>
+           <div class="form-group">
+            <label>Grayscale: <span id="grayscaleValue">0</span>%</label>
+            <input type="range" class="filter-control" id="grayscale" min="0" max="100" value="0">
+          </div>
+          <button class="btn" onclick="resetFilters()">Reset All</button>
+        </div>
+
+        <div class="preview-area">
+          <img id="imagePreview" src="https://via.placeholder.com/400x300.png?text=Contoh+Gambar" alt="Preview">
+          <textarea id="resultCode" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const controls = document.querySelectorAll('.filter-control');
+    const imagePreview = document.getElementById('imagePreview');
+    const resultCode = document.getElementById('resultCode');
+
+    const defaultValues = {
+        blur: { val: 0, unit: 'px'},
+        brightness: { val: 100, unit: '%'},
+        contrast: { val: 100, unit: '%'},
+        saturate: { val: 100, unit: '%'},
+        grayscale: { val: 0, unit: '%'}
+    };
+
+    function updateFilters() {
+        let filterString = '';
+        controls.forEach(control => {
+            const value = control.value;
+            const id = control.id;
+            const defaultValue = defaultValues[id].val;
+            
+            // Update label value
+            document.getElementById(`${id}Value`).textContent = value;
+
+            if (parseFloat(value) !== defaultValue) {
+                filterString += `${id}(${value}${defaultValues[id].unit}) `;
+            }
+        });
+        
+        imagePreview.style.filter = filterString.trim();
+        resultCode.value = `filter: ${filterString.trim()};`;
+    }
+
+    function resetFilters() {
+        controls.forEach(control => {
+            control.value = defaultValues[control.id].val;
+        });
+        updateFilters();
+    }
+
+    controls.forEach(control => {
+        control.addEventListener('input', updateFilters);
+    });
+
+    window.onload = updateFilters;
+  </script>
+</body>
+</html>

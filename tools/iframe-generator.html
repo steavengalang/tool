@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>iframe Generator - ToolsKita</title><link rel="stylesheet" href="../css/style.css"></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🖼️ iframe Generator</h1><p>Buat kode sematan iframe dengan mudah.</p></div>
+<div class="tool-content">
+  <div class="form-group"><label>URL:</label><input type="text" id="url" oninput="generate()"></div>
+  <div class="form-group"><label>Width:</label><input type="text" id="width" value="100%" oninput="generate()"></div>
+  <div class="form-group"><label>Height:</label><input type="text" id="height" value="450" oninput="generate()"></div>
+  <textarea id="resultCode" readonly style="height:150px;"></textarea>
+</div></div></main>
+<script>
+function generate() {
+  const url = document.getElementById('url').value;
+  const w = document.getElementById('width').value;
+  const h = document.getElementById('height').value;
+  const code = `<iframe src="${url}" width="${w}" height="${h}" style="border:0;" allowfullscreen="" loading="lazy"></iframe>`;
+  document.getElementById('resultCode').value = code;
+}
+window.onload=generate;
+</script></body></html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Graph Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🌐 Open Graph Generator</h1><p>Buat meta tag Open Graph untuk pratinjau media sosial yang kaya.</p></div>
+      <div class="tool-content">
+        <div class="form-group"><label>Judul Situs:</label><input type="text" id="ogTitle" oninput="generateOG()"></div>
+        <div class="form-group"><label>Deskripsi Singkat:</label><input type="text" id="ogDesc" oninput="generateOG()"></div>
+        <div class="form-group"><label>URL Gambar Pratinjau:</label><input type="text" id="ogImage" oninput="generateOG()"></div>
+        <div class="form-group"><label>URL Kanonikal:</label><input type="text" id="ogUrl" oninput="generateOG()"></div>
+        <h3>Hasil Meta Tag:</h3>
+        <textarea id="resultCode" readonly style="height: 250px;"></textarea>
+      </div>
+    </div>
+  </main>
+  <script>
+    function generateOG() {
+      const title = document.getElementById('ogTitle').value;
+      const desc = document.getElementById('ogDesc').value;
+      const image = document.getElementById('ogImage').value;
+      const url = document.getElementById('ogUrl').value;
+      
+      let code = '';
+      code += `<meta property="og:title" content="${title}" />\\n`;
+      code += `<meta property="og:description" content="${desc}" />\\n`;
+      code += `<meta property="og:image" content="${image}" />\\n`;
+      code += `<meta property="og:url" content="${url}" />\\n`;
+      code += `<meta property="og:type" content="website" />`;
+      
+      document.getElementById('resultCode').value = code;
+    }
+    window.onload = generateOG;
+  </script>
+</body>
+</html>

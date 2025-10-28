@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Tip - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .results-tip {
+      margin-top: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+    }
+    .result-row:not(:last-child) {
+      border-bottom: 1px solid #eee;
+    }
+    .result-row label {
+      color: #555;
+    }
+    .result-row span {
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #007bff;
+    }
+    .result-row#totalPerPerson span {
+      color: #28a745; /* Hijau untuk hasil akhir */
+      font-size: 1.8rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>💰 Kalkulator Tip & Pembagian Tagihan</h1>
+        <p>Hitung tip dan bagi tagihan dengan teman secara adil dan cepat.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="billAmount">Jumlah Tagihan (Rp):</label>
+          <input type="number" id="billAmount" placeholder="e.g., 250000" oninput="calculateTip()">
+        </div>
+
+        <div class="form-group">
+          <label for="tipPercentage">Persentase Tip (%):</label>
+          <input type="range" id="tipPercentage" min="0" max="50" value="15" oninput="updateTipValue(); calculateTip();">
+          <span id="tipValue">15%</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="numberOfPeople">Dibagi untuk Berapa Orang?</label>
+          <input type="number" id="numberOfPeople" value="1" min="1" oninput="calculateTip()">
+        </div>
+
+        <div class="results-tip">
+          <div class="result-row">
+            <label>Jumlah Tip:</label>
+            <span id="tipAmount">Rp 0</span>
+          </div>
+          <div class="result-row">
+            <label>Total Tagihan (termasuk tip):</label>
+            <span id="totalBill">Rp 0</span>
+          </div>
+          <div class="result-row" id="totalPerPerson">
+            <label>Total per Orang:</label>
+            <span id="billPerPerson">Rp 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const billAmountInput = document.getElementById('billAmount');
+    const tipPercentageInput = document.getElementById('tipPercentage');
+    const tipValueOutput = document.getElementById('tipValue');
+    const peopleInput = document.getElementById('numberOfPeople');
+    
+    const tipAmountOutput = document.getElementById('tipAmount');
+    const totalBillOutput = document.getElementById('totalBill');
+    const billPerPersonOutput = document.getElementById('billPerPerson');
+
+    function formatCurrency(value) {
+      if (isNaN(value) || value === 0) return 'Rp 0';
+      return 'Rp ' + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    
+    function updateTipValue() {
+      tipValueOutput.textContent = `${tipPercentageInput.value}%`;
+    }
+
+    function calculateTip() {
+      const bill = parseFloat(billAmountInput.value) || 0;
+      const tipPercent = parseFloat(tipPercentageInput.value) || 0;
+      const people = parseInt(peopleInput.value) || 1;
+
+      if (people < 1) {
+        peopleInput.value = 1; // Minimal 1 orang
+      }
+
+      let tip = 0;
+      let total = bill;
+      let perPerson = bill;
+
+      if (bill > 0) {
+        tip = bill * (tipPercent / 100);
+        total = bill + tip;
+        perPerson = total / people;
+      }
+      
+      tipAmountOutput.textContent = formatCurrency(tip);
+      totalBillOutput.textContent = formatCurrency(total);
+      billPerPersonOutput.textContent = formatCurrency(perPerson);
+    }
+    
+    window.onload = () => {
+      updateTipValue();
+      calculateTip();
+    };
+  </script>
+</body>
+</html>

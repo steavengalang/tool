@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Table Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .generator-layout { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
+    #resultCode { height: 400px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>📝 HTML Table Generator</h1><p>Buat kode struktur tabel HTML dengan cepat dan mudah.</p></div>
+      <div class="tool-content generator-layout">
+        <div class="controls">
+          <div class="form-group">
+            <label for="rows">Jumlah Baris:</label>
+            <input type="number" id="rows" value="3" min="1">
+          </div>
+          <div class="form-group">
+            <label for="cols">Jumlah Kolom:</label>
+            <input type="number" id="cols" value="4" min="1">
+          </div>
+          <div class="form-group">
+            <label><input type="checkbox" id="hasHeader" checked> Sertakan Header Tabel (`<thead>`)</label>
+          </div>
+          <button class="btn" onclick="generateTable()">Generate Kode</button>
+        </div>
+        <div class="result-area">
+          <textarea id="resultCode" readonly></textarea>
+          <button class="btn" onclick="copyCode()">Copy Kode</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    function generateTable() {
+      const rows = parseInt(document.getElementById('rows').value);
+      const cols = parseInt(document.getElementById('cols').value);
+      const hasHeader = document.getElementById('hasHeader').checked;
+      let code = '<table>\n';
+      
+      if (hasHeader) {
+        code += '  <thead>\n    <tr>\n';
+        for (let i = 1; i <= cols; i++) {
+          code += `      <th>Header ${i}</th>\n`;
+        }
+        code += '    </tr>\n  </thead>\n';
+      }
+      
+      code += '  <tbody>\n';
+      for (let r = 1; r <= rows; r++) {
+        code += '    <tr>\n';
+        for (let c = 1; c <= cols; c++) {
+          code += `      <td>Data ${r},${c}</td>\n`;
+        }
+        code += '    </tr>\n';
+      }
+      code += '  </tbody>\n</table>';
+      
+      document.getElementById('resultCode').value = code;
+    }
+    function copyCode() {
+      const area = document.getElementById('resultCode');
+      area.select();
+      document.execCommand('copy');
+      alert('Kode disalin!');
+    }
+    window.onload = generateTable;
+  </script>
+</body>
+</html>

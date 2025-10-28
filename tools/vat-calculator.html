@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator PPN - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🧾 Kalkulator PPN (Pajak Pertambahan Nilai)</h1>
+        <p>Hitung harga bersih, jumlah pajak, dan harga kotor dengan mudah.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label>Harga yang saya masukkan adalah:</label>
+          <div class="radio-group">
+             <label><input type="radio" name="priceType" value="before" checked onchange="calculate()"> Harga SEBELUM Pajak</label>
+             <label><input type="radio" name="priceType" value="after" onchange="calculate()"> Harga SETELAH Pajak</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="initialPrice">Jumlah Harga (Rp):</label>
+          <input type="number" id="initialPrice" placeholder="e.g., 100000" oninput="calculate()">
+        </div>
+
+        <div class="form-group">
+          <label for="taxRate">Tarif Pajak (%):</label>
+          <input type="number" id="taxRate" value="11" oninput="calculate()">
+        </div>
+
+        <hr style="margin: 2rem 0;">
+
+        <h3>Hasil Kalkulasi:</h3>
+        <div class="form-group">
+          <label for="priceBeforeTax">Harga Sebelum Pajak (Net):</label>
+          <input type="text" id="priceBeforeTax" readonly>
+        </div>
+        <div class="form-group">
+          <label for="taxAmount">Jumlah Pajak:</label>
+          <input type="text" id="taxAmount" readonly>
+        </div>
+        <div class="form-group">
+          <label for="priceAfterTax">Harga Setelah Pajak (Gross):</label>
+          <input type="text" id="priceAfterTax" readonly>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const priceType = document.getElementsByName('priceType');
+    const initialPriceInput = document.getElementById('initialPrice');
+    const taxRateInput = document.getElementById('taxRate');
+    const priceBeforeTaxOutput = document.getElementById('priceBeforeTax');
+    const taxAmountOutput = document.getElementById('taxAmount');
+    const priceAfterTaxOutput = document.getElementById('priceAfterTax');
+
+    function formatCurrency(value) {
+      if (isNaN(value) || value === 0) return 'Rp 0';
+      return 'Rp ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace(/\.00$/, '');
+    }
+
+    function calculate() {
+      const price = parseFloat(initialPriceInput.value) || 0;
+      const rate = parseFloat(taxRateInput.value) || 0;
+      const type = Array.from(priceType).find(radio => radio.checked).value;
+
+      let netPrice = 0;
+      let tax = 0;
+      let grossPrice = 0;
+
+      if (price > 0 && rate > 0) {
+        if (type === 'before') {
+          netPrice = price;
+          tax = netPrice * (rate / 100);
+          grossPrice = netPrice + tax;
+        } else { // type === 'after'
+          grossPrice = price;
+          netPrice = grossPrice / (1 + (rate / 100));
+          tax = grossPrice - netPrice;
+        }
+      }
+      
+      priceBeforeTaxOutput.value = formatCurrency(netPrice);
+      taxAmountOutput.value = formatCurrency(tax);
+      priceAfterTaxOutput.value = formatCurrency(grossPrice);
+    }
+    
+    // Panggil fungsi saat halaman pertama kali dimuat
+    window.onload = calculate;
+  </script>
+</body>
+</html>

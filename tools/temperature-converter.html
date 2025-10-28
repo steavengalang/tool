@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Satuan Suhu - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-row { display: flex; align-items: center; gap: 1rem; }
+    .converter-row input { flex-grow: 1; }
+    .converter-row label { min-width: 90px; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🌡️ Konverter Satuan Suhu</h1>
+        <p>Konversi suhu antara Celsius (°C), Fahrenheit (°F), dan Kelvin (K).</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group converter-row">
+          <input type="number" id="celsius" oninput="convert('celsius', this.value)">
+          <label for="celsius">Celsius (°C)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="fahrenheit" oninput="convert('fahrenheit', this.value)">
+          <label for="fahrenheit">Fahrenheit (°F)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="kelvin" oninput="convert('kelvin', this.value)">
+          <label for="kelvin">Kelvin (K)</label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const celsiusInput = document.getElementById('celsius');
+    const fahrenheitInput = document.getElementById('fahrenheit');
+    const kelvinInput = document.getElementById('kelvin');
+
+    function roundToTwo(num) {
+      return +(Math.round(num + "e+2")  + "e-2");
+    }
+
+    function convert(source, value) {
+      const val = parseFloat(value);
+      if (value.trim() === '' || isNaN(val)) {
+        celsiusInput.value = '';
+        fahrenheitInput.value = '';
+        kelvinInput.value = '';
+        return;
+      }
+      
+      switch (source) {
+        case 'celsius':
+          fahrenheitInput.value = roundToTwo((val * 9/5) + 32);
+          kelvinInput.value = roundToTwo(val + 273.15);
+          break;
+        case 'fahrenheit':
+          celsiusInput.value = roundToTwo((val - 32) * 5/9);
+          kelvinInput.value = roundToTwo(((val - 32) * 5/9) + 273.15);
+          break;
+        case 'kelvin':
+          celsiusInput.value = roundToTwo(val - 273.15);
+          fahrenheitInput.value = roundToTwo(((val - 273.15) * 9/5) + 32);
+          break;
+      }
+    }
+  </script>
+</body>
+</html>

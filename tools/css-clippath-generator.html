@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS clip-path Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .generator-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 2rem;
+    }
+    .controls { border-right: 1px solid #eee; padding-right: 2rem; }
+    .preview-area { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #shapePreview {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(45deg, #007bff, #00c6ff);
+        transition: clip-path 0.3s ease;
+    }
+    #resultCode {
+        width: 100%;
+        margin-top: 1rem;
+        font-family: monospace;
+        padding: 0.8rem;
+    }
+    .control-group { display: none; }
+    .control-group.active { display: block; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>✨ CSS clip-path Generator</h1>
+        <p>Buat bentuk kustom yang keren untuk elemen web Anda secara visual.</p>
+      </div>
+
+      <div class="tool-content generator-layout">
+        <div class="controls">
+          <div class="form-group">
+            <label for="shapeSelect">Pilih Bentuk:</label>
+            <select id="shapeSelect" onchange="changeShape()">
+              <option value="circle">Circle</option>
+              <option value="ellipse">Ellipse</option>
+              <option value="inset" selected>Inset (Rectangle)</option>
+              <option value="polygon">Polygon (Triangle)</option>
+            </select>
+          </div>
+          <hr>
+          <!-- Controls for Inset -->
+          <div id="insetControls" class="control-group active">
+            <h4>Inset Controls</h4>
+            <div class="form-group">
+                <label>Top (%):</label> <input type="range" id="insetTop" min="0" max="50" value="10" oninput="updateClipPath()">
+            </div>
+            <div class="form-group">
+                <label>Right (%):</label> <input type="range" id="insetRight" min="0" max="50" value="10" oninput="updateClipPath()">
+            </div>
+            <div class="form-group">
+                <label>Bottom (%):</label> <input type="range" id="insetBottom" min="0" max="50" value="10" oninput="updateClipPath()">
+            </div>
+            <div class="form-group">
+                <label>Left (%):</label> <input type="range" id="insetLeft" min="0" max="50" value="10" oninput="updateClipPath()">
+            </div>
+          </div>
+          <!-- Other control groups would go here -->
+        </div>
+
+        <div class="preview-area">
+          <div id="shapePreview"></div>
+          <textarea id="resultCode" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const shapeSelect = document.getElementById('shapeSelect');
+    const shapePreview = document.getElementById('shapePreview');
+    const resultCode = document.getElementById('resultCode');
+
+    function updateClipPath() {
+        const shape = shapeSelect.value;
+        let clipPathValue = '';
+        
+        if (shape === 'inset') {
+            const top = document.getElementById('insetTop').value;
+            const right = document.getElementById('insetRight').value;
+            const bottom = document.getElementById('insetBottom').value;
+            const left = document.getElementById('insetLeft').value;
+            clipPathValue = `inset(${top}% ${right}% ${bottom}% ${left}%)`;
+        }
+        // Add logic for other shapes (circle, ellipse, polygon) here
+        // This is a simplified example focusing on 'inset'
+        
+        shapePreview.style.clipPath = clipPathValue;
+        resultCode.value = `clip-path: ${clipPathValue};`;
+    }
+
+    function changeShape() {
+        document.querySelectorAll('.control-group').forEach(el => el.classList.remove('active'));
+        const activeControls = document.getElementById(`${shapeSelect.value}Controls`);
+        if (activeControls) {
+            activeControls.classList.add('active');
+        }
+        updateClipPath();
+    }
+
+    window.onload = changeShape;
+  </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Peringkat Bintang - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .rating-row label {
+      min-width: 60px;
+      font-size: 1.2rem;
+    }
+    .rating-result {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px dashed #ddd;
+      border-radius: 8px;
+    }
+    .rating-result p {
+      margin: 0;
+    }
+    #averageRating {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ffc107; /* Warna kuning bintang */
+    }
+    #totalVotes {
+        font-size: 1rem;
+        color: #666;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⭐ Kalkulator Peringkat Bintang</h1>
+        <p>Hitung skor rata-rata dari distribusi peringkat bintang 1 hingga 5.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="rating-row">
+          <label for="stars5">5 ★</label>
+          <input type="number" id="stars5" min="0" value="100" oninput="calculateAverageRating()">
+        </div>
+        <div class="rating-row">
+          <label for="stars4">4 ★</label>
+          <input type="number" id="stars4" min="0" value="50" oninput="calculateAverageRating()">
+        </div>
+        <div class="rating-row">
+          <label for="stars3">3 ★</label>
+          <input type="number" id="stars3" min="0" value="10" oninput="calculateAverageRating()">
+        </div>
+        <div class="rating-row">
+          <label for="stars2">2 ★</label>
+          <input type="number" id="stars2" min="0" value="5" oninput="calculateAverageRating()">
+        </div>
+        <div class="rating-row">
+          <label for="stars1">1 ★</label>
+          <input type="number" id="stars1" min="0" value="2" oninput="calculateAverageRating()">
+        </div>
+        
+        <div class="rating-result">
+          <p>Peringkat Rata-rata:</p>
+          <div id="averageRating">0.00</div>
+          <p id="totalVotes">Total 0 suara</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function calculateAverageRating() {
+      const s5 = parseInt(document.getElementById('stars5').value) || 0;
+      const s4 = parseInt(document.getElementById('stars4').value) || 0;
+      const s3 = parseInt(document.getElementById('stars3').value) || 0;
+      const s2 = parseInt(document.getElementById('stars2').value) || 0;
+      const s1 = parseInt(document.getElementById('stars1').value) || 0;
+      
+      const totalVotes = s1 + s2 + s3 + s4 + s5;
+      const totalScore = (s5 * 5) + (s4 * 4) + (s3 * 3) + (s2 * 2) + (s1 * 1);
+      
+      let average = 0;
+      if (totalVotes > 0) {
+        average = totalScore / totalVotes;
+      }
+      
+      document.getElementById('averageRating').textContent = average.toFixed(2);
+      document.getElementById('totalVotes').textContent = `Total ${totalVotes.toLocaleString('id-ID')} suara`;
+    }
+    
+    window.onload = calculateAverageRating;
+  </script>
+</body>
+</html>

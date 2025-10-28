@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Sistem Bilangan - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔢 Konverter Sistem Bilangan</h1>
+        <p>Konversi antara Biner, Oktal, Desimal, dan Heksadesimal secara real-time.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="decimal">Desimal (Base 10)</label>
+          <input type="text" id="decimal" oninput="convertBase('decimal', this.value)">
+        </div>
+        <div class="form-group">
+          <label for="binary">Biner (Base 2)</label>
+          <input type="text" id="binary" oninput="convertBase('binary', this.value)">
+        </div>
+        <div class="form-group">
+          <label for="octal">Oktal (Base 8)</label>
+          <input type="text" id="octal" oninput="convertBase('octal', this.value)">
+        </div>
+        <div class="form-group">
+          <label for="hex">Heksadesimal (Base 16)</label>
+          <input type="text" id="hex" oninput="convertBase('hex', this.value.toUpperCase())">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const inputs = {
+      decimal: document.getElementById('decimal'),
+      binary: document.getElementById('binary'),
+      octal: document.getElementById('octal'),
+      hex: document.getElementById('hex')
+    };
+
+    const bases = {
+      decimal: 10,
+      binary: 2,
+      octal: 8,
+      hex: 16
+    };
+
+    function convertBase(sourceId, value) {
+      if (value.trim() === '') {
+        Object.values(inputs).forEach(input => input.value = '');
+        return;
+      }
+      
+      // Validasi input
+      const validationPatterns = {
+        decimal: /^[0-9]+$/,
+        binary: /^[01]+$/,
+        octal: /^[0-7]+$/,
+        hex: /^[0-9A-F]+$/
+      };
+
+      if (!validationPatterns[sourceId].test(value)) {
+        // Biarkan pengguna mengetik, jangan langsung hapus
+        return;
+      }
+
+      const decimalValue = parseInt(value, bases[sourceId]);
+
+      if (isNaN(decimalValue)) {
+        return;
+      }
+
+      for (const unit in inputs) {
+        if (unit !== sourceId) {
+          if (decimalValue === 0) {
+             inputs[unit].value = '0';
+          } else {
+             inputs[unit].value = decimalValue.toString(bases[unit]).toUpperCase();
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

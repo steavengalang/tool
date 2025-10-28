@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email & URL Extractor - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>textarea { height: 200px; }</style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>📤 Email & URL Extractor</h1><p>Temukan dan kumpulkan semua alamat email atau URL dari teks.</p></div>
+      <div class="tool-content">
+        <textarea id="textInput" placeholder="Tempel teks di sini..."></textarea>
+        <div style="margin-top:1rem;"><button class="btn" onclick="extract('email')">Ekstrak Email</button> <button class="btn" onclick="extract('url')">Ekstrak URL</button></div>
+        <h3>Hasil:</h3>
+        <textarea id="resultOutput" readonly></textarea>
+      </div>
+    </div>
+  </main>
+  <script>
+    function extract(type) {
+      const text = document.getElementById('textInput').value;
+      // PERBAIKAN: Regex diperbaiki, backslash tidak perlu di-escape berlebihan
+      const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+      const urlRegex = /(https?:\/\/[^\s]+)/gi;
+      const regex = type === 'email' ? emailRegex : urlRegex;
+      const matches = text.match(regex);
+      document.getElementById('resultOutput').value = matches ? [...new Set(matches)].join('\n') : 'Tidak ditemukan.';
+    }
+  </script>
+</body>
+</html>

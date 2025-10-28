@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Transform Playground - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .generator-layout { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
+    .preview-area { display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px dashed #ccc; min-height: 300px;}
+    #previewBox { width: 100px; height: 100px; background-color: #007bff; transition: transform 0.3s ease; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔲 CSS Transform Playground</h1><p>Eksperimen dengan scale, rotate, skew, dan translate CSS.</p></div>
+      <div class="tool-content generator-layout">
+        <div class="controls">
+          <div class="form-group"><label>Scale:</label><input type="range" id="scale" min="0.5" max="2" value="1" step="0.1" oninput="applyTransform()"></div>
+          <div class="form-group"><label>Rotate (deg):</label><input type="range" id="rotate" min="0" max="360" value="0" oninput="applyTransform()"></div>
+          <div class="form-group"><label>Translate X (px):</label><input type="range" id="translateX" min="-100" max="100" value="0" oninput="applyTransform()"></div>
+          <div class="form-group"><label>Translate Y (px):</label><input type="range" id="translateY" min="-100" max="100" value="0" oninput="applyTransform()"></div>
+          <div class="form-group"><label>Skew X (deg):</label><input type="range" id="skewX" min="-45" max="45" value="0" oninput="applyTransform()"></div>
+        </div>
+        <div class="preview-area">
+          <div id="previewBox"></div>
+        </div>
+      </div>
+      <textarea id="resultCode" readonly style="width:100%; margin-top: 1rem;"></textarea>
+    </div>
+  </main>
+  <script>
+    function applyTransform() {
+      const scale = document.getElementById('scale').value;
+      const rotate = document.getElementById('rotate').value;
+      const translateX = document.getElementById('translateX').value;
+      const translateY = document.getElementById('translateY').value;
+      const skewX = document.getElementById('skewX').value;
+      
+      const transformValue = `
+        scale(${scale}) 
+        rotate(${rotate}deg) 
+        translateX(${translateX}px) 
+        translateY(${translateY}px) 
+        skewX(${skewX}deg)
+      `.trim().replace(/\\s+/g, ' ');
+      
+      document.getElementById('previewBox').style.transform = transformValue;
+      document.getElementById('resultCode').value = `transform: ${transformValue};`;
+    }
+    window.onload = applyTransform;
+  </script>
+</body>
+</html>

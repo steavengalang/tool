@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Diskon - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .result-display {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: #f0fff0; /* Warna hijau muda untuk hasil */
+      border: 1px solid #cce8cc;
+      border-radius: 8px;
+    }
+    .result-display p {
+      margin: 0.5rem 0;
+      font-size: 1.2rem;
+    }
+    .result-display p span {
+      font-weight: bold;
+      color: #007bff; /* Warna biru untuk nilai */
+    }
+    #finalPrice {
+      font-size: 1.8rem;
+      color: #28a745; /* Warna hijau untuk harga akhir */
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>✂️ Kalkulator Diskon</h1>
+        <p>Hitung harga akhir setelah potongan diskon dan lihat berapa yang Anda hemat.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="originalPrice">Harga Asli (Rp):</label>
+          <input type="number" id="originalPrice" placeholder="e.g., 500000" oninput="calculateDiscount()">
+        </div>
+
+        <div class="form-group">
+          <label for="discountPercentage">Persentase Diskon (%):</label>
+          <input type="number" id="discountPercentage" placeholder="e.g., 25" oninput="calculateDiscount()">
+        </div>
+
+        <div id="results" class="result-display">
+          <p>Anda Hemat: <span id="amountSaved">Rp 0</span></p>
+          <p>Harga Akhir: <span id="finalPrice">Rp 0</span></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const originalPriceInput = document.getElementById('originalPrice');
+    const discountPercentageInput = document.getElementById('discountPercentage');
+    const amountSavedOutput = document.getElementById('amountSaved');
+    const finalPriceOutput = document.getElementById('finalPrice');
+
+    function formatCurrency(value) {
+      if (isNaN(value) || value === 0) return 'Rp 0';
+      // Format ke format Rupiah tanpa desimal
+      return 'Rp ' + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function calculateDiscount() {
+      const price = parseFloat(originalPriceInput.value) || 0;
+      const discount = parseFloat(discountPercentageInput.value) || 0;
+
+      let saved = 0;
+      let finalPrice = price;
+
+      if (price > 0 && discount > 0) {
+        if (discount > 100) {
+           discountPercentageInput.value = 100; // Batasi diskon maksimal 100%
+        }
+        saved = price * (discount / 100);
+        finalPrice = price - saved;
+      }
+      
+      amountSavedOutput.textContent = formatCurrency(saved);
+      finalPriceOutput.textContent = formatCurrency(finalPrice);
+    }
+    
+    window.onload = calculateDiscount;
+  </script>
+</body>
+</html>

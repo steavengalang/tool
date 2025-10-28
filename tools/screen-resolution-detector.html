@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detektor Resolusi Layar - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .resolution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center; }
+    .resolution-box { background-color: #f8f9fa; padding: 2rem; border-radius: 8px; }
+    .resolution-box h3 { margin: 0; font-size: 2.5rem; color: #007bff; }
+    .resolution-box p { margin: 0.5rem 0 0; color: #6c757d; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🖥️ Detektor Resolusi Layar & Viewport</h1><p>Lihat resolusi layar dan ukuran viewport browser Anda saat ini.</p></div>
+      <div class="tool-content">
+        <div class="resolution-grid">
+          <div class="resolution-box">
+            <h3 id="screenSize">-</h3><p>Resolusi Layar (Screen)</p>
+          </div>
+          <div class="resolution-box">
+            <h3 id="viewportSize">-</h3><p>Ukuran Viewport Browser</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    function updateSizes() {
+      // Screen size
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
+      document.getElementById('screenSize').textContent = `${screenWidth} x ${screenHeight}`;
+      
+      // Viewport size
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      document.getElementById('viewportSize').textContent = `${viewportWidth} x ${viewportHeight}`;
+    }
+    window.addEventListener('resize', updateSizes);
+    window.onload = updateSizes;
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter YAML ke JSON - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    textarea { height: 300px; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔄 Konverter YAML ke JSON</h1><p>Ubah data YAML menjadi format JSON.</p></div>
+      <div class="tool-content converter-container">
+        <div class="form-group">
+          <label>Input YAML:</label>
+          <textarea id="yamlInput" oninput="convertYamlToJson()"></textarea>
+          <div id="yamlError" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label>Output JSON:</label>
+          <textarea id="jsonOutput" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script>
+    function convertYamlToJson() {
+      const yamlStr = document.getElementById('yamlInput').value;
+      const jsonOutput = document.getElementById('jsonOutput');
+      const yamlError = document.getElementById('yamlError');
+      if (yamlStr.trim() === '') { jsonOutput.value = ''; yamlError.textContent = ''; return; }
+      try {
+        const jsonObj = jsyaml.load(yamlStr);
+        jsonOutput.value = JSON.stringify(jsonObj, null, 2);
+        yamlError.textContent = '';
+      } catch (e) {
+        jsonOutput.value = 'Error pada input YAML...';
+        yamlError.textContent = e.message;
+      }
+    }
+  </script>
+</body>
+</html>

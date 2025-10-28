@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>localStorage Viewer - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>table{width:100%;}td,th{border:1px solid #ddd;padding:8px;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>📦 localStorage Viewer</h1><p>Lihat data yang tersimpan di penyimpanan lokal browser Anda.</p></div>
+<div class="tool-content">
+  <table id="storageTable"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody></tbody></table>
+  <button class="btn" style="margin-top:1rem" onclick="loadStorage()">Muat Ulang</button>
+</div></div></main>
+<script>
+function loadStorage() {
+  const tableBody = document.querySelector('#storageTable tbody');
+  tableBody.innerHTML = '';
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    const row = tableBody.insertRow();
+    row.insertCell(0).textContent = key;
+    row.insertCell(1).textContent = value;
+  }
+}
+window.onload = loadStorage;
+</script></body></html>

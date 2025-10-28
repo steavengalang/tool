@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Angka Romawi - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .swap-icon {
+        text-align: center;
+        font-size: 2rem;
+        margin: 1rem 0;
+        cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🏛️ Konverter Angka Romawi</h1>
+        <p>Ubah angka desimal menjadi angka Romawi, dan sebaliknya.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="decimalInput">Angka Desimal (1-3999)</label>
+          <input type="number" id="decimalInput" min="1" max="3999" oninput="convertToRoman()">
+        </div>
+        <div class="form-group">
+          <label for="romanOutput">Hasil Angka Romawi</label>
+          <input type="text" id="romanOutput" readonly>
+        </div>
+        
+        <div class="swap-icon">↓ ↑</div>
+
+        <div class="form-group">
+          <label for="romanInput">Angka Romawi</label>
+          <input type="text" id="romanInput" oninput="convertToDecimal()">
+        </div>
+        <div class="form-group">
+          <label for="decimalOutput">Hasil Angka Desimal</label>
+          <input type="text" id="decimalOutput" readonly>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const romanMap = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+    const decimalMap = [
+        [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'],
+        [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']
+    ];
+
+    function convertToRoman() {
+        let num = parseInt(document.getElementById('decimalInput').value);
+        if (isNaN(num) || num < 1 || num > 3999) {
+            document.getElementById('romanOutput').value = 'Input tidak valid';
+            return;
+        }
+
+        let roman = '';
+        for (const [decimal, numeral] of decimalMap) {
+            while (num >= decimal) {
+                roman += numeral;
+                num -= decimal;
+            }
+        }
+        document.getElementById('romanOutput').value = roman;
+    }
+
+    function convertToDecimal() {
+        const str = document.getElementById('romanInput').value.toUpperCase();
+        let result = 0;
+        for (let i = 0; i < str.length; i++) {
+            const current = romanMap[str[i]];
+            const next = romanMap[str[i + 1]];
+
+            if (current < next) {
+                result += next - current;
+                i++; // Loncat ke karakter berikutnya
+            } else {
+                result += current;
+            }
+        }
+        
+        if (isNaN(result) || result === 0) {
+           document.getElementById('decimalOutput').value = 'Input tidak valid';
+        } else {
+           document.getElementById('decimalOutput').value = result;
+        }
+    }
+  </script>
+</body>
+</html>

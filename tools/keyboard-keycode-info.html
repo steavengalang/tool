@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info KeyCode Keyboard - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    #key-display { height: 150px; background-color: #007bff; color: white; display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: bold; border-radius: 8px; }
+    .key-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; text-align: center; }
+    .key-info-box { background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; }
+    .key-info-box h3 { margin: 0; font-size: 2.5rem; }
+    .key-info-box p { margin: 0.5rem 0 0; color: #6c757d; }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>⌨️ Info KeyCode Keyboard</h1><p>Tekan tombol apa saja untuk melihat informasi `key`, `code`, dan `keyCode`.</p></div>
+      <div class="tool-content">
+        <div id="key-display">Tekan Tombol</div>
+        <div class="key-info-grid">
+          <div class="key-info-box"><h3 id="key">-</h3><p>event.key</p></div>
+          <div class="key-info-box"><h3 id="keyCode">-</h3><p>event.keyCode (deprecated)</p></div>
+          <div class="key-info-box"><h3 id="code">-</h3><p>event.code</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    window.addEventListener('keydown', (e) => {
+      document.getElementById('key-display').textContent = e.key === ' ' ? 'Space' : e.key;
+      document.getElementById('key').textContent = e.key;
+      document.getElementById('keyCode').textContent = e.keyCode;
+      document.getElementById('code').textContent = e.code;
+    });
+  </script>
+</body>
+</html>

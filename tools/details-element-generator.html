@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Details Element Generator - ToolsKita</title><link rel="stylesheet" href="../css/style.css"></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>➕ Details Element Generator</h1><p>Buat elemen akordeon sederhana.</p></div>
+<div class="tool-content">
+  <div class="form-group"><label>Judul Ringkasan:</label><input type="text" id="summary" value="Klik untuk lihat detail" oninput="generate()"></div>
+  <div class="form-group"><label>Konten Detail:</label><textarea id="content" oninput="generate()" style="height:100px;">Ini adalah konten yang tersembunyi.</textarea></div>
+  <h3>Hasil Kode:</h3><textarea id="resultCode" readonly style="height:150px;"></textarea>
+  <h3>Pratinjau:</h3><div id="preview"></div>
+</div></div></main>
+<script>
+function generate() {
+  const summary = document.getElementById('summary').value;
+  const content = document.getElementById('content').value;
+  const code = `<details>\\n  <summary>${summary}</summary>\\n  <p>${content}</p>\\n</details>`;
+  document.getElementById('resultCode').value = code;
+  document.getElementById('preview').innerHTML = code.replace(/\\n/g, '');
+}
+window.onload=generate;
+</script></body></html>

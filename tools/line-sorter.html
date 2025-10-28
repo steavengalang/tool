@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengurut Baris - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style> textarea { height: 400px; } </style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔠 Pengurut Baris</h1><p>Urutkan baris-baris teks berdasarkan urutan abjad.</p></div>
+      <div class="tool-content">
+        <textarea id="textInput" placeholder="Tempel daftar yang ingin diurutkan..."></textarea>
+        <div style="margin-top: 1rem;">
+          <button class="btn" onclick="sortLines('asc')">Urutkan A-Z</button>
+          <button class="btn" onclick="sortLines('desc')">Urutkan Z-A</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    function sortLines(direction) {
+      const inputArea = document.getElementById('textInput');
+      const lines = inputArea.value.split('\\n');
+      lines.sort((a, b) => a.localeCompare(b));
+      if (direction === 'desc') {
+        lines.reverse();
+      }
+      inputArea.value = lines.join('\\n');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Triangle Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .generator-layout { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
+    .preview-area { display: flex; align-items: center; justify-content: center; min-height: 200px; }
+    #trianglePreview { width: 0; height: 0; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>🔺 CSS Triangle Generator</h1><p>Buat segitiga dengan CSS murni menggunakan trik border.</p></div>
+      <div class="tool-content generator-layout">
+        <div class="controls">
+          <div class="form-group">
+            <label for="direction">Arah:</label>
+            <select id="direction" onchange="updateTriangle()"><option value="top">Top</option><option value="right">Right</option><option value="bottom" selected>Bottom</option><option value="left">Left</option></select>
+          </div>
+          <div class="form-group">
+            <label>Ukuran (px):</label> <input type="range" id="size" min="10" max="150" value="50" oninput="updateTriangle()">
+          </div>
+          <div class="form-group">
+            <label for="color">Warna:</label> <input type="color" id="color" value="#007bff" oninput="updateTriangle()">
+          </div>
+        </div>
+        <div class="preview-area">
+          <div id="trianglePreview"></div>
+          <textarea id="resultCode" readonly style="width:100%; height: 200px; margin-top: 1rem;"></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const direction = document.getElementById('direction');
+    const size = document.getElementById('size');
+    const color = document.getElementById('color');
+    const preview = document.getElementById('trianglePreview');
+    const resultCode = document.getElementById('resultCode');
+    function updateTriangle() {
+      const s = size.value;
+      const c = color.value;
+      const d = direction.value;
+      let style = `width: 0;\nheight: 0;\n`;
+      preview.style.border = 'none'; // reset
+      preview.style.borderLeft = `${s}px solid transparent`;
+      preview.style.borderRight = `${s}px solid transparent`;
+      preview.style.borderTop = `${s}px solid transparent`;
+      preview.style.borderBottom = `${s}px solid transparent`;
+
+      switch (d) {
+        case 'top':
+          preview.style.borderBottomColor = c;
+          style += `border-left: ${s}px solid transparent;\nborder-right: ${s}px solid transparent;\nborder-bottom: ${s}px solid ${c};`;
+          break;
+        case 'right':
+          preview.style.borderLeftColor = c;
+          style += `border-top: ${s}px solid transparent;\nborder-bottom: ${s}px solid transparent;\nborder-left: ${s}px solid ${c};`;
+          break;
+        case 'bottom':
+          preview.style.borderTopColor = c;
+          style += `border-left: ${s}px solid transparent;\nborder-right: ${s}px solid transparent;\nborder-top: ${s}px solid ${c};`;
+          break;
+        case 'left':
+          preview.style.borderRightColor = c;
+          style += `border-top: ${s}px solid transparent;\nborder-bottom: ${s}px solid transparent;\nborder-right: ${s}px solid ${c};`;
+          break;
+      }
+      resultCode.value = style;
+    }
+    window.onload = updateTriangle;
+  </script>
+</body>
+</html>

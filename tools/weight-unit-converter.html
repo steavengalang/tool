@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter Satuan Berat - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-row { display: flex; align-items: center; gap: 1rem; }
+    .converter-row input { flex-grow: 1; }
+    .converter-row label { min-width: 90px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>⚖️ Konverter Satuan Berat</h1>
+        <p>Konversi antara ton, kilogram, gram, pon, ons, dan lainnya.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group converter-row">
+          <input type="number" id="t" oninput="convert('t', this.value)">
+          <label for="t">Ton (t)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="kg" oninput="convert('kg', this.value)">
+          <label for="kg">Kilogram (kg)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="g" oninput="convert('g', this.value)">
+          <label for="g">Gram (g)</label>
+        </div>
+        <hr>
+        <div class="form-group converter-row">
+          <input type="number" id="lb" oninput="convert('lb', this.value)">
+          <label for="lb">Pon (lb)</label>
+        </div>
+        <div class="form-group converter-row">
+          <input type="number" id="oz" oninput="convert('oz', this.value)">
+          <label for="oz">Ons (oz)</label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const inputs = {
+      t: document.getElementById('t'), kg: document.getElementById('kg'), g: document.getElementById('g'),
+      lb: document.getElementById('lb'), oz: document.getElementById('oz')
+    };
+    // Faktor konversi ke kilogram (unit dasar)
+    const factors = {
+      t: 1000, kg: 1, g: 0.001,
+      lb: 0.453592, oz: 0.0283495
+    };
+    function convert(sourceId, value) {
+      if (value.trim() === '') {
+        Object.values(inputs).forEach(input => input.value = '');
+        return;
+      }
+      const valueInKg = parseFloat(value) * factors[sourceId];
+      for (const unit in inputs) {
+        if (unit !== sourceId) {
+          const result = valueInKg / factors[unit];
+          inputs[unit].value = parseFloat(result.toPrecision(6));
+        }
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Bunga Majemuk - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .results-compound {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .results-compound h3 {
+      margin-top: 0;
+      color: #666;
+      font-weight: 500;
+    }
+    #futureValue {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 0.5rem;
+    }
+    #totalInterest {
+        font-size: 1.2rem;
+        color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>📈 Kalkulator Bunga Majemuk</h1>
+        <p>Proyeksikan pertumbuhan investasi Anda dengan kekuatan bunga majemuk.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+          <label for="principal">Modal Awal (Rp):</label>
+          <input type="number" id="principal" placeholder="10000000" oninput="calculateCompoundInterest()">
+        </div>
+
+        <div class="form-group">
+          <label for="rate">Tingkat Bunga Tahunan (%):</label>
+          <input type="number" id="rate" placeholder="e.g., 7" oninput="calculateCompoundInterest()">
+        </div>
+
+        <div class="form-group">
+          <label for="years">Jangka Waktu (Tahun):</label>
+          <input type="number" id="years" placeholder="e.g., 10" oninput="calculateCompoundInterest()">
+        </div>
+        
+        <div class="form-group">
+          <label for="compounding">Frekuensi Bunga Majemuk:</label>
+          <select id="compounding" onchange="calculateCompoundInterest()">
+            <option value="1">Tahunan</option>
+            <option value="2">Per Semester</option>
+            <option value="4">Per Kuartal</option>
+            <option value="12" selected>Bulanan</option>
+          </select>
+        </div>
+
+        <div class="results-compound">
+          <h3>Nilai Masa Depan:</h3>
+          <p id="futureValue">Rp 0</p>
+          <p id="totalInterest">Total Bunga: Rp 0</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const principalInput = document.getElementById('principal');
+    const rateInput = document.getElementById('rate');
+    const yearsInput = document.getElementById('years');
+    const compoundingInput = document.getElementById('compounding');
+    
+    const futureValueOutput = document.getElementById('futureValue');
+    const totalInterestOutput = document.getElementById('totalInterest');
+
+    function formatCurrency(value) {
+      if (isNaN(value) || value === 0) return 'Rp 0';
+      return 'Rp ' + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function calculateCompoundInterest() {
+      const P = parseFloat(principalInput.value) || 0;
+      const r = (parseFloat(rateInput.value) || 0) / 100;
+      const t = parseFloat(yearsInput.value) || 0;
+      const n = parseInt(compoundingInput.value) || 1;
+
+      let futureValue = P;
+      let totalInterest = 0;
+
+      if (P > 0 && r > 0 && t > 0) {
+        // Rumus Bunga Majemuk: A = P(1 + r/n)^(nt)
+        futureValue = P * Math.pow(1 + r / n, n * t);
+        totalInterest = futureValue - P;
+      }
+      
+      futureValueOutput.textContent = formatCurrency(futureValue);
+      totalInterestOutput.textContent = `Total Bunga: ${formatCurrency(totalInterest)}`;
+    }
+    
+    window.onload = calculateCompoundInterest;
+  </script>
+</body>
+</html>

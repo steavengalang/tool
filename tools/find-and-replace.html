@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pencari dan Pengganti - ToolsKita</title><link rel="stylesheet" href="../css/style.css"><style>textarea{height:250px;}</style></head>
+<body>
+<nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+<main class="tool-page"><div class="container">
+<div class="tool-header"><h1>🔍 Pencari dan Pengganti Teks</h1><p>Ganti semua kemunculan suatu kata dalam teks.</p></div>
+<div class="tool-content">
+  <textarea id="textInput" placeholder="Teks sumber..."></textarea>
+  <div class="form-group" style="margin-top:1rem;">
+    <label>Cari:</label><input type="text" id="findText">
+    <label>Ganti dengan:</label><input type="text" id="replaceText">
+  </div>
+  <button class="btn" onclick="findAndReplace()">Ganti Semua</button>
+</div></div></main>
+<script>
+function findAndReplace() {
+  const area = document.getElementById('textInput');
+  const find = document.getElementById('findText').value;
+  const replace = document.getElementById('replaceText').value;
+  // Gunakan new RegExp untuk 'g' (global) flag
+  const regex = new RegExp(find, 'g');
+  area.value = area.value.replace(regex, replace);
+}
+</script></body></html>

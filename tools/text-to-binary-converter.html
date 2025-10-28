@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teks ke Biner Converter - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    textarea {
+        height: 200px;
+        font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔡 Teks ke Biner Converter</h1>
+        <p>Ubah teks biasa menjadi kode biner, dan sebaliknya.</p>
+      </div>
+
+      <div class="tool-content">
+        <div class="form-group">
+            <label for="textInput">Teks Biasa:</label>
+            <textarea id="textInput" placeholder="Ketik sesuatu di sini..." oninput="convertToBinary()"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="binaryOutput">Output Biner:</label>
+            <textarea id="binaryOutput" oninput="convertToText()"></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const binaryOutput = document.getElementById('binaryOutput');
+
+    function convertToBinary() {
+      const text = textInput.value;
+      if (text.trim() === '') {
+        binaryOutput.value = '';
+        return;
+      }
+      
+      let binaryResult = '';
+      for (let i = 0; i < text.length; i++) {
+        let binaryChar = text[i].charCodeAt(0).toString(2);
+        // Pastikan setiap karakter memiliki 8 bit
+        binaryResult += '0'.repeat(8 - binaryChar.length) + binaryChar + ' ';
+      }
+      binaryOutput.value = binaryResult.trim();
+    }
+
+    function convertToText() {
+        const binaryStr = binaryOutput.value;
+        if (binaryStr.trim() === '') {
+            textInput.value = '';
+            return;
+        }
+
+        try {
+            const textResult = binaryStr.split(' ')
+                .map(bin => String.fromCharCode(parseInt(bin, 2)))
+                .join('');
+            textInput.value = textResult;
+        } catch (e) {
+            textInput.value = 'Input biner tidak valid...';
+        }
+    }
+  </script>
+</body>
+</html>

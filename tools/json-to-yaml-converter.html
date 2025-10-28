@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverter JSON ke YAML - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .converter-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    textarea {
+        height: 300px;
+        font-family: monospace;
+    }
+    .error-message {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+    @media (min-width: 768px) {
+      .converter-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-brand">ToolsKita</a>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <h1>🔄 Konverter JSON ke YAML</h1>
+        <p>Ubah data JSON menjadi format YAML yang lebih mudah dibaca.</p>
+      </div>
+
+      <div class="tool-content converter-container">
+        <div class="form-group">
+          <label for="jsonInput">Input JSON:</label>
+          <textarea id="jsonInput" placeholder='{ "nama": "Budi", "umur": 25, "aktif": true }' oninput="convertJsonToYaml()"></textarea>
+          <div id="jsonError" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="yamlOutput">Output YAML:</label>
+          <textarea id="yamlOutput" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Tambahkan pustaka js-yaml melalui CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script>
+    const jsonInput = document.getElementById('jsonInput');
+    const yamlOutput = document.getElementById('yamlOutput');
+    const jsonError = document.getElementById('jsonError');
+
+    function convertJsonToYaml() {
+      const jsonStr = jsonInput.value;
+      if (jsonStr.trim() === '') {
+        yamlOutput.value = '';
+        jsonError.textContent = '';
+        return;
+      }
+
+      try {
+        const jsonObj = JSON.parse(jsonStr);
+        // Konversi objek JSON ke string YAML menggunakan pustaka js-yaml
+        const yamlStr = jsyaml.dump(jsonObj);
+        yamlOutput.value = yamlStr;
+        jsonError.textContent = '';
+      } catch (e) {
+        yamlOutput.value = 'Error pada input JSON...';
+        jsonError.textContent = e.message;
+      }
+    }
+    
+    // Inisialisasi dengan contoh
+    window.onload = convertJsonToYaml;
+  </script>
+</body>
+</html>

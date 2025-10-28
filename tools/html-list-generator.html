@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML List Generator - ToolsKita</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>textarea { height: 250px; }</style>
+</head>
+<body>
+  <nav class="navbar"><div class="container"><a href="../index.html" class="nav-brand">ToolsKita</a></div></nav>
+  <main class="tool-page">
+    <div class="container">
+      <div class="tool-header"><h1>📋 HTML List Generator</h1><p>Ubah teks per baris menjadi daftar HTML (`<ul>` atau `<ol>`).</p></div>
+      <div class="tool-content">
+        <div class="form-group">
+          <label>Tipe Daftar:</label>
+          <select id="listType" onchange="generateList()"><option value="ul">Unordered (ul)</option><option value="ol">Ordered (ol)</option></select>
+        </div>
+        <div class="form-group">
+          <label>Input (satu item per baris):</label>
+          <textarea id="listInput" oninput="generateList()"></textarea>
+        </div>
+        <h3>Hasil Kode:</h3>
+        <textarea id="resultCode" readonly></textarea>
+      </div>
+    </div>
+  </main>
+  <script>
+    function generateList() {
+      const type = document.getElementById('listType').value;
+      const input = document.getElementById('listInput').value;
+      const lines = input.split('\\n').filter(Boolean);
+      let code = `<${type}>\\n`;
+      lines.forEach(line => { code += `  <li>${line}</li>\\n`; });
+      code += `</${type}>`;
+      document.getElementById('resultCode').value = code;
+    }
+    window.onload = generateList;
+  </script>
+</body>
+</html>
